@@ -5,10 +5,11 @@ $dbname = 'pet_adoption';
 $user = 'postgres';
 $password = 'password';
 
-$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
-
-if (!$conn) {
-    die("Eroare la conectarea la PostgreSQL: " . pg_last_error());
+try {
+    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 ?>
 //require_once 'db.php';->restul fisierelor
