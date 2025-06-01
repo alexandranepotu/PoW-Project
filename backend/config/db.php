@@ -9,8 +9,9 @@ try {
     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    error_log("Database connection failed: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Database connection failed']);
+    exit;
 }
-?>
-//require_once 'db.php';->restul fisierelor
 

@@ -11,18 +11,17 @@
     <div class="site-title">Pet Adoption</div>
     <div class="site-description">
         Găsește și adoptă animalul de companie potrivit pentru tine! Platforma noastră conectează iubitorii de animale cu prietenii necuvântători care au nevoie de o casă.
-    </div>
-    <div class="login-box">
+    </div>    <div class="login-box">
         <h2>Login</h2>
-        <form>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
+        <form id="loginForm">
+            <input type="text" name="username" id="username" placeholder="Username" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+        <div id="message"></div>
         <div class="login-extra">
             Don't have an account? <a href="register.html">Sign up</a>
-        </div>
-    </div>
-    <script src="js/login.js"></script>
+        </div>    </div>
+    <script src="../js/login.js"></script>
 </body>
 </html>

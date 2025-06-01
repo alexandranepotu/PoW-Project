@@ -1,4 +1,15 @@
 RewriteEngine On
+RewriteBase /PoW-Project/backend/public
+
+# Allow any files or directories that exist to be displayed directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite all other URLs to index.php
 RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Set headers
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Accept"
+Header set Content-Type "application/json" env=API_REQUEST

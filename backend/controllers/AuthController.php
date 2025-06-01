@@ -58,47 +58,93 @@ class AuthController {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to register user']);
         }
+    }    public function login() {
+        try {
+            error_log("\n=== Login attempt started ===");
+            
+            // Citim datele de intrare
+            $inputData = file_get_contents('php://input');
+            error_log("Raw input data: " . $inputData);
+            
+            if (empty($inputData)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'No input data received']);
+                return;
+            }
+            
+            // decdodare json + verificare erori
+            $data = json_decode($inputData, true);
+            if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid JSON format']);
+                return;
+            }
+            
+            // validare campuri
+            if (!isset($data['username']) || !isset($data['password'])) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Username and password are required']);
+                return;
+            }
+
+            $username = trim($data['username']);
+            $password = $data['password'];
+
+            // verificare daca username si parola nu sunt goale
+            if (empty($username) || empty($password)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Username and password cannot be empty']);
+                return;
+            }
+
+            // autentificare
+            $loginResult = $this->userModel->login($username, $password);
+            
+            if (!$loginResult['success']) {
+                http_response_code(401);
+                echo json_encode(['error' => $loginResult['message']]);
+                return;
+            }
+
+            // succes!!!!
+            $_SESSION['user_id'] = $loginResult['user']['id'];
+            $_SESSION['username'] = $loginResult['user']['username'];
+            
+            echo json_encode([
+                'success' => true,
+                'message' => 'Login successful',
+                'user' => $loginResult['user']
+            ]);
+            return;
+
+        } catch (Exception $e) {
+            error_log('Login error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['error' => 'Server error occurred']);
+            return;
+        }
     }
-
-    public function login() {
-    session_start();
-
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    $username = trim($data['username'] ?? '');
-    $password = $data['password'] ?? '';
-
-    if (!$username || !$password) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Username and password are required']);
-        return;
-    }
-
-    $user = $this->userModel->login($username, $password);
-
-    if ($user) {
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'username' => $user['username'],
-            'email' => $user['email'],
-            'full_name' => $user['full_name'],
-            'phone' => $user['phone']
-        ];
-
-        http_response_code(200);
-        echo json_encode(['message' => 'Login successful', 'user' => $_SESSION['user']]);
-    } else {
-        http_response_code(401);
-        echo json_encode(['error' => 'Invalid username or password']);
-    }
-}
-
 }
 
 // Pornire controller
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $auth = new AuthController($pdo);
-    $auth->register();
+
+    $path = $_SERVER['REQUEST_URI'];
+
+    if (strpos($path, 'register') !== false) {
+        $auth->register();
+        exit;
+    } elseif (strpos($path, 'login') !== false) {
+        session_start(); 
+        $auth->login();
+        exit;
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'Unknown action']);
+        exit;
+    }
 }
+
 ?>

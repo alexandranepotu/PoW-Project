@@ -1,0 +1,2 @@
+DirectoryIndex login.html
+RedirectMatch 301 ^/PoW-Project/frontend/views/index.html$ /PoW-Project/frontend/views/login.html
