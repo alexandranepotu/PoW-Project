@@ -14,8 +14,19 @@ class AuthController {
       // asteapta date POST JSON 
       //extrageaza datele si le valideaza
     public function register() {
-    
+        // Log request data
+        error_log('Register request received: ' . file_get_contents('php://input'));
+
         $data = json_decode(file_get_contents('php://input'), true);
+        
+        // Log decoded data
+        error_log('Decoded data: ' . print_r($data, true));
+
+        if (!$data) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid JSON data']);
+            return;
+        }
 
         $fullName = trim($data['full_name'] ?? '');
         $username = trim($data['username'] ?? '');
@@ -48,6 +59,40 @@ class AuthController {
             echo json_encode(['error' => 'Failed to register user']);
         }
     }
+
+    public function login() {
+    session_start();
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $username = trim($data['username'] ?? '');
+    $password = $data['password'] ?? '';
+
+    if (!$username || !$password) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Username and password are required']);
+        return;
+    }
+
+    $user = $this->userModel->login($username, $password);
+
+    if ($user) {
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'email' => $user['email'],
+            'full_name' => $user['full_name'],
+            'phone' => $user['phone']
+        ];
+
+        http_response_code(200);
+        echo json_encode(['message' => 'Login successful', 'user' => $_SESSION['user']]);
+    } else {
+        http_response_code(401);
+        echo json_encode(['error' => 'Invalid username or password']);
+    }
+}
+
 }
 
 // Pornire controller

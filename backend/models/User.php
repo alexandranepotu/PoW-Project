@@ -48,5 +48,18 @@ class User {
         $stmt->execute([':email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function login($username, $password) {
+        $sql = "SELECT * FROM users WHERE username = :username LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password_hash'])) {
+            return $user;
+        }
+        return false;
+    }  
+
 }
 ?>

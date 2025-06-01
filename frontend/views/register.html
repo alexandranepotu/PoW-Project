@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Adoption</title>
     <link rel="stylesheet" href="../assets/register.css">
-    <script src="js/register.js"></script>
+    <script src="../js/register.js" defer></script>
+
 </head>
 <body>
     <div class="register-box">
         <h2>Register</h2>
-        <form id="registerForm">
+        <form id="registerForm" method="POST">
             <input type="text" placeholder=" Full Name" name="full_name" required>
             <input type="text" placeholder="Username" name="username" required>
             <input type="email" placeholder="Email" name="email" required>
@@ -21,7 +22,7 @@
         </form>
         <div id="message"></div>
         <div class="register-extra">
-            Already have an account? <a href="index.html">Login</a>
+            Already have an account? <a href="./index.html">Login</a>
         </div>
     </div>
     <div class="site-title">Pet Adoption</div>

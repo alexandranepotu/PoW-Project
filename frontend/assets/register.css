@@ -9,11 +9,10 @@
 
 body {
     min-height: 100vh;
-    background: url('/frontend/images/background.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: linear-gradient(135deg, #5E2E65 0%, #7d3fa6 100%);
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* chenarul in stanga */
+    justify-content: flex-start;
     position: relative;
 }
 
