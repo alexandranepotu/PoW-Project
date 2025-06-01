@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.textContent = result.message;
         loginForm.reset();
         // redirectionarea utilizatorului dupa login
-        window.location.href = '/PoW-Project/frontend/views/register.html'; //de schimbat pagina!!!!!!!!!!!!!!!!!!!!
+        window.location.href = '/PoW-Project/frontend/views/dashboard.html';
       } else {
         messageDiv.style.color = 'red';
         messageDiv.textContent = result.error || 'Login failed';
