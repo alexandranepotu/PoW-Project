@@ -4,13 +4,49 @@
   <meta charset="UTF-8">
   <title>Dashboard</title>
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/dashboard.css">
 </head>
 <body>
-  <h1>Bine ai venit în dashboard!</h1>
+  <nav class="navbar">    <div class="nav-left">
+      <a href="dashboard.html" class="logo">Pet Adoption</a>
+    </div>
+    <div class="nav-center">
+      <div class="search-bar">
+        <input type="text" placeholder="Caută un animal...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="#about" class="about-btn">About Us</a>
+      <a href="#adopt" class="adopt-btn">Adopt Now</a>      <div class="profile-dropdown">
+        <span class="profile-text">Profile</span>
+        <div class="dropdown-content">
+          <a href="#profile">My Profile</a>
+          <a href="#settings">Settings</a>
+          <a href="#logout">Logout</a>
+        </div>
+      </div>
+    </div>
+    <button class="menu-toggle" aria-label="Toggle navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
 
-  <section id="user-animals"></section>
-  <section id="adoptable-animals"></section>
-  <section id="calendar"></section>
+  <main class="dashboard-content">
+    <section id="user-animals" class="dashboard-section">
+      <h2>Animalele tale</h2>
+    </section>
+    
+    <section id="adoptable-animals" class="dashboard-section">
+      <h2>Animale disponibile pentru adopție</h2>
+    </section>
+    
+    <section id="calendar" class="dashboard-section">
+      <h2>Calendar evenimente</h2>
+    </section>
+  </main>
 
   <script src="../js/dashboard.js"></script>
 </body>

@@ -1,0 +1,290 @@
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #5E2E65;
+    text-decoration: none;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: 400px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.adopt-btn {
+    background: #5E2E65;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.adopt-btn:hover {
+    background: #7d3fa6;
+}
+
+.about-btn {
+    background: #5E2E65;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin-right: 1rem;
+}
+
+.about-btn:hover {
+    background: #7d3fa6;
+}
+
+.profile-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-text {
+    color: #5E2E65;
+    font-weight: 500;
+    padding: 0.5rem;
+    transition: color 0.3s;
+}
+
+.profile-dropdown:hover .profile-text {
+    color: #7d3fa6;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background: #f5f5f5;
+}
+
+/* Mobile menu toggle styles */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: 0.3s;
+}
+
+/* Main content styles */
+.dashboard-content {
+    margin-top: 80px;
+    padding: 2rem;
+}
+
+.dashboard-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-section h2 {
+    color: #5E2E65;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .search-bar {
+        width: 300px;
+    }
+    .nav-left, .nav-center, .nav-right {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar {
+        padding: 1rem;
+    }
+    .search-bar {
+        width: 250px;
+    }
+    .adopt-btn {
+        padding: 0.6rem 1.2rem;
+    }
+    .about-btn {
+        padding: 0.6rem 1.2rem;
+        margin-right: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-left, .nav-center, .nav-right {
+        width: 100%;
+        justify-content: center;
+        margin: 0.5rem 0;
+    }
+    
+    .search-bar {
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .dashboard-content {
+        margin-top: 160px;
+        padding: 1rem;
+    }
+
+    .dropdown-content {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        top: auto;
+        bottom: 0;
+        border-radius: 12px 12px 0 0;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .menu-toggle {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 100;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .navbar.menu-open .nav-left,
+    .navbar.menu-open .nav-center,
+    .navbar.menu-open .nav-right {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.8rem;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-left, .nav-center, .nav-right {
+        gap: 0.8rem;
+    }
+    
+    .adopt-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .about-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        margin-right: 0.5rem;
+    }
+    
+    .dashboard-section {
+        padding: 1rem;
+    }
+    
+    .dashboard-section h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .navbar {
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    .dropdown-content {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
