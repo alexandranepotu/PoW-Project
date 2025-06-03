@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Adoption - Profile</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/profile.css">
+</head>
+<body>
+<header>
+  <div class="logo">Pet Adoption</div>
+  <nav>
+    <input type="search" placeholder="Caută..." />
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+    <div class="profile-dropdown">
+      <div class="profile-text">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+      <div class="dropdown-content">
+        <a href="#account"><i class="fas fa-user-circle"></i> My Account</a>
+        <a href="#logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+    <button class="theme-toggle">🌙</button>
+  </nav>
+</header>
+
+  <main>
+    <form id="profileForm">
+        <h1>User info</h1>
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required />
+      <label for="username">Username:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" />
+
+
+      <button type="submit">Save changes</button>
+    </form>
+
+    <form id="addressForm">
+       <h1>Address</h1>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required />
+        <label for="county">County:</label>
+        <input type="text" id="county" name="county" required />
+        <label for="street">Street:</label>
+        <input type="text" id="street" name="street" required />
+        <label for="postalCode">Postal Code:</label>
+        <input type="text" id="postalCode" name="postalCode" required />
+
+    <div id="message" class="hidden"></div>
+    <button type="submit">Save changes</button>
+  </main>
+
+  <script src="profile.js"></script>
+</body>
+</html>
