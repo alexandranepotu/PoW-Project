@@ -2,14 +2,15 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Pet Adoption</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Adoption</title>
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="../assets/dashboard.css">
 </head>
 <body>
  
 <header>
-  <div class="logo">Logo</div>
+  <div class="logo">Pet Adoption</div>
   <nav>
     <input type="search" placeholder="Caută..." />
     <a href="#about">About Us</a>
@@ -24,7 +25,7 @@
         <a href="#logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
     </div>
-    <button id="darkModeToggle">🌙</button>
+    <button id="darkModeToggle" onclick="toggleTheme()">🌙</button>
   </nav>
 </header>
 
@@ -32,7 +33,7 @@
   <div class="chenare">
     <section class="about-adopt">
       <h2>About Us</h2>
-      <p>Informații despre organizația noastră...</p>
+      <p>Informații despre organizația noastră de adopție de animale. Ne dedicăm să conectăm animalele cu familiile potrivite și să oferim suport pentru toată viața.</p>
       <div class="btn-group">
         <button>Adopt</button>
         <button>My Pet</button>
@@ -41,25 +42,76 @@
 
     <section class="news">
       <h2>Știri</h2>
-      <p>Ultimele noutăți și evenimente...</p>
+      <p>Ultimele noutăți și evenimente din lumea adopțiilor de animale...</p>
+      <ul>
+        <li>Campanie de adopție pentru pisici - Weekend-ul acesta</li>
+      </ul>
     </section>
   </div>
 
   <div class="scroll-cards" aria-label="Carduri scrollabile">
-    <div class="card">Card 1</div>
-    <div class="card">Card 2</div>
-    <div class="card">Card 3</div>
-    <div class="card">Card 4</div>
-    <div class="card">Card 5</div>
-    <div class="card">Card 6</div>
+    <div class="card">
+      <h3>Card 1</h3>
+      <p>Conținut exemplu pentru primul card</p>
+    </div>
+    <div class="card">
+      <h3>Card 2</h3>
+      <p>Conținut exemplu pentru al doilea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 3</h3>
+      <p>Conținut exemplu pentru al treilea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 4</h3>
+      <p>Conținut exemplu pentru al patrulea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 5</h3>
+      <p>Conținut exemplu pentru al cincilea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 6</h3>
+      <p>Conținut exemplu pentru al șaselea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 7</h3>
+      <p>Conținut exemplu pentru al șaptelea card</p>
+    </div>
+    <div class="card">
+      <h3>Card 8</h3>
+      <p>Conținut exemplu pentru al optulea card</p>
+    </div>
   </div>
 </main>
 
-  <script>
-    function toggleTheme() {
-      document.body.classList.toggle("light-mode");
-    }
-  </script>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const button = document.getElementById('darkModeToggle');
+  
+  // Toggle between light and dark themes
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.setAttribute('data-theme', 'light');
+    button.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    button.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  const html = document.documentElement;
+  const button = document.getElementById('darkModeToggle');
+  
+  html.setAttribute('data-theme', savedTheme);
+  button.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+});
+</script>
 
 </body>
 </html>

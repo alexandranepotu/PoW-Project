@@ -1,185 +1,178 @@
-@import url('https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,300..900;1,300..900&display=swap');
+/* Variabile și reset */
+:root {
+  --primary-color: #8ECAE6;
+  --secondary-color: #219EBC;
+  --accent-color: #023047;
+  --bg-light: #F9F5F9;
+  --bg-dark: #121212;
+  --text-light: #000000;
+  --text-dark: #ffffff;
+}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Ancizar Serif, serif;
+[data-theme="dark"] body {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] .about-adopt,
+[data-theme="dark"] .news {
+  background-color: rgba(34, 34, 34, 0.85);
+  color: var(--text-dark);
+  border: 1px solid #555;
+}
+
+[data-theme="dark"] nav,
+[data-theme="dark"] footer {
+  background-color: #1e1e1e;
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] nav a,
+[data-theme="dark"] footer a {
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #2c2c2c;
+  color: var(--text-dark);
+  border: 1px solid #555;
+}
+
+[data-theme="dark"] button {
+  background-color: var(--accent-color);
+  color: var(--text-dark);
+  border: none;
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .container,
+[data-theme="dark"] .modal {
+  background-color: #1e1e1e;
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] table {
+  background-color: #1e1e1e;
+  color: var(--text-dark);
+  border: 1px solid #444;
+}
+
+[data-theme="dark"] th,
+[data-theme="dark"] td {
+  border: 1px solid #444;
+}
+
+:root {
+    /* Base Colors */
+    --c1: #F9F5F9;    /* Light background */
+    --c2: #121212;    /* Dark text/background */
+    --c3: #5C9E9A;    /* Teal accent */
+    --c4: #EEA525;    /* Orange accent */
+    --c5: #5E2E65;    /* Purple brand */
+    --c6: #D4D7CF;    /* Sage neutral */
+    
+    /* Functional Variables with Fallbacks */
+    --bg-primary: var(--c1, #F9F5F9);
+    --bg-secondary: var(--c6, #D4D7CF);
+    --bg-tertiary: var(--c5, #5E2E65);
+    
+    --text-primary: var(--c2, #121212);
+    --text-light: var(--c1, #F9F5F9);
+    --text-secondary: var(--c6, #666666);
+    
+    --primary-color: var(--c5, #5E2E65);
+    --primary-hover: var(--c3, #5C9E9A);
+    --accent-color: var(--c4, #EEA525);
+    
+    /* Shadows and Effects */
+    --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-large: 0 4px 12px rgba(0, 0, 0, 0.2);
+    
+    /* Borders */
+    --border-radius-full: 999px;
+    --border-radius-medium: 8px;
+    --border-radius-large: 12px;
+    
+    /* Transitions */
+    --transition-speed-fast: 0.2s;
+    --transition-speed: 0.3s;
+    --transition-speed-slow: 0.5s;
+    
+    /* Gradients */
+    --linear-light: linear-gradient(135deg, rgba(249, 245, 249, 0.95), rgba(212, 215, 207, 0.95));
+    --linear-dark: linear-gradient(135deg, rgba(18, 16, 18, 0.95), rgba(44, 47, 43, 0.95));
+    
+    /* RGB Values for Advanced Effects */
+    --primary-rgb: 94, 46, 101;  /* RGB values for --c5 */
+    --accent-rgb: 238, 165, 37;  /* RGB values for --c4 */
+    --secondary-rgb: 92, 158, 154;  /* RGB values for --c3 */
+}
+
+:root[data-theme="dark"] {
+    /* Dark Mode Overrides */
+    --bg-primary: var(--c2, #121212);
+    --bg-secondary: var(--c6, #2C2F2B);
+    --bg-tertiary: var(--c3, #5C9E9A);
+    
+    --text-primary: var(--c1, #F9F5F9);
+    --text-light: var(--c2, #121212);
+    --text-secondary: var(--c6, #aaaaaa);
+    
+    --primary-color: var(--c3, #5C9E9A);
+    --primary-hover: var(--c4, #EEA525);
+    --accent-color: var(--c4, #EEA525);
+    
+    --shadow-small: 0 2px 4px rgba(255, 255, 255, 0.1);
+    --shadow-large: 0 4px 12px rgba(255, 255, 255, 0.15);
+    
+    --linear-gradient: var(--linear-dark);
+}
+
+/* Global transition styles */
+body, button, input, nav, .dashboard-section {
+    transition: background-color var(--transition-speed),
+                color var(--transition-speed),
+                border-color var(--transition-speed),
+                box-shadow var(--transition-speed),
+                transform var(--transition-speed-fast);
+}
+
+/* Smoother transitions for background elements */
+.navbar,
+.search-bar,
+.dashboard-section {
+    transition: background-color var(--transition-speed-slow),
+                box-shadow var(--transition-speed);
+}
+
+/* Instant transitions for theme icon */
+.theme-toggle {
+    transition: transform var(--transition-speed-fast),
+                background-color var(--transition-speed-fast),
+                box-shadow var(--transition-speed-fast),
+                color var(--transition-speed-fast);
+}
+
+/* Global styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
 }
 
 body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.login-box {
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 40px 30px;
-    border-radius: 0 0 0 12px; /* doar colțul stânga-jos rotunjit */
-    box-shadow: -8px 0 32px rgba(0,0,0,0.2);
-    width: 48vw; /* aproape jumătate din pagină */
-    max-width: 600px;
-    min-width: 320px;
-    height: 100vh;
+    min-height: 100%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    right: 0;
-    top: 0;
-    font-size: 1.1rem;
-}
-
-.login-box h2 {
-    margin-bottom: 24px;
-    color: #5E2E65;
-    font-size: 2.2rem; /* mărit */
-}
-
-.login-box input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 18px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.15rem; /* mărit */
-}
-
-.login-box button {
-    width: 100%;
-    padding: 12px;
-    background: #5E2E65;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.15rem; /* mărit */
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.login-box button:hover {
-    background: #7d3fa6;
-}
-
-/* Title styles */
-.site-title {
-    position: absolute;
-    top: 48px;
-    left: 48px;
-    color: #fff;
-    font-size: 3.5rem; /* mai mare */
-    font-family: 'Ancizar Serif', serif;
-    font-weight: 700;
-    text-shadow: 0 2px 16px rgba(0,0,0,0.25);
-    letter-spacing: 2px;
-    z-index: 2;
-    user-select: none;
-}
-
-/* Description styles */
-.site-description {
-    position: absolute;
-    top: 65vh;           /* mult mai jos pe ecran mare */
-    left: 48px;
-    max-width: 420px;
-    color: #fff;
-    font-size: 1.35rem;
-    font-family: 'Ancizar Serif', serif;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.22);
-    background: rgba(30, 0, 40, 0.18);
-    border-radius: 10px;
-    padding: 18px 22px 18px 18px;
-    z-index: 2;
-    user-select: none;
-    box-sizing: border-box;
-    transition: top 0.3s;
-}
-
-.login-extra {
-    margin-top: 18px;
-    font-size: 1.05rem;
-    color: #5E2E65;
-    text-align: center;
-}
-
-.login-extra a {
-    color: #7d3fa6;
-    text-decoration: none;
-    font-weight: 600;
-    margin-left: 4px;
-    transition: color 0.2s;
-}
-
-.login-extra a:hover {
-    color: #5E2E65;
-    text-decoration: underline;
-}
-
-@media (max-width: 900px) {
-    body {
-        justify-content: center;
-    }
-    .login-box {
-        border-radius: 12px;
-        height: auto;
-        margin: 60px 20px 20px 20px; /* crește margin-top */
-        width: 80vw;
-        max-width: 500px;
-        min-width: 220px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    .site-title {
-        top: 24px;
-        left: 24px;
-        font-size: 2.5rem; /* mai mare și pe tabletă */
-    }
-    .site-description {
-        position: static;
-        margin: 32px auto 0 auto;
-        left: unset;
-        top: unset;
-        max-width: 90vw;
-        font-size: 1.05rem;
-        padding: 14px 14px 14px 12px;
-        display: block;
-        text-align: center;
-    }
-}
-
-@media (max-width: 600px) {
-    .login-box {
-        width: 100%;
-        max-width: 340px;
-        padding: 30px 10px;
-        margin: 40px 5px 20px 5px; /* crește margin-top */
-        height: auto;
-        border-radius: 12px;
-    }
-    body {
-        align-items: flex-start;
-        padding-top: 30px;
-    }
-    .site-title {
-        top: 12px;
-        left: 12px;
-        font-size: 1.6rem; /* puțin mai mare pe mobil */
-    }
-    .site-description {
-        position: static;
-        margin: 18px auto 0 auto;
-        left: unset;
-        top: unset;
-        max-width: 98vw;
-        font-size: 0.98rem;
-        padding: 10px 8px;
-        display: block;
-        text-align: center;
-    }
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color var(--transition-speed),
+                color var(--transition-speed);
 }

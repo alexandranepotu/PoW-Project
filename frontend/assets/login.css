@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Ancizar Serif, serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.login-box {
+    background: var(--bg-tertiary);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 0 0 0 var(--border-radius-large);
+    box-shadow: var(--shadow-large);
+    width: 48vw;
+    max-width: 600px;
+    min-width: 320px;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    right: 0;
+    top: 0;
+    font-size: 1.1rem;
+}
+
+.login-box h2 {
+    margin-bottom: 24px;
+    color: var(--primary-color);
+    font-size: 2.2rem;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    font-size: 1.15rem;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: var(--text-light);
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.login-box button:hover {
+    background: var(--primary-hover);
+}
+
+/* Title styles */
+.site-title {
+    position: absolute;
+    top: 48px;
+    left: 48px;
+    color: var(--text-light);
+    font-size: 3.5rem;
+    font-family: 'Ancizar Serif', serif;
+    font-weight: 700;
+    text-shadow: var(--shadow-large);
+    letter-spacing: 2px;
+    z-index: 2;
+    user-select: none;
+}
+
+/* Description styles */
+.site-description {
+    position: absolute;
+    top: 65vh;
+    left: 48px;
+    max-width: 420px;
+    color: var(--text-light);
+    font-size: 1.35rem;
+    font-family: 'Ancizar Serif', serif;
+    text-shadow: var(--shadow-small);
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius-medium);
+    padding: 18px 22px 18px 18px;
+    z-index: 2;
+    user-select: none;
+    box-sizing: border-box;
+    transition: top var(--transition-speed);
+}
+
+.login-extra {
+    margin-top: 18px;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.login-extra a {
+    color: var(--primary-hover);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+    transition: color var(--transition-speed);
+}
+
+.login-extra a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    body {
+        justify-content: center;
+    }
+    .login-box {
+        border-radius: var(--border-radius-large);
+        height: auto;
+        margin: 60px 20px 20px 20px; /* crește margin-top */
+        width: 80vw;
+        max-width: 500px;
+        min-width: 220px;
+        box-shadow: var(--shadow-large);
+    }
+    .site-title {
+        top: 24px;
+        left: 24px;
+        font-size: 2.5rem; /* mai mare și pe tabletă */
+    }
+    .site-description {
+        position: static;
+        margin: 32px auto 0 auto;
+        left: unset;
+        top: unset;
+        max-width: 90vw;
+        font-size: 1.05rem;
+        padding: 14px 14px 14px 12px;
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-box {
+        width: 100%;
+        max-width: 340px;
+        padding: 30px 10px;
+        margin: 40px 5px 20px 5px; /* crește margin-top */
+        height: auto;
+        border-radius: var(--border-radius-large);
+    }
+    body {
+        align-items: flex-start;
+        padding-top: 30px;
+    }
+    .site-title {
+        top: 12px;
+        left: 12px;
+        font-size: 1.6rem; /* puțin mai mare pe mobil */
+    }
+    .site-description {
+        position: static;
+        margin: 18px auto 0 auto;
+        left: unset;
+        top: unset;
+        max-width: 98vw;
+        font-size: 0.98rem;
+        padding: 10px 8px;
+        display: block;
+        text-align: center;
+    }
+}
