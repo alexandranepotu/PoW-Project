@@ -5,6 +5,7 @@
   --text-dark: #eee;
   --primary-color: #5E2E65;
   
+  /* Using variables from style.css for consistency */
   --c1: #F9F5F9;
   --c2: #121212;
   --c3: #5C9E9A;
@@ -15,58 +16,49 @@
   --bg-primary: var(--c1);
   --bg-secondary: var(--c6);
   --text-primary: var(--c2);
-  --text-light: var(--c1);
   --accent-color: var(--c4);
-  --primary-hover: var(--c3);
   --transition-speed: 0.3s;
-  --transition-speed-fast: 0.2s;
-  --border-radius-full: 999px;
-  --border-radius-medium: 8px;
-  --border-radius-large: 12px;
-  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-large: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --primary-rgb: 94, 46, 101;
-  --secondary-rgb: 92, 158, 154;
 }
 
+/* Dark theme variables */
 :root[data-theme="dark"] {
   --bg-primary: var(--c2);
   --bg-secondary: #2C2F2B;
   --text-primary: var(--c1);
-  --text-light: var(--c2);
   --primary-color: var(--c3);
-  --primary-hover: var(--c4);
-  --shadow-small: 0 2px 4px rgba(255, 255, 255, 0.1);
-  --shadow-large: 0 4px 12px rgba(255, 255, 255, 0.15);
 }
 
 body {
-  margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color var(--transition-speed), color var(--transition-speed);
-  padding-top: 60px;
+  padding-top: 60px; /* spatiu pentru navbar fix */
 }
 
+/* Dark mode support using data-theme attribute */
 [data-theme="dark"] body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
+
+/* NAVBAR FIX SUS */
 header {
+  position: fixed;
   top: 0; 
-  left: 0; right: 0;
+  left: 0; 
+  right: 0;
   height: 60px;
   background: var(--primary-color);
-  color: var(--text-light);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
   z-index: 1000;
-  box-shadow: var(--shadow-large);
-  transition: background-color var(--transition-speed);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 header .logo {
@@ -82,49 +74,23 @@ header nav {
 
 header nav input[type="search"] {
   padding: 5px 10px;
-  border-radius: var(--border-radius-full);
+  border-radius: 20px;
   border: none;
   font-size: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 header nav a, header nav button {
-  color: var(--text-light);
+  color: white;
   text-decoration: none;
   background: transparent;
   border: none;
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  transition: color var(--transition-speed);
-}
-
-header nav button.theme-toggle {
-  font-size: 1.2rem;
-  padding: 0.4rem 0.8rem;
-  background: none;
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-  border-radius: var(--border-radius-full);
-  transition: background var(--transition-speed-fast), transform var(--transition-speed-fast);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-header nav button.theme-toggle:hover {
-  background: var(--primary-hover);
-  transform: scale(1.1);
 }
 
 header nav button:hover,
 header nav a:hover {
-  color: var(--accent-color);
   text-decoration: underline;
 }
 

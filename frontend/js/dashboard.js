@@ -6,10 +6,6 @@ class ThemeManager {
     }
 
     init() {
-        // Initialize theme based on priority:
-        // 1. Previously selected theme
-        // 2. System preference
-        // 3. Default to light
         const savedTheme = localStorage.getItem('theme');
         const initialTheme = savedTheme || (this.prefersDark.matches ? 'dark' : 'light');
         
@@ -22,6 +18,10 @@ class ThemeManager {
     }
 
     setupListeners() {
+        if (!this.toggleBtn) {
+        console.warn('Theme toggle button not found in DOM.');
+        return;
+    }
         // Toggle button click
         this.toggleBtn.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -84,6 +84,101 @@ class ThemeManager {
     }
 }
 
+class AuthManager {
+    constructor() {
+        this.apiUrl = '/PoW-Project/backend/public/api'; 
+        this.init();
+    }
+
+    init() {
+        //verifica daca userul este autentificat la incarcarea paginii
+        this.checkAuth();
+    }
+
+    checkAuth() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userData = localStorage.getItem('userData');
+        
+        //daca nu este autentificat, redirectioneaza la pagina de login
+        if (!isLoggedIn || isLoggedIn !== 'true' || !userData) {
+            console.log('User not authenticated, redirecting to login...');
+            this.redirectToLogin();
+            return false;
+        }
+        
+        console.log('User authenticated');
+        return true;
+    }
+
+    async logout() {
+        try {
+            console.log('Starting logout process...');
+            
+            //apeleaza API-ul de logout
+            const response = await fetch(`${this.apiUrl}/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                credentials: 'include' // Include cookies pentru sesiune
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                console.log('Logout successful on server');
+            } else {
+                console.warn('Server logout failed:', result.error);
+            }
+            
+        } catch (error) {
+            console.error('Logout API call failed:', error);
+        } finally {
+            //indiferent daca logout-ul a reusit sau nu, curata localStorage si redirectioneaza la pagina de login
+            this.clearLocalStorage();
+            this.redirectToLogin();
+        }
+    }
+
+    clearLocalStorage() {
+        // Clear all authentication data
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+        console.log('Local storage cleared');
+    }
+
+    redirectToLogin() {
+        //schimba URL-ul pentru a redirectiona la pagina de login
+        window.location.href = 'login.html';
+    }
+}
+
+// Global logout function for onclick events
+async function logout() {
+    if (window.authManager) {
+        await window.authManager.logout();
+    }
+}
+
+// Global theme toggle function for backward compatibility
+function toggleTheme() {
+    if (window.themeManager) {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        window.themeManager.applyTheme(newTheme);
+        window.themeManager.updateButtonIcon(newTheme);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     window.themeManager = new ThemeManager();
+    
+    if (window.authManager.checkAuth()) {
+        window.themeManager = new ThemeManager();
+    }
 });

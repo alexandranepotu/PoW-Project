@@ -21,19 +21,19 @@
         <span>Profile</span>
       </div>
       <div class="dropdown-content">
-        <a href="#account"><i class="fas fa-user-circle"></i> My Account</a>
-        <a href="#logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
+        <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
       </div>
     </div>
-    <button id="darkModeToggle" onclick="toggleTheme()">🌙</button>
+  <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
   </nav>
 </header>
 
 <main>
   <div class="chenare">
     <section class="about-adopt">
-      <h2>About Us</h2>
-      <p>Informații despre organizația noastră de adopție de animale. Ne dedicăm să conectăm animalele cu familiile potrivite și să oferim suport pentru toată viața.</p>
+      <h4>About Us</h4>
+      <h1>Bring home a new best friend by adopting or find a new family for your pet</h1>
       <div class="btn-group">
         <button>Adopt</button>
         <button>My Pet</button>
@@ -85,33 +85,7 @@
   </div>
 </main>
 
-<script>
-function toggleTheme() {
-  const html = document.documentElement;
-  const button = document.getElementById('darkModeToggle');
-  
-  // Toggle between light and dark themes
-  if (html.getAttribute('data-theme') === 'dark') {
-    html.setAttribute('data-theme', 'light');
-    button.textContent = '🌙';
-    localStorage.setItem('theme', 'light');
-  } else {
-    html.setAttribute('data-theme', 'dark');
-    button.textContent = '☀️';
-    localStorage.setItem('theme', 'dark');
-  }
-}
-
-// Load saved theme on page load
-document.addEventListener('DOMContentLoaded', function() {
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  const html = document.documentElement;
-  const button = document.getElementById('darkModeToggle');
-  
-  html.setAttribute('data-theme', savedTheme);
-  button.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-});
-</script>
+<script src="../js/dashboard.js"></script>
 
 </body>
 </html>

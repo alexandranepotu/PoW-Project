@@ -118,6 +118,10 @@ header nav a:hover {
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
 }
 
+.about-adopt h1 {
+  font-size: 60px;
+}
+
 .news {
   width: 60%;
   height: 600px;
@@ -264,16 +268,16 @@ header nav a:hover {
 .profile-dropdown .dropdown-content {
   display: none;
   position: absolute;
-  right: 0;
-  top: 120%;
-  min-width: 160px;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  z-index: 1001;
-  padding: 0.5rem 0;
-  transition: background-color var(--transition-speed), border-color var(--transition-speed);
+  z-index: 10;
+  right: 0;
+}
+
+.profile-dropdown.active .dropdown-content {
+  display: block;
 }
 
 [data-theme="dark"] .profile-dropdown .dropdown-content {
