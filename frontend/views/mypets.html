@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Adoption</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/mypets.css">
+</head>
+<body>
+<header>
+  <div class="logo">Pet Adoption</div>
+  <nav>
+    <input type="search" placeholder="Caută..." />
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+    <div class="profile-dropdown">
+      <div class="profile-text">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+      <div class="dropdown-content">
+        <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
+        <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
+      </div>
+    </div>
+    <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+  </nav>
+</header>
+
+  <main>
+     <section class="mypets-bar">
+    <h2>My Pets</h2>
+    <button class="btn-add">Add</button>
+  </section>
+  <div id="addPetModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+
+    <h3>Add a pet</h3>
+<form id="addPetForm">
+    <div class="form-sections">
+  <!-- basics -->
+  <section>
+    <h3>Pet details</h3>
+    <label for="petName">Name:</label>
+    <input type="text" id="petName" name="petName" required />
+
+    <label for="species">Specie:</label>
+    <input type="text" id="species" name="species" required />
+
+    <label for="breed">Breed:</label>
+    <input type="text" id="breed" name="breed" />
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" min="0" />
+
+    <label for="healthStatus">Health Status:</label>
+    <input type="text" id="healthStatus" name="healthStatus" />
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="3"></textarea>
+  </section>
+
+  <!-- Media Resources -->
+  <section id="mediaResourcesSection">
+    <h3>Media Resources</h3>
+    <div id="mediaResourcesList">
+      <!-- media inputs -->
+    </div>
+    <button type="button" id="btnAddMedia">Add Media</button>
+  </section>
+
+  <!-- Feeding Calendar -->
+  <section id="feedingCalendarSection">
+    <h3>Feeding Calendar</h3>
+    <div class="feeding-entry">
+        <label>Feed Time: <input type="time" name="feedTime[]" required /></label>
+        <label>Food Type: <input type="text" name="foodType[]" required /></label>
+        <label>Notes: <input type="text" name="feedNotes[]" /></label>
+        <button type="button" class="btn-remove-entry">Remove</button>
+    </div>
+    <button type="button" id="btnAddFeeding">Add Feeding</button>
+  </section>
+
+  <!-- Medical History -->
+  <section id="medicalHistorySection">
+    <h3>Medical History</h3>
+    <div class="medical-entry">
+    <label>Date: <input type="date" name="medicalDate[]" required /></label>
+    <label>Description: <input type="text" name="medicalDescription[]" required /></label>
+    <label>Treatment: <input type="text" name="medicalTreatment[]" /></label>
+    <label>Emergency: 
+        <select name="medicalEmergency[]">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+        </select>
+    </label>
+    <button type="button" class="btn-remove-entry">Remove</button>
+</div>
+    <button type="button" id="btnAddMedical">Add Medical Record</button>
+  </section>
+</div>
+  <button type="submit" class="btn-submit">Add Pet</button>
+</form>
+  </div>
+</div>
+
+  </main>
+
+  <script src="../js/global-theme.js"></script>
+  <script src="../js/mypets.js"></script>
+</body>
+</html>
