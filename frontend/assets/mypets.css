@@ -168,6 +168,26 @@ header nav a:hover {
   background-color: var(--accent-color);
 }
 
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+  background-color: #c0392b;
+}
+
 /* Layout container for form sections */
 .form-sections {
   display: flex;
@@ -186,7 +206,7 @@ header nav a:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 form#addPetForm {
-  max-width: 700px;
+  max-width: 1500px;
   margin: 2rem auto;
   background-color: var(--bg-secondary);
   padding: 2rem 2.5rem;

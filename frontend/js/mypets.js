@@ -11,24 +11,24 @@ const btnAddMedia = document.getElementById('btnAddMedia');
 const btnAddFeeding = document.getElementById('btnAddFeeding');
 const btnAddMedical = document.getElementById('btnAddMedical');
 
-// Deschide modal la click pe Add
+// Deschide ->click pe Add
 addBtn.addEventListener('click', () => {
   modal.style.display = 'flex';
 });
 
-// Închide modal la X
+// inchide la click x
 closeBtn.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
-// Închide modal dacă dai click în afara conținutului
+// inchide la click in afara modalului
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
     modal.style.display = 'none';
   }
 });
 
-// Funcție comună pentru creare buton Remove
+//fct comuna-> creare buton Remove
 function createRemoveBtn() {
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -40,7 +40,7 @@ function createRemoveBtn() {
   return btn;
 }
 
-// Adaugă media entry
+// media entry
 btnAddMedia.addEventListener('click', () => {
   const div = document.createElement('div');
   div.className = 'media-entry';
@@ -62,7 +62,7 @@ btnAddMedia.addEventListener('click', () => {
   mediaList.appendChild(div);
 });
 
-// Adaugă feeding entry
+//feeding entry
 btnAddFeeding.addEventListener('click', () => {
   const div = document.createElement('div');
   div.className = 'feeding-entry';
@@ -98,7 +98,7 @@ btnAddFeeding.addEventListener('click', () => {
   feedingList.appendChild(div);
 });
 
-// Adaugă medical record entry
+//medical record entry
 btnAddMedical.addEventListener('click', () => {
   const div = document.createElement('div');
   div.className = 'medical-entry';
@@ -160,12 +160,12 @@ form.addEventListener('submit', (e) => {
     age: form.age.value,
     healthStatus: form.healthStatus.value.trim(),
     description: form.description.value.trim(),
-    media: [],       // aici poți aduna media info
-    feedings: [],    // aici poți aduna feedings info
-    medical: []      // aici poți aduna medical records info
+    media: [],       // aduna media info
+    feedings: [],    // aduna feedings info
+    medical: []      // aduna medical records info
   };
 
-  // Exemplu simplificat de colectare media descriptions (nu fișierele, care trebuie tratate diferit)
+  // Exemplu simplificat de colectare media descriptions 
   const mediaDescs = form.querySelectorAll('input[name="mediaDescriptions[]"]');
   mediaDescs.forEach(input => {
     petData.media.push({ description: input.value });
@@ -197,8 +197,8 @@ form.addEventListener('submit', (e) => {
     });
   }
 
-  console.log('Animal adăugat:', petData);
-  alert(`Ai adăugat un nou animal: ${petData.name} (${petData.species})`);
+  console.log('Pet added:', petData);
+  alert(`You added a new pet: ${petData.name} (${petData.species})`);
 
   form.reset();
   mediaList.innerHTML = '';

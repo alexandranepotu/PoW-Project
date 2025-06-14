@@ -35,10 +35,11 @@
   </section>
   <div id="addPetModal" class="modal">
   <div class="modal-content">
-    <span class="close-btn">&times;</span>
+    
 
-    <h3>Add a pet</h3>
 <form id="addPetForm">
+    <span class="close-btn">&times;</span>
+    <h3>Add a pet</h3>
     <div class="form-sections">
   <!-- basics -->
   <section>
@@ -55,6 +56,13 @@
     <label for="age">Age:</label>
     <input type="number" id="age" name="age" min="0" />
 
+    <label for="sex">Sex:</label>
+    <select id="sex" name="sex">
+        <option value="">-- Select --</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+    </select>
+
     <label for="healthStatus">Health Status:</label>
     <input type="text" id="healthStatus" name="healthStatus" />
 
@@ -67,6 +75,14 @@
     <h3>Media Resources</h3>
     <div id="mediaResourcesList">
       <!-- media inputs -->
+         <label>Type:
+        <select name="mediaType[]">
+        <option value="image">Image</option>
+        <option value="video">Video</option>
+        </select>
+          <label>URL:
+    <input type="url" name="mediaUrl[]" required />
+  </label>
     </div>
     <button type="button" id="btnAddMedia">Add Media</button>
   </section>
