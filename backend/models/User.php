@@ -38,9 +38,7 @@ class User {
         } catch (PDOException $e) {
             //afiseaza eroarea SQL
             error_log('DB Error: ' . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
-            return false;
+            return ['success' => false, 'message' => 'Database error: ' . $e->getMessage()];
         }
     }
 
@@ -70,10 +68,8 @@ class User {
             if (!password_verify($password, $user['password_hash'])) {
                 error_log("Invalid password for user: " . $username);
                 return ['success' => false, 'message' => 'Invalid username or password'];
-            }
-
-            return ['success' => true, 'user' => [
-                'id' => $user['id'],
+            }            return ['success' => true, 'user' => [
+                'id' => $user['user_id'],
                 'username' => $user['username'],
                 'full_name' => $user['full_name'],
                 'email' => $user['email']
@@ -82,8 +78,30 @@ class User {
             error_log('Database error during login: ' . $e->getMessage());
             throw new Exception('Database error occurred');
         }
+    }    public function findById($id) {
+    $stmt = $this->pdo->prepare("SELECT * FROM users WHERE user_id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+public function updateProfile($userId, $fullName, $username, $email, $phone) {
+    try {
+        $sql = "UPDATE users SET full_name = :full_name, username = :username, email = :email, phone = :phone WHERE user_id = :user_id";
+        
+        $stmt = $this->pdo->prepare($sql);
+        
+        $result = $stmt->execute([
+            ':full_name' => $fullName,
+            ':username' => $username,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':user_id' => $userId
+        ]);
+        
+        return $result;
+    } catch (PDOException $e) {
+        error_log('Update profile error: ' . $e->getMessage());
+        return false;
     }
-
+}
 }
 ?>
-

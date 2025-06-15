@@ -1,6 +1,7 @@
 <?php
 //incarc modelul User si conexiunea la baza de date
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/JwtManager.php';
 require_once __DIR__ . '/../config/db.php';
 
 class AuthController {
@@ -104,11 +105,27 @@ class AuthController {
                 http_response_code(401);
                 echo json_encode(['error' => $loginResult['message']]);
                 return;
-            }
-
-            // succes!!!!
+            }            // succes!!!!
             $_SESSION['user_id'] = $loginResult['user']['id'];
             $_SESSION['username'] = $loginResult['user']['username'];
+            
+            // genereaza JWT token
+            $jwtToken = JwtManager::generateToken([
+                'user_id' => $loginResult['user']['id'],
+                'username' => $loginResult['user']['username'],
+                'email' => $loginResult['user']['email']
+            ]);
+            
+            // Set JWT in cookie -> httpOnly pentru securitate
+            setcookie(
+                'auth_token', 
+                $jwtToken, 
+                time() + (24 * 60 * 60), // 24 ore
+                '/', 
+                '', 
+                false, // set to true for HTTPS
+                true   // httpOnly
+            );
             
             echo json_encode([
                 'success' => true,
@@ -123,28 +140,46 @@ class AuthController {
             echo json_encode(['error' => 'Server error occurred']);
             return;
         }
+    }     public function logout() {
+        try {
+            error_log("\n=== Logout attempt started ===");
+            
+            //distruge sesiunea
+            session_start();
+            
+            //sterge toate datele din sesiune
+            $_SESSION = array();
+            
+            // Șterge cookie-ul JWT
+            setcookie('auth_token', '', time() - 3600, '/');
+            
+            //pt cookie
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+            
+            //distruge sesiunea
+            session_destroy();
+            
+            error_log("Session destroyed successfully");
+            
+            http_response_code(200);
+            echo json_encode([
+                'success' => true,
+                'message' => 'Logout successful'
+            ]);
+            return;
+
+        } catch (Exception $e) {
+            error_log('Logout error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['error' => 'Server error occurred during logout']);
+            return;
+        }
     }
 }
-
-// Pornire controller
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json');
-    $auth = new AuthController($pdo);
-
-    $path = $_SERVER['REQUEST_URI'];
-
-    if (strpos($path, 'register') !== false) {
-        $auth->register();
-        exit;
-    } elseif (strpos($path, 'login') !== false) {
-        session_start(); 
-        $auth->login();
-        exit;
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'Unknown action']);
-        exit;
-    }
-}
-
 ?>

@@ -93,11 +93,11 @@ class AuthManager {
     init() {
         //verifica daca userul este autentificat la incarcarea paginii
         this.checkAuth();
-    }
-
-    checkAuth() {
+    }    checkAuth() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = localStorage.getItem('userData');
+        
+        console.log('Checking auth - isLoggedIn:', isLoggedIn, 'userData:', userData);
         
         //daca nu este autentificat, redirectioneaza la pagina de login
         if (!isLoggedIn || isLoggedIn !== 'true' || !userData) {
@@ -139,10 +139,8 @@ class AuthManager {
             this.clearLocalStorage();
             this.redirectToLogin();
         }
-    }
-
-    clearLocalStorage() {
-        // Clear all authentication data
+    }    clearLocalStorage() {
+        // Clear all authentication data (JWT is handled by httpOnly cookie on server)
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userData');
         localStorage.removeItem('userToken');
@@ -176,9 +174,20 @@ function toggleTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    window.themeManager = new ThemeManager();
+    // Inițializează AuthManager primul pentru a verifica autentificarea
+    window.authManager = new AuthManager();
     
+    // Doar dacă utilizatorul este autentificat, inițializează ThemeManager
     if (window.authManager.checkAuth()) {
         window.themeManager = new ThemeManager();
+        
+        // Adaugă event listener pentru logout
+        const logoutLink = document.querySelector('a[href="#logout"]');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await logout();
+            });
+        }
     }
 });
