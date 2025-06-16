@@ -28,14 +28,14 @@
     <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
   </nav>
 </header>
-
   <main>
     <form id="profileForm">
         <h1>User info</h1>
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" required />
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="full_name" required />
+      
       <label for="username">Username:</label>
-      <input type="text" id="name" name="name" required />
+      <input type="text" id="username" name="username" required />
 
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" required />
@@ -43,25 +43,30 @@
       <label for="phone">Phone Number:</label>
       <input type="tel" id="phone" name="phone" />
 
-
       <button type="submit">Save changes</button>
-    </form>
-
-    <form id="addressForm">
+    </form>    <form id="addressForm">
        <h1>Address</h1>
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" required />
+        
+        <label for="county">County:</label>
+        <input type="text" id="county" name="county" />
+        
         <label for="city">City:</label>
         <input type="text" id="city" name="city" required />
-        <label for="county">County:</label>
-        <input type="text" id="county" name="county" required />
+        
         <label for="street">Street:</label>
         <input type="text" id="street" name="street" required />
+        
         <label for="postalCode">Postal Code:</label>
-        <input type="text" id="postalCode" name="postalCode" required />
+        <input type="text" id="postalCode" name="postal_code" />
 
-    <div id="message" class="hidden"></div>
-    <button type="submit">Save changes</button>
+    <div id="address-message" class="hidden"></div>
+    <button type="submit">Save Address</button>
+    </form>
   </main>
 
   <script src="../js/global-theme.js"></script>
+  <script src="../js/profile.js"></script>
 </body>
 </html>
