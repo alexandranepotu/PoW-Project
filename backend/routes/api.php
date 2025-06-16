@@ -87,16 +87,20 @@ try {
     if ($path === '/api/profile/update' && $method === 'POST') {
         require_once __DIR__ . '/../controllers/ProfileController.php';
         $controller = new ProfileController($pdo);
-        $controller->updateProfile();
-        exit;    }
+        $controller->updateProfile();        exit;    }
 
-    // ruta pentru pets
+    // rute pentru pets (dashboard general si My Pets)
     if (str_starts_with($path, '/api/pets')) {
-        require_once __DIR__ . '/../controllers/PetController.php';
-        $controller = new PetController($pdo);
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        
+        if ($path === '/api/pets' && $method === 'GET') {
+            $controller->getAllPets(); // Pentru dashboard general
+            exit;
+        }
         
         if ($path === '/api/pets/my' && $method === 'GET') {
-            $controller->getMyPets();
+            $controller->getMyPets(); // Pentru My Pets (backward compatibility)
             exit;
         }
         
@@ -125,6 +129,129 @@ try {
             $controller->deleteAddress();
             exit;
         }
+    }    // rute pentru My Pets
+    if (preg_match('#^/api/mypets$#', $path)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        
+        if ($method === 'GET') {
+            $controller->getMyPets();
+        } elseif ($method === 'POST') {
+            $controller->addPet();
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // Detalii animal specific
+    if (preg_match('#^/api/mypets/(\d+)$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $petId = $matches[1];
+        
+        if ($method === 'GET') {
+            $controller->getPetDetails($petId);
+        } elseif ($method === 'PUT') {
+            $controller->updatePet($petId);
+        } elseif ($method === 'DELETE') {
+            $controller->deletePet($petId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // add feeding record
+    if (preg_match('#^/api/mypets/(\d+)/feeding$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $petId = $matches[1];
+        
+        if ($method === 'POST') {
+            $controller->addFeedingRecord($petId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // add medical record
+    if (preg_match('#^/api/mypets/(\d+)/medical$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $petId = $matches[1];
+        
+        if ($method === 'POST') {
+            $controller->addMedicalRecord($petId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // Upload media
+    if (preg_match('#^/api/mypets/(\d+)/media$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $petId = $matches[1];
+        
+        if ($method === 'POST') {
+            $controller->uploadMedia($petId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // sterge feedings record
+    if (preg_match('#^/api/mypets/feeding/(\d+)$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $feedId = $matches[1];
+        
+        if ($method === 'DELETE') {
+            $controller->deleteFeedingRecord($feedId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    // sterge medical record
+    if (preg_match('#^/api/mypets/medical/(\d+)$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $recordId = $matches[1];
+        
+        if ($method === 'DELETE') {
+            $controller->deleteMedicalRecord($recordId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
+    }
+    
+    //sterge media
+    if (preg_match('#^/api/mypets/media/(\d+)$#', $path, $matches)) {
+        require_once __DIR__ . '/../controllers/MyPetsController.php';
+        $controller = new MyPetsController();
+        $mediaId = $matches[1];
+        
+        if ($method === 'DELETE') {
+            $controller->deleteMedia($mediaId);
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        exit;
     }
 
     // daca nicio ruta nu se potriveste
