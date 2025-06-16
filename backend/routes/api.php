@@ -88,8 +88,7 @@ try {
         require_once __DIR__ . '/../controllers/ProfileController.php';
         $controller = new ProfileController($pdo);
         $controller->updateProfile();
-        exit;
-    }
+        exit;    }
 
     // ruta pentru pets
     if (str_starts_with($path, '/api/pets')) {
@@ -103,6 +102,27 @@ try {
         
         if ($path === '/api/pets' && $method === 'POST') {
             $controller->addPet();
+            exit;
+        }
+    }
+
+    // rute pentru adrese
+    if (str_starts_with($path, '/api/address')) {
+        require_once __DIR__ . '/../controllers/AddressController.php';
+        $controller = new AddressController();
+        
+        if ($path === '/api/address' && $method === 'GET') {
+            $controller->getAddress();
+            exit;
+        }
+        
+        if ($path === '/api/address/update' && $method === 'POST') {
+            $controller->updateAddress();
+            exit;
+        }
+        
+        if ($path === '/api/address' && $method === 'DELETE') {
+            $controller->deleteAddress();
             exit;
         }
     }
