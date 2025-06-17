@@ -1,7 +1,7 @@
   document.getElementById('filterForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const params = new URLSearchParams(new FormData(this)).toString();
-  fetch('animal.php?' + params)
+  fetch('PetPageModel.php?' + params)
     .then(response => response.json())
     .then(data => {
       const list = document.getElementById('animalList');
