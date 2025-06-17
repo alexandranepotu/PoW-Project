@@ -21,10 +21,11 @@ class MyPetsManager {
         // sa nu fie deschis automat modalul
         if (modal) {
             modal.style.display = 'none';
-        }if (addBtn && modal) {
+        }        if (addBtn && modal) {
             addBtn.addEventListener('click', () => {
                 modal.style.display = 'flex';
                 this.setupFormEntryManagement();
+                this.setupMediaPreview();
             });
         }
         
@@ -712,44 +713,37 @@ class MyPetsManager {
             </div>        `;        
         container.appendChild(newEntry);
     }
-    previewMediaFiles(files) {
-        const previewContainer = document.getElementById('mediaPreview');
-        if (!previewContainer) return;
-        
-        previewContainer.innerHTML = '';
-        
-        if (!files || files.length === 0) return;
-        
-        const previewGrid = document.createElement('div');
-        previewGrid.className = 'media-preview-grid';
-        previewGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;';
-        previewContainer.appendChild(previewGrid);
+    previewMediaFiles(files, container) {
+        container.innerHTML = '';
         
         Array.from(files).forEach((file, index) => {
             const previewItem = document.createElement('div');
             previewItem.className = 'preview-item';
-            previewItem.style.cssText = 'border: 1px solid #ddd; padding: 10px; border-radius: 5px; text-align: center;';
             
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let mediaElement = '';
-                if (file.type.startsWith('image/')) {
-                    mediaElement = `<img src="${e.target.result}" alt="Preview ${index}" style="max-width: 100%; max-height: 120px; object-fit: cover;">`;
-                } else if (file.type.startsWith('video/')) {
-                    mediaElement = `<video src="${e.target.result}" style="max-width: 100%; max-height: 120px;" controls></video>`;
-                }
-                
-                previewItem.innerHTML = `
-                    ${mediaElement}
-                    <div style="margin-top: 5px; font-size: 12px;">
-                        <strong>${file.name}</strong><br>
-                        <small>${(file.size / 1024 / 1024).toFixed(2)} MB</small>
-                    </div>
-                `;
-            };
-            reader.readAsDataURL(file);
-            previewGrid.appendChild(previewItem);
-        });    }
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                previewItem.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.controls = true;
+                video.onload = () => URL.revokeObjectURL(video.src);
+                previewItem.appendChild(video);
+            }
+            
+            const fileName = document.createElement('strong');
+            fileName.textContent = file.name;
+            previewItem.appendChild(fileName);
+            
+            const fileSize = document.createElement('small');
+            fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+            previewItem.appendChild(fileSize);
+            
+            container.appendChild(previewItem);
+        });
+    }
     
     formatHealthStatus(healthStatus) {
         return this.renderer.formatHealthStatus(healthStatus);
@@ -765,3 +759,68 @@ let myPetsManager;
 document.addEventListener('DOMContentLoaded', () => {
     myPetsManager = new MyPetsManager();
 });
+
+async function uploadMediaFiles(petId, files, descriptions) {
+    const formData = new FormData();
+    formData.append('pet_id', petId);
+    
+    //adauga fisierele
+    Array.from(files).forEach((file, index) => {
+        formData.append('files[]', file);
+        formData.append('descriptions[]', descriptions[index] || '');
+    });
+    
+    try {
+        const response = await fetch('/backend/public/index.php/api/mypets/upload-media', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+        
+        const result = await response.json();
+        return result;
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        throw error;
+    }
+}
+
+// in fctde adăugare animal
+async function handleAddPet(formData) {
+    try {
+        // salveaza pet mai inati
+        const petResponse = await fetch('/backend/public/index.php/api/mypets', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const petResult = await petResponse.json();
+        if (!petResult.success) {
+            throw new Error(petResult.message);
+        }
+        
+        const petId = petResult.pet.id;
+        
+        // Upload media files daca exista
+        const fileInput = document.getElementById('mediaFiles');
+        if (fileInput.files.length > 0) {
+            const descriptions = [];
+            document.querySelectorAll('.media-description').forEach(input => {
+                descriptions.push(input.value);
+            });
+            
+            await uploadMediaFiles(petId, fileInput.files, descriptions);
+        }
+        
+        showMessage('Pet added successfully with media!', 'success');
+        closeModal('addPetModal');
+        loadPets(); // reincarca lista
+        
+    } catch (error) {
+        showMessage('Error: ' + error.message, 'error');
+    }
+}

@@ -1,0 +1,209 @@
+/* DARK THEME -> componenete */
+[data-theme="dark"] .pet-card {
+  background: var(--bg-secondary);
+  border-color: var(--c3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .pet-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .basic-info,
+[data-theme="dark"] .media-gallery,
+[data-theme="dark"] .feeding-section,
+[data-theme="dark"] .medical-section {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .basic-info h3,
+[data-theme="dark"] .media-gallery h3 {
+  color: var(--c3);
+  border-bottom-color: var(--c3);
+}
+
+[data-theme="dark"] .feeding-section h3 {
+  color: var(--c4);
+  border-bottom-color: var(--c4);
+}
+
+[data-theme="dark"] .medical-section h3 {
+  color: var(--c3);
+  border-bottom-color: var(--c3);
+}
+
+[data-theme="dark"] .status-excellent { 
+  background: rgba(40, 167, 69, 0.2); 
+  color: #4caf50; 
+}
+
+[data-theme="dark"] .status-good { 
+  background: rgba(255, 193, 7, 0.2); 
+  color: var(--c4); 
+}
+
+[data-theme="dark"] .status-fair { 
+  background: rgba(255, 87, 34, 0.2); 
+  color: #ff7043; 
+}
+
+[data-theme="dark"] .status-poor { 
+  background: rgba(244, 67, 54, 0.2); 
+  color: #f44336; 
+}
+
+[data-theme="dark"] .feeding-item,
+[data-theme="dark"] .medical-item {
+  background: var(--bg-secondary);
+  border-color: var(--c3);
+}
+
+[data-theme="dark"] .feeding-time {
+  color: var(--c4);
+}
+
+[data-theme="dark"] .medical-type {
+  color: var(--c3);
+}
+
+[data-theme="dark"] .medical-date {
+  color: var(--c3);
+}
+
+[data-theme="dark"] .last-fed {
+  background: rgba(238, 165, 37, 0.2);
+  color: var(--c4);
+}
+
+[data-theme="dark"] .vaccination-status {
+  background: rgba(92, 158, 154, 0.2);
+  color: var(--c3);
+}
+
+[data-theme="dark"] .empty-media {
+  background: var(--bg-secondary);
+  border-color: var(--c3);
+  color: var(--c3);
+}
+
+[data-theme="dark"] .media-more {
+  background: var(--c3);
+}
+
+[data-theme="dark"] .btn-edit {
+  background: var(--c4);
+}
+
+[data-theme="dark"] .btn-edit:hover {
+  background: #d49420;
+}
+
+[data-theme="dark"] .btn-view {
+  background: var(--c3);
+}
+
+[data-theme="dark"] .btn-view:hover {
+  background: var(--c5);
+}
+
+[data-theme="dark"] .no-pets-message {
+  background: var(--bg-primary);
+  border-color: var(--c3);
+}
+
+[data-theme="dark"] .no-pets-message h3 {
+  color: var(--c3);
+}
+
+[data-theme="dark"] .no-pets-message .btn-add-first {
+  background: var(--c3);
+}
+
+[data-theme="dark"] .no-pets-message .btn-add-first:hover {
+  background: var(--c4);
+}
+
+[data-theme="dark"] .pet-card-skeleton {
+  background: var(--bg-secondary);
+  border-color: var(--c3);
+}
+
+[data-theme="dark"] .skeleton-section {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .skeleton-line {
+  background: var(--c3);
+}
+
+/* DARK THEME - FORMS */
+[data-theme="dark"] .modal-content {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+}
+
+[data-theme="dark"] .modal-header {
+  border-bottom-color: var(--c3);
+}
+
+[data-theme="dark"] .modal-header h2,
+[data-theme="dark"] .close-btn {
+  color: var(--c3);
+}
+
+[data-theme="dark"] .close-btn:hover {
+  color: var(--c4);
+}
+
+[data-theme="dark"] .age-group select {
+  background-color: var(--bg-secondary);
+  border-color: var(--c3);
+}
+
+[data-theme="dark"] .age-group select:focus {
+  border-color: var(--c3);
+  box-shadow: 0 0 0 3px rgba(92, 158, 154, 0.2);
+}
+
+[data-theme="dark"] .feeding-entry,
+[data-theme="dark"] .medical-entry,
+[data-theme="dark"] .preview-item,
+[data-theme="dark"] .form-sections section {
+  background-color: var(--bg-secondary);
+  border-color: var(--c3);
+}
+
+[data-theme="dark"] .feeding-entry h4,
+[data-theme="dark"] .medical-entry h4,
+[data-theme="dark"] .form-sections section h3 {
+  color: var(--c3);
+}
+
+[data-theme="dark"] .form-sections section h3 {
+  border-bottom-color: var(--c3);
+}
+
+[data-theme="dark"] .preview-item:hover,
+[data-theme="dark"] .feeding-entry:hover,
+[data-theme="dark"] .medical-entry:hover {
+  border-color: var(--c4);
+}
+
+/* DARK THEME - MESSAGE COMPONENTS */
+[data-theme="dark"] .message-success {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #4caf50;
+  border-color: rgba(40, 167, 69, 0.4);
+}
+
+[data-theme="dark"] .message-error {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border-color: rgba(244, 67, 54, 0.4);
+}
+
+[data-theme="dark"] .message-warning {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: var(--c4);
+  border-color: rgba(255, 193, 7, 0.4);
+}

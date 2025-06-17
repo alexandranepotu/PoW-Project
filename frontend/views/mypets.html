@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Adoption</title>
-  <link rel="stylesheet" href="../assets/style.css">
-  <link rel="stylesheet" href="../assets/mypets.css">
+  <title>Pet Adoption</title>  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/mypets-base.css">
+  <link rel="stylesheet" href="../assets/mypets-components.css">
+  <link rel="stylesheet" href="../assets/mypets-forms.css">
+  <link rel="stylesheet" href="../assets/mypets-dark-theme.css">
 </head>
 <body>
 <header>
@@ -134,7 +136,7 @@
     <h3>Media Resources</h3>
     <div class="form-group">
       <label for="petMediaFiles">Upload Images/Videos:</label>
-      <input type="file" id="petMediaFiles" name="mediaFiles" accept="image/*,video/*" multiple>
+      <input type="file" id="petMediaFiles" name="petMediaFiles" accept="image/*,video/*" multiple>
       <small>You can select multiple images and videos from your computer</small>
     </div>
     <div class="form-group">
@@ -142,7 +144,7 @@
       <input type="text" id="mediaDescription" name="mediaDescription" placeholder="Description for uploaded files...">
     </div>
     <div id="mediaPreview" class="media-preview-container"></div>
-  </section>  <!-- Feeding Calendar -->
+  </section><!-- Feeding Calendar -->
   <section id="feedingCalendarSection">
     <h3>Feeding Calendar</h3>
     <div id="feedingEntries">
@@ -161,7 +163,7 @@
         </div>
       </div>
     </div>
-    <button type="button" id="btnAddFeeding">+ Add Another Feeding Entry</button>
+    <button type="button" class="btn-add" id="btnAddFeeding">+ Add Another Feeding Entry</button>
   </section>
   <!-- Medical History -->
   <section id="medicalHistorySection">
@@ -189,7 +191,7 @@
         </div>
       </div>
     </div>
-    <button type="button" id="btnAddMedical">+ Add Another Medical Record</button>
+    <button type="button" class="btn-add" id="btnAddMedical">+ Add Another Medical Record</button>
   </section>
 </div>
   <button type="submit" class="btn-submit">Add Pet</button>
@@ -199,13 +201,13 @@
 
   </main>
   <script src="../js/global-theme.js"></script>
-  <!-- Template-uri HTML -->
+  <!-- TEMPLATEURI DINAMICE HTML -->
   <script src="../js/mypets-templates.js"></script>
-  <!-- DOM Management -->
+  <!-- DOM MANAGEMENT(adauga/sterge/modifica)-->
   <script src="../js/mypets-dom.js"></script>
-  <!-- Rendering -->
+  <!-- RENDERING -->
   <script src="../js/mypets-renderer.js"></script>
-  <!-- Logica principală -->
+  <!-- LOGICA PRINCIPALA -->
   <script src="../js/mypets.js"></script>
 </body>
 </html>

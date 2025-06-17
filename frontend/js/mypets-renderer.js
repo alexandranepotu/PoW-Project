@@ -1,4 +1,4 @@
-// Clasă pentru rendering în My Pets
+// pt rendering in MyPets
 class MyPetsRenderer {
     
     constructor() {
@@ -62,7 +62,7 @@ class MyPetsRenderer {
             <div class="record-item">
                 <div class="record-info">
                     <strong>${new Date(record.feed_time).toLocaleString('ro-RO')}</strong>
-                    <p>Tip hrană: ${record.food_type}</p>
+                    <p>Food type: ${record.food_type}</p>
                     ${record.notes ? `<p>Note: ${record.notes}</p>` : ''}
                 </div>
                 <button onclick="myPetsManager.deleteFeedingRecord(${record.feed_id})" class="btn-delete-small">Delete</button>
@@ -94,12 +94,11 @@ class MyPetsRenderer {
         if (!media || media.length === 0) {
             return '<p class="empty-message">No media</p>';
         }
-        
-        return media.map(item => `
+          return media.map(item => `
             <div class="media-item">
                 ${item.type === 'image' ? 
-                    `<img src="/${item.file_path}" alt="${item.description || 'Pet image'}" loading="lazy">` :
-                    `<video src="/${item.file_path}" controls preload="metadata"></video>`
+                    `<img src="http://localhost/${item.file_path}" alt="${item.description || 'Pet image'}" loading="lazy">` :
+                    `<video src="http://localhost/${item.file_path}" controls preload="metadata"></video>`
                 }
                 <div class="media-controls">
                     <p class="media-description">${item.description || ''}</p>
