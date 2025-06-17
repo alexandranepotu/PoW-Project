@@ -152,9 +152,8 @@ class MyPetsDOMManager {
         reader.onload = (e) => {
             let mediaElement = '';
             if (file.type.startsWith('image/')) {
-                mediaElement = `<img src="${e.target.result}" alt="Preview ${index}" style="max-width: 150px; max-height: 150px; display: block;">`;
-            } else if (file.type.startsWith('video/')) {
-                mediaElement = `<video src="${e.target.result}" controls style="max-width: 150px; max-height: 150px; display: block;"></video>`;
+                mediaElement = `<img src="${e.target.result}" alt="Preview ${index}" style="max-width: 150px; max-height: 150px; display: block;">`;            } else if (file.type.startsWith('video/')) {
+                mediaElement = `<video src="${e.target.result}" muted style="max-width: 150px; max-height: 150px; display: block;"></video>`;
             }
             
             previewItem.innerHTML = `

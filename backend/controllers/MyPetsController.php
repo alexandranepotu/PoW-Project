@@ -347,10 +347,25 @@ class MyPetsController {
                 'sex' => $input['sex'] ?? null,
                 'health_status' => $input['healthStatus'] ?? $input['health_status'] ?? '',
                 'description' => $input['description'] ?? '',
-                'added_by' => $user->user_id
-            ];
+                'added_by' => $user->user_id            ];
             
-            $petId = $this->petModel->insertPet($petData);
+            $result = $this->petModel->insertPet($petData);
+            
+            if (!$result['success']) {
+                if (isset($result['requiresAddress']) && $result['requiresAddress']) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'error' => $result['error'],
+                        'requiresAddress' => true
+                    ]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(['error' => $result['error']]);
+                }
+                return;
+            }
+            
+            $petId = $result['petId'];
             
             //adauga feedings daca exista
             if (!empty($input['feedings'])) {
@@ -370,7 +385,8 @@ class MyPetsController {
             echo json_encode([
                 'success' => true,
                 'message' => 'Pet added successfully',
-                'pet_id' => $petId
+                'pet_id' => $petId,
+                'address' => $result['address']
             ]);
             
         } catch (Exception $e) {
@@ -394,6 +410,45 @@ class MyPetsController {
             error_log('Error getting all pets: ' . $e->getMessage());
             http_response_code(500);
             echo json_encode(['error' => 'Failed to fetch pets']);
+        }
+    }    // PUT /api/mypets/{id}/pickup-address -> actualizare adresa utilizator
+    public function updatePickupAddress($petId) {
+        $user = AuthMiddleware::requireAuth();
+        
+        try {
+            // verif daca utiliz are are adresa setata           
+            // verif daca animalul apartine utilizatorului
+            $petDetails = $this->petModel->getPetDetails($petId, $user->user_id);
+            if (!$petDetails) {
+                http_response_code(403);
+                echo json_encode(['error' => 'Access denied - pet not found or does not belong to you']);
+                return;
+            }
+            
+            $result = $this->petModel->updatePickupAddress($petId, $user->user_id);
+            
+            if ($result['success']) {
+                echo json_encode([
+                    'success' => true, 
+                    'message' => $result['message'],
+                    'address' => $result['address']
+                ]);
+            } else {
+                if (isset($result['requiresAddress']) && $result['requiresAddress']) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'error' => $result['error'],
+                        'requiresAddress' => true
+                    ]);
+                } else {
+                    http_response_code(400);
+                    echo json_encode(['error' => $result['error']]);
+                }
+            }
+            
+        } catch (Exception $e) {
+            error_log('Error in updatePickupAddress: ' . $e->getMessage());
+            http_response_code(500);            echo json_encode(['error' => 'Internal server error']);
         }
     }
 }

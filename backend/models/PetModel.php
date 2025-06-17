@@ -7,12 +7,21 @@ class PetModel {
     
     public function __construct() {
         global $pdo;
-        $this->pdo = $pdo;
-    }
-
-//operatii crud
+        $this->pdo = $pdo;    }    //operatii crud
     public function insertPet($data) {
         try {
+            // obtine adresa utilizatorului
+            $pickupAddress = $this->getUserAddress($data['added_by']);
+            
+            //verif daca adresa exista
+            if (!$pickupAddress) {
+                return [
+                    'success' => false,
+                    'error' => 'No address found. Please add your address in Profile page first.',
+                    'requiresAddress' => true
+                ];
+            }
+            
             $stmt = $this->pdo->prepare("INSERT INTO animals (name, species, breed, age, sex, health_status, description, added_by, pickup_address) 
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $result = $stmt->execute([
@@ -24,17 +33,21 @@ class PetModel {
                 $data['health_status'] ?? 'unknown',
                 $data['description'],
                 $data['added_by'], 
-                $data['pickup_address'] ?? 'Not specified'
+                $pickupAddress
             ]);
             if ($result) {
-                return $this->pdo->lastInsertId();
+                return [
+                    'success' => true,
+                    'petId' => $this->pdo->lastInsertId(),
+                    'address' => $pickupAddress
+                ];
             }
-            return false;
+            return ['success' => false, 'error' => 'Failed to add pet'];
         } catch (PDOException $e) {
             error_log('Error inserting pet: ' . $e->getMessage());
-            return false;
+            return ['success' => false, 'error' => 'Database error'];
         }
-    }    
+    }
     public function insertFeedings($petId, $feedings) {
         try {
             $stmt = $this->pdo->prepare("INSERT INTO feeding_calendar (animal_id, feed_time, food_type, notes) 
@@ -313,8 +326,7 @@ class PetModel {
         } catch (PDOException $e) {
             error_log('Error deleting media resource: ' . $e->getMessage());
             return false;
-        }
-    }
+        }    }
     
     //actualizare info pet
     public function updatePet($petId, $userId, $data) {
@@ -323,10 +335,10 @@ class PetModel {
             $stmt = $this->pdo->prepare("SELECT animal_id FROM animals WHERE animal_id = ? AND added_by = ?");
             $stmt->execute([$petId, $userId]);
             if (!$stmt->fetch()) {
-                return false; //nu are drept sa verifice
+                return false; //nu are drept sa modifice
             }
             
-            $stmt = $this->pdo->prepare("UPDATE animals SET name = ?, species = ?, breed = ?, age = ?, sex = ?, health_status = ?, description = ?, pickup_address = ? WHERE animal_id = ?");
+            $stmt = $this->pdo->prepare("UPDATE animals SET name = ?, species = ?, breed = ?, age = ?, sex = ?, health_status = ?, description = ? WHERE animal_id = ?");
             return $stmt->execute([
                 $data['name'],
                 $data['species'],
@@ -335,7 +347,6 @@ class PetModel {
                 $data['sex'],
                 $data['health_status'],
                 $data['description'],
-                $data['pickup_address'],
                 $petId
             ]);
             
@@ -387,6 +398,91 @@ class PetModel {
         } catch (PDOException $e) {
             error_log('Error getting pet statistics: ' . $e->getMessage());
             return [];
+        }
+    }   
+    public function updatePickupAddress($petId, $userId) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT animal_id FROM animals WHERE animal_id = ? AND added_by = ?");
+            $stmt->execute([$petId, $userId]);
+            if (!$stmt->fetch()) {
+                error_log("Pet $petId does not belong to user $userId");
+                return ['success' => false, 'error' => 'Pet does not belong to user']; 
+            }
+            
+            // obt adresa utilizatorului
+            $userAddress = $this->getUserAddress($userId);
+            
+            //verif daca utilizatorul are adresa
+            if (!$userAddress) {
+                return [
+                    'success' => false, 
+                    'error' => 'No address found. Please add your address in Profile page first.',
+                    'requiresAddress' => true
+                ];
+            }
+            
+            $stmt = $this->pdo->prepare("UPDATE animals SET pickup_address = ? WHERE animal_id = ?");
+            $result = $stmt->execute([
+                $userAddress,
+                $petId
+            ]);
+            
+            if ($result) {
+                return [
+                    'success' => true, 
+                    'address' => $userAddress,
+                    'message' => 'Pickup address updated successfully!'
+                ];
+            }
+            
+            return ['success' => false, 'error' => 'Failed to update address'];
+            
+        } catch (PDOException $e) {
+            error_log('Error updating pickup address: ' . $e->getMessage());
+            return ['success' => false, 'error' => 'Database error'];
+        }
+    }
+    
+    //obtine adresa utilizatorului pentru afisare
+    public function getUserAddressForDisplay($userId) {
+        return $this->getUserAddress($userId);
+    }  
+    public function getUserAddress($userId) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM user_addresses WHERE user_id = ? LIMIT 1");
+            $stmt->execute([$userId]);
+            $address = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$address) {
+                //daca nu are adresa setata
+                return null;
+            }
+            
+            // adresa completa
+            $fullAddress = [];
+            if (!empty($address['street'])) $fullAddress[] = $address['street'];
+            if (!empty($address['city'])) $fullAddress[] = $address['city'];
+            if (!empty($address['county'])) $fullAddress[] = $address['county'];
+            if (!empty($address['country'])) $fullAddress[] = $address['country'];
+            if (!empty($address['postal_code'])) $fullAddress[] = $address['postal_code'];
+            
+            $result = implode(', ', $fullAddress);
+            
+            return !empty($result) ? $result : null;
+            
+        } catch (PDOException $e) {
+            error_log('Error getting user address: ' . $e->getMessage());
+            return null;
+        }    }    // verif daca utilizatorul are o adresa reala
+    public function userHasRealAddress($userId) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) as count FROM user_addresses WHERE user_id = ?");
+            $stmt->execute([$userId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'] > 0;
+        } catch (PDOException $e) {
+            error_log('Error checking user address: ' . $e->getMessage());
+            return false;
         }
     }
 }

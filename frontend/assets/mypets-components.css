@@ -326,7 +326,7 @@
 }
 
 .btn-view:hover {
-  background: var(--c3);
+  background: var(--primary-hover);
 }
 
 /* EMPTY STATES(pt cand nu sunt date de afisat) */

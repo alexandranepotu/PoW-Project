@@ -93,12 +93,11 @@ class MyPetsRenderer {
     renderMediaGallery(media) {
         if (!media || media.length === 0) {
             return '<p class="empty-message">No media</p>';
-        }
-          return media.map(item => `
+        }        return media.map(item => `
             <div class="media-item">
                 ${item.type === 'image' ? 
                     `<img src="http://localhost/${item.file_path}" alt="${item.description || 'Pet image'}" loading="lazy">` :
-                    `<video src="http://localhost/${item.file_path}" controls preload="metadata"></video>`
+                    `<video src="http://localhost/${item.file_path}" muted preload="metadata" controls="false"></video>`
                 }
                 <div class="media-controls">
                     <p class="media-description">${item.description || ''}</p>
@@ -121,35 +120,5 @@ class MyPetsRenderer {
         const displayName = this.healthStatusMap[cleanStatus] || healthStatus;
         
         return `<span class="health-status-${cleanStatus}">${displayName}</span>`;
-    }
-
-    // rendereaza preview pentru media în formularul de adaugare
-    renderMediaPreview(files) {
-        if (!files || files.length === 0) return '';
-        
-        const previews = Array.from(files).map((file, index) => {
-            let mediaElement = '';
-            if (file.type.startsWith('image/')) {
-                mediaElement = `<img alt="Preview ${index}" style="max-width: 100%; max-height: 120px; object-fit: cover;">`;
-            } else if (file.type.startsWith('video/')) {
-                mediaElement = `<video style="max-width: 100%; max-height: 120px;" controls></video>`;
-            }
-            
-            return `
-                <div class="preview-item" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; text-align: center;">
-                    ${mediaElement}
-                    <div style="margin-top: 5px; font-size: 12px;">
-                        <strong>${file.name}</strong><br>
-                        <small>${(file.size / 1024 / 1024).toFixed(2)} MB</small>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        return `
-            <div class="media-preview-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
-                ${previews}
-            </div>
-        `;
     }
 }

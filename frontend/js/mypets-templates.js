@@ -191,9 +191,7 @@ const MyPetsTemplates = {
             <h3>You have no pets</h3>
             <p>Add your first pet</p>
         </div>
-    `,
-
-    // Template pentru modal generic
+    `,    // Template pentru modal generic
     modal: (id, title) => `
         <div class="modal-content">
             <div class="modal-header">
@@ -202,5 +200,133 @@ const MyPetsTemplates = {
             </div>
             <div class="modal-body"></div>
         </div>
+    `,
+
+    // Template pentru editarea unui animal
+    editPetForm: (pet) => `
+        <form id="editPetForm" class="edit-pet-form">
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-group">
+                    <label for="edit_name">Name:</label>                    <input type="text" id="edit_name" name="name" value="${pet.name || ''}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_species">Species:</label>
+                    <select id="edit_species" name="species" required>
+                        <option value="dog" ${(pet.species || '') === 'dog' ? 'selected' : ''}>Dog</option>
+                        <option value="cat" ${(pet.species || '') === 'cat' ? 'selected' : ''}>Cat</option>
+                        <option value="bird" ${(pet.species || '') === 'bird' ? 'selected' : ''}>Bird</option>
+                        <option value="rabbit" ${(pet.species || '') === 'rabbit' ? 'selected' : ''}>Rabbit</option>
+                        <option value="other" ${(pet.species || '') === 'other' ? 'selected' : ''}>Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_breed">Breed:</label>
+                    <input type="text" id="edit_breed" name="breed" value="${pet.breed || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_age">Age (years):</label>
+                    <input type="number" id="edit_age" name="age" value="${pet.age || ''}" min="0" max="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_sex">Sex:</label>
+                    <select id="edit_sex" name="sex">
+                        <option value="">Unknown</option>
+                        <option value="0" ${(pet.sex === '0' || pet.sex === 0) ? 'selected' : ''}>Male</option>
+                        <option value="1" ${(pet.sex === '1' || pet.sex === 1) ? 'selected' : ''}>Female</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_health_status">Health Status:</label>
+                    <select id="edit_health_status" name="health_status">
+                        <option value="">Select status</option>
+                        <option value="healthy" ${(pet.health_status || '') === 'healthy' ? 'selected' : ''}>Healthy</option>
+                        <option value="excellent" ${(pet.health_status || '') === 'excellent' ? 'selected' : ''}>Excellent</option>
+                        <option value="good" ${(pet.health_status || '') === 'good' ? 'selected' : ''}>Good</option>
+                        <option value="fair" ${(pet.health_status || '') === 'fair' ? 'selected' : ''}>Fair</option>
+                        <option value="poor" ${(pet.health_status || '') === 'poor' ? 'selected' : ''}>Poor</option>
+                        <option value="recovering" ${(pet.health_status || '') === 'recovering' ? 'selected' : ''}>Recovering</option>
+                        <option value="injured" ${(pet.health_status || '') === 'injured' ? 'selected' : ''}>Injured</option>
+                        <option value="sick" ${(pet.health_status || '') === 'sick' ? 'selected' : ''}>Sick</option>
+                        <option value="under_treatment" ${(pet.health_status || '') === 'under_treatment' ? 'selected' : ''}>Under Treatment</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_description">Description:</label>
+                    <textarea id="edit_description" name="description" rows="4">${pet.description || ''}</textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Current Records</h3>
+                  <div class="current-feeding-records">
+                    <h4>Feeding Records <button type="button" id="editFeedingBtn" class="btn-secondary">Edit Feeding Records</button></h4>
+                    <div id="currentFeedingList">
+                        ${pet.feeding_calendar && pet.feeding_calendar.length > 0 ? 
+                            pet.feeding_calendar.slice(0, 3).map(record => `
+                                <div class="record-item">
+                                    <span>${new Date(record.feed_time).toLocaleString()} - ${record.food_type}</span>
+                                    <button type="button" onclick="myPetsManager.deleteFeedingRecord(${record.feed_id})" class="btn-delete-small">Delete</button>
+                                </div>
+                            `).join('') : 
+                            '<p>No feeding records</p>'
+                        }
+                    </div>
+                </div>
+                
+                <div class="current-medical-records">
+                    <h4>Medical Records <button type="button" id="editMedicalBtn" class="btn-secondary">Edit Medical Records</button></h4>
+                    <div id="currentMedicalList">
+                        ${pet.medical_history && pet.medical_history.length > 0 ? 
+                            pet.medical_history.slice(0, 3).map(record => `
+                                <div class="record-item ${record.emergency ? 'emergency' : ''}">
+                                    <span>${new Date(record.date_of_event).toLocaleDateString()} - ${record.description}</span>
+                                    <button type="button" onclick="myPetsManager.deleteMedicalRecord(${record.record_id})" class="btn-delete-small">Delete</button>
+                                </div>
+                            `).join('') : 
+                            '<p>No medical records</p>'
+                        }
+                    </div>
+                </div>                <div class="current-media">
+                    <h4>Media Files <button type="button" id="editMediaBtn" class="btn-secondary">Manage Media</button></h4>
+                    <div id="currentMediaList" class="media-gallery">                        ${pet.media && pet.media.length > 0 ? 
+                            pet.media.slice(0, 6).map(media => `
+                                <div class="media-item edit-mode">
+                                    ${media.file_type && media.file_type.startsWith('image/') ? 
+                                        `<img src="${media.file_path}" alt="Pet media" class="media-preview">` :
+                                        `<video class="media-preview" muted><source src="${media.file_path}"></video>`
+                                    }
+                                    <button type="button" onclick="myPetsManager.deleteMedia(${media.media_id})" class="btn-delete-small">Delete</button>
+                                </div>
+                            `).join('') + 
+                            (pet.media.length > 6 ? `<div class="media-item-more"><span>+${pet.media.length - 6} more...</span></div>` : '') : 
+                            '<p>No media files</p>'
+                        }                    </div>
+                </div>
+            </div>
+              <div class="form-section">
+                <h3>Pickup Location</h3>
+                <div class="pickup-address-section">                    <h4>Current Pickup Address:</h4>
+                    <p class="current-address">${pet.pickup_address || 'Address will be set automatically'}</p>
+                    <div class="address-buttons">
+                        <button type="button" id="updateAddressBtn" class="btn-secondary" onclick="myPetsManager.updatePickupAddress(${pet.animal_id})">>
+                            Update to My Address
+                        </button>
+                    </div>
+                    <small class="address-note">Address is automatically set from your profile or default location</small>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Save Changes</button>
+                <button type="button" onclick="document.getElementById('editPetModal').remove()" class="btn-secondary">Cancel</button>
+            </div>
+        </form>
     `
 };

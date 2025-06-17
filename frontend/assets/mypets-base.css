@@ -1,31 +1,14 @@
+/* MyPets extends style.css variables - using variables from parent */
 :root {
-  --bg-light: #f9f9f9;
-  --bg-dark: #121212;
-  --text-light: #222;
-  --text-dark: #eee;
-  --primary-color: #5E2E65;
-  
-  /* Using variables from style.css for consistency */
-  --c1: #F9F5F9;
-  --c2: #121212;
-  --c3: #5C9E9A;
-  --c4: #EEA525;
-  --c5: #5E2E65;
-  --c6: #D4D7CF;
-  
-  --bg-primary: var(--c1);
-  --bg-secondary: var(--c6);
-  --text-primary: var(--c2);
-  --accent-color: var(--c4);
-  --transition-speed: 0.3s;
+  /* MyPets specific variables only */
+  --text-secondary: #666;
+  --border-color: #ddd;
 }
 
-/* Dark theme variables */
+/* Dark theme variables for MyPets */
 :root[data-theme="dark"] {
-  --bg-primary: var(--c2);
-  --bg-secondary: #2C2F2B;
-  --text-primary: var(--c1);
-  --primary-color: var(--c3);
+  --text-secondary: #aaa;
+  --border-color: #444;
 }
 
 body {
