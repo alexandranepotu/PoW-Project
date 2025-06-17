@@ -127,6 +127,18 @@ class PetModel {
         } catch (PDOException $e) {
             error_log('Error getting all pets: ' . $e->getMessage());
             return [];
+        }    }
+    
+    // obtine un animal dupa ID (pt verificare stapan)
+    public function getPetById($petId) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM animals WHERE animal_id = ?");
+            $stmt->execute([$petId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            error_log('Error getting pet by ID: ' . $e->getMessage());
+            return null;
         }
     }
     
@@ -260,12 +272,22 @@ class PetModel {
             error_log('Error getting media resources: ' . $e->getMessage());
             return [];
         }
-    }
-    
-    public function addMediaResource($petId, $type, $filePath, $description = '') {
+    }    public function addMediaResource($petId, $mediaData) {
         try {
-            $stmt = $this->pdo->prepare("INSERT INTO media_resources (animal_id, type, file_path, description) VALUES (?, ?, ?, ?)");
-            return $stmt->execute([$petId, $type, $filePath, $description]);
+            // determina tipul simplu 
+            $simpleType = 'unknown';
+            if (strpos($mediaData['file_type'], 'image/') === 0) {
+                $simpleType = 'image';
+            } elseif (strpos($mediaData['file_type'], 'video/') === 0) {
+                $simpleType = 'video';
+            }
+            
+            $stmt = $this->pdo->prepare("INSERT INTO media_resources (animal_id, type, file_path) VALUES (?, ?, ?)");
+            return $stmt->execute([
+                $petId, 
+                $simpleType, 
+                $mediaData['file_path']
+            ]);
             
         } catch (PDOException $e) {
             error_log('Error adding media resource: ' . $e->getMessage());

@@ -32,8 +32,7 @@ class AuthMiddleware {
             exit;
         }
     }
-    
-    public static function getAuthenticatedUser() {
+      public static function getAuthenticatedUser() {
         // versiune fara verificare a statusului HTTP
         // doar returneaza datele utilizatorului daca JWT-ul este valid
         if (!isset($_COOKIE['auth_token'])) {
@@ -45,7 +44,6 @@ class AuthMiddleware {
         } catch (Exception $e) {
             error_log('Auth middleware error: ' . $e->getMessage());
             return null;
-        }
-    }
+        }    }
 }
 ?>

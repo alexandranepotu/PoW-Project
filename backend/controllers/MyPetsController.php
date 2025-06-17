@@ -6,18 +6,15 @@ class MyPetsController {
     private $petModel;
     
     public function __construct() {
-        $this->petModel = new PetModel();
-    }
-      // GET /api/mypets -> lista animalelor utilizatorului
+        $this->petModel = new PetModel();    }
+    
+    // GET /api/mypets -> lista animalelor utilizatorului
     public function getMyPets() {
         $user = AuthMiddleware::requireAuth(); //verifica daca userul e autentificat
-          try {
+        
+        try {
             $pets = $this->petModel->getPetsByUserId($user->user_id);
             $stats = $this->petModel->getPetStatistics($user->user_id);
-            
-            error_log('MyPets Debug - User ID: ' . $user->user_id);
-            error_log('MyPets Debug - Pets count: ' . count($pets));
-            error_log('MyPets Debug - Stats: ' . json_encode($stats));
             
             echo json_encode([
                 'success' => true,
@@ -179,74 +176,87 @@ class MyPetsController {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to add medical record']);
         }
-    }
-      // POST /api/mypets/{id}/media -> upload media
+    }    // POST /api/mypets/{id}/media -> upload media
     public function uploadMedia($petId) {
-        $user = AuthMiddleware::requireAuth();
-        
-        try {
-            //verifica daca animalul apartine utilizatorului again
-            $petDetails = $this->petModel->getPetDetails($petId, $user->user_id);
-            if (!$petDetails) {
+        $user = AuthMiddleware::requireAuth();try {
+            // verifica daca animalul apartine utilizatorului
+            $pet = $this->petModel->getPetById($petId);
+            if (!$pet || $pet['added_by'] !== $user->user_id) {
                 http_response_code(403);
                 echo json_encode(['error' => 'Access denied']);
                 return;
             }
             
             if (!isset($_FILES['file'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'No file uploaded']);
-                return;
+                throw new Exception('No file uploaded');
             }
+
+            $file = $_FILES['file'];            $uploadedFiles = [];
+            $uploadDir = '../../uploads/pets/' . $petId . '/';
             
-            $file = $_FILES['file'];
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm'];
-            
-            if (!in_array($file['type'], $allowedTypes)) {
-                http_response_code(400);
-                echo json_encode(['error' => 'File type not allowed']);
-                return;
-            }
-            
-            //creeaza dir daca nu exista
-            $uploadDir = __DIR__ . "/../../uploads/pets/{$petId}/";
+            // Creeaza directorul daca nu exista
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+                mkdir($uploadDir, 0777, true);
             }
-            
-            // Generează numele fișierului
-            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $fileName = uniqid() . '.' . $extension;
-            $filePath = $uploadDir . $fileName;
-            $relativePath = "uploads/pets/{$petId}/" . $fileName;
-            
-            if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                $mediaType = strpos($file['type'], 'image') === 0 ? 'image' : 'video';
-                $description = $_POST['description'] ?? '';
+
+            if ($file['error'] === UPLOAD_ERR_OK) {
+                $fileName = $file['name'];
+                $fileSize = $file['size'];
+                $fileType = $file['type'];
                 
-                $result = $this->petModel->addMediaResource($petId, $mediaType, $relativePath, $description);
+                // Validare tip fisier
+                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'];
+                if (!in_array($fileType, $allowedTypes)) {
+                    throw new Exception('File type not allowed: ' . $fileType);
+                }
                 
-                if ($result) {
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'Media uploaded successfully',
-                        'file_path' => $relativePath
-                    ]);
+                // Validare marime (10MB max)
+                $maxSize = 10 * 1024 * 1024;
+                if ($fileSize > $maxSize) {
+                    throw new Exception('File too large. Maximum size is 10MB');
+                }
+                
+                // Genereaza nume unic
+                $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $uniqueName = uniqid() . '.' . $extension;
+                $filePath = $uploadDir . $uniqueName;
+                
+                if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                    // salveaza in bd
+                        $description = $_POST['description'] ?? '';
+                        $this->petModel->addMediaResource($petId, [
+                            'file_path' => '/PoW-Project/uploads/pets/' . $petId . '/' . $uniqueName,
+                            'file_type' => $fileType,
+                            'file_size' => $fileSize,
+                            'description' => $description
+                        ]);
+                        
+                        $uploadedFiles[] = [
+                            'name' => $fileName,
+                            'path' => '/PoW-Project/uploads/pets/' . $petId . '/' . $uniqueName,
+                            'type' => $fileType
+                        ];
                 } else {
-                    // sterge fisierul daca nu s a salvat in bd
-                    unlink($filePath);
-                    http_response_code(500);
-                    echo json_encode(['error' => 'Failed to save media record']);
+                    throw new Exception('Failed to move uploaded file');
                 }
             } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Failed to upload file']);
+                throw new Exception('Upload error: ' . $file['error']);
             }
             
+            echo json_encode([
+                'success' => true,
+                'files' => $uploadedFiles,
+                'message' => 'File uploaded successfully'
+            ]);
+
         } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Failed to upload media']);
-        }    }
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     
     // DELETE /api/mypets/feeding/{id} -> sterge feeding record
     public function deleteFeedingRecord($feedId) {
@@ -267,7 +277,8 @@ class MyPetsController {
             echo json_encode(['error' => 'Failed to delete feeding record']);
         }
     }
-      // DELETE /api/mypets/medical/{id} -> sterge medical record
+    
+    // DELETE /api/mypets/medical/{id} -> sterge medical record
     public function deleteMedicalRecord($recordId) {
         $user = AuthMiddleware::requireAuth();
         
@@ -285,10 +296,9 @@ class MyPetsController {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to delete medical record']);
         }
-    }
-      // DELETE /api/mypets/media/{id} -> sterge media file
+    }    // DELETE /api/mypets/media/{id} -> sterge media file
     public function deleteMedia($mediaId) {
-        $user = AuthMiddleware::requireAuth();        $user = AuthMiddleware::requireAuth();
+        $user = AuthMiddleware::requireAuth();
         
         try {
             $result = $this->petModel->deleteMediaResource($mediaId);
@@ -305,7 +315,8 @@ class MyPetsController {
             echo json_encode(['error' => 'Failed to delete media']);
         }
     }
-      // POST /api/mypets -> add animal nou
+    
+    // POST /api/mypets -> add animal nou
     public function addPet() {
         $user = AuthMiddleware::requireAuth();
         
@@ -372,7 +383,7 @@ class MyPetsController {
     // GET /api/pets -> toate animalele pentru dashboard general-> daca nu adaug cards pt filtrare
     public function getAllPets() {
         try {
-            $pets = $this->petModel->getAllPets(); // Fără limită pentru toate animalele
+            $pets = $this->petModel->getAllPets();
             
             echo json_encode([
                 'success' => true,
