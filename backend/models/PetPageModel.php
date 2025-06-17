@@ -3,7 +3,7 @@ class Animal {
     private $conn;
 
     public function __construct() {
-        $this->conn = pg_connect("host=localhost dbname=animals user=postgres password=password*");
+        $this->conn = pg_connect("host=localhost dbname=pet_adoption user=postgres password=password*");
         if (!$this->conn) {
             die("Connection failed");
         }
