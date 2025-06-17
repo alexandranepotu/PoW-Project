@@ -1,27 +1,50 @@
+<?php include 'navbar.php'; ?>
 <?php
-include 'db.php';
+header('Content-Type: application/json');
 
-$id = $_GET['id'];
-$sql = "SELECT * FROM animale WHERE id=$id";
-$result = $conn->query($sql);
-$animal = $result->fetch_assoc();
-$conn->close();
-?>
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <title><?php echo $animal['nume']; ?> - Detalii</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <a href="index.php">← Înapoi la listă</a>
-    <div class="card">
-        <img src="uploads/<?php echo $animal['poza']; ?>" alt="<?php echo $animal['nume']; ?>">
-        <h2><?php echo $animal['nume']; ?></h2>
-        <p>Vârsta: <?php echo $animal['varsta']; ?> ani</p>
-        <p>Rasă: <?php echo $animal['rasa']; ?></p>
-        <p><?php echo nl2br($animal['descriere']); ?></p>
-    </div>
-</body>
-</html>
+$conn_string = "host=localhost dbname=adoptii user=postgres password=password";
+$conn = pg_connect($conn_string);
+
+if (!$conn) {
+    echo json_encode(['error' => 'Failed to connect']);
+    exit;
+}
+
+$query = "SELECT * FROM animale WHERE 1=1";
+
+if (!empty($_GET['species'])) {
+    $species = pg_escape_string($conn, $_GET['species']);
+    $query .= " AND species ILIKE '%$species%'";
+}
+
+if (!empty($_GET['breed'])) {
+    $breed = pg_escape_string($conn, $_GET['breed']);
+    $query .= " AND breed ILIKE '%$breed%'";
+}
+
+if (!empty($_GET['age'])) {
+    $age = intval($_GET['age']);
+    $query .= " AND age = $age";
+}
+
+if (!empty($_GET['sex'])) {
+    $sex = pg_escape_string($conn, $_GET['sex']);
+    $query .= " AND sex = '$sex'";
+}
+
+if (!empty($_GET['health_status'])) {
+    $health_status = pg_escape_string($conn, $_GET['health_status']);
+    $query .= " AND health_status ILIKE '%$health_status%'";
+}
+
+$result = pg_query($conn, $query);
+$animals = [];
+
+if ($result) {
+    while ($row = pg_fetch_assoc($result)) {
+        $animals[] = $row;
+    }
+}
+
+echo json_encode($animals);
+pg_close($conn);
