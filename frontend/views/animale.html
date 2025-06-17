@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Adopt an Animal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script src="animals.js"></script>
+  <!-- trebuie inclus navbar -->
+  <header>
+    <h1>🐾 List of pets up for adoption 🐾</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Animals</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+<form id="filterForm" method="GET" action="#">
+  <label>
+    Species:
+    <input type="text" name="species" placeholder="ex: Cat">
+  </label>
+
+  <label>
+    Breed:
+    <input type="text" name="breed" placeholder="ex: Labrador">
+  </label>
+
+  <label>
+    Age:
+    <input type="number" name="age" min="0">
+  </label>
+
+  <label>
+    Sex:
+    <select name="sex">
+      <option value="">-- Select --</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+  </label>
+
+  <label>
+    Health Status:
+    <input type="text" name="health_status" placeholder="ex: Vaccinated">
+  </label>
+
+  <button type="submit">Filter</button>
+</form>
+
+    <section class="animal-list" id="animalList">
+      <!--animalele apar aici din JS-->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 PoW. All rights reserved to Nepotu Alexandra-Maria and Plamada Bianca-Elena.</p>
+  </footer>
+<script src="animale.js"></script>
+</body>
+</html>
