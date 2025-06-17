@@ -110,3 +110,18 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER after_medical_insert
 AFTER INSERT ON medical_history
 FOR EACH ROW EXECUTE FUNCTION trg_emergency_alert();
+
+CREATE TABLE user_addresses (
+    address_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    country VARCHAR(100),
+    county VARCHAR(100),
+    city VARCHAR(100),
+    street VARCHAR(255),
+    postal_code VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_user_addresses_user_id ON user_addresses(user_id);
+--performanta la cautare dupa user_id, optimizare join, fk
