@@ -2,63 +2,57 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <title>Adopt an Animal</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Pet Adoption</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="../assets/animale.css" />
 </head>
 <body>
-  <script src="animals.js"></script>
-  <!-- trebuie inclus navbar -->
   <header>
-    <h1>🐾 List of pets up for adoption 🐾</h1>
+    <h1> Pet Adoption </h1>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Animals</a>
-      <a href="#">Contact</a>
+  <nav>
+    <input type="search" placeholder="Caută..." />
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+    <div class="profile-dropdown">
+      <div class="profile-text">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+      <div class="dropdown-content">
+        <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
+        <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
+      </div>
+    </div>
+  <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+  </nav>
     </nav>
   </header>
 
   <main>
-<form id="filterForm" method="GET" action="#">
-  <label>
-    Species:
-    <input type="text" name="species" placeholder="ex: Cat">
-  </label>
+    <form id="filterForm">
+      <label>Species: <input type="text" name="species"></label>
+      <label>Breed: <input type="text" name="breed"></label>
+      <label>Age: <input type="number" name="age"></label>
+      <label>Sex: 
+        <select name="sex">
+          <option value="">-- Select --</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </label>
+      <label>Health Status: <input type="text" name="health_status"></label>
+      <button type="submit">Filter</button>
+    </form>
 
-  <label>
-    Breed:
-    <input type="text" name="breed" placeholder="ex: Labrador">
-  </label>
-
-  <label>
-    Age:
-    <input type="number" name="age" min="0">
-  </label>
-
-  <label>
-    Sex:
-    <select name="sex">
-      <option value="">-- Select --</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select>
-  </label>
-
-  <label>
-    Health Status:
-    <input type="text" name="health_status" placeholder="ex: Vaccinated">
-  </label>
-
-  <button type="submit">Filter</button>
-</form>
-
-    <section class="animal-list" id="animalList">
-      <!--animalele apar aici din JS-->
-    </section>
+    <section id="animalList"></section>
   </main>
 
   <footer>
     <p>&copy; 2025 PoW. All rights reserved to Nepotu Alexandra-Maria and Plamada Bianca-Elena.</p>
   </footer>
-<script src="animale.js"></script>
+
+  <script src="../js/animale.js"></script>
+  <script src="../js/global-theme.js"></script>
 </body>
 </html>
