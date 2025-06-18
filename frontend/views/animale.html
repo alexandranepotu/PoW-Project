@@ -10,22 +10,20 @@
   <header>
     <h1> Pet Adoption </h1>
     <nav>
-  <nav>
-    <input type="search" placeholder="Caută..." />
-    <a href="#about">About Us</a>
-    <a href="#contact">Contact</a>
-    <div class="profile-dropdown">
-      <div class="profile-text">
-        <i class="fas fa-user"></i>
-        <span>Profile</span>
+      <input type="search" placeholder="Caută..." />
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact</a>
+      <div class="profile-dropdown">
+        <div class="profile-text">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </div>
+        <div class="dropdown-content">
+          <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
+          <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
+        </div>
       </div>
-      <div class="dropdown-content">
-        <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
-        <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
-      </div>
-    </div>
-  <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
-  </nav>
+      <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
     </nav>
   </header>
 
@@ -45,14 +43,38 @@
       <button type="submit">Filter</button>
     </form>
 
-    <section id="animalList"></section>
+    <h1>Available Animals for Adoption</h1>
+    <section id="animalList">
+      <p style="color: rgb(157, 16, 192);">Loading animals...</p>
+    </section>
   </main>
 
   <footer>
     <p>&copy; 2025 PoW. All rights reserved to Nepotu Alexandra-Maria and Plamada Bianca-Elena.</p>
   </footer>
 
-  <script src="../js/animale.js"></script>
-  <script src="../js/global-theme.js"></script>
+  //testam scriptul
+  <script>
+    console.log("Inline script loaded - testing paths...");
+    console.log("Current page:", window.location.href);
+    
+    //test de gasire elemente
+    document.addEventListener('DOMContentLoaded', () => {
+      const list = document.getElementById('animalList');
+      if (list) {
+        console.log("Found animalList element");
+      } else {
+        console.error("animalList element not found");
+      }
+    });
+  </script>
+
+  <script src="../js/animale.js" 
+          onerror="console.error('Failed to load animale.js from ../js/animale.js'); document.getElementById('animalList').innerHTML = '<p style=color:red>❌ Failed to load animale.js - check file path</p>'">
+  </script>
+  
+  <script src="../js/global-theme.js" 
+          onerror="console.error('Failed to load global-theme.js')">
+  </script>
 </body>
 </html>
