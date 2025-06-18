@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt Animal</title>
+    <link rel="stylesheet" href="../assets/navbar.css">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/carduri.css">
+    <link rel="stylesheet" href="../assets/adopt.css">
+</head>
+<body>
+    <header>
+        <a href="dashboard.html" class="logo">Pet Adoption</a>
+        <nav>
+            <input type="search" placeholder="Caută..." />
+            <a href="animale.html">Adopt</a>
+            <div class="profile-dropdown">
+                <div class="profile-text">
+                    <span>Profile</span>
+                </div>
+                <div class="dropdown-content">
+                    <a href="mypets.html">My Pets</a>
+                    <a href="profile.html">My Profile</a>
+                    <a href="#logout">Logout</a>
+                </div>
+            </div>
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+            </button>
+        </nav>
+    </header>
+    <main style="margin-top: 80px;">
+        <div id="animal-details"></div>
+        <form id="adoption-form">
+            <h2>Adoption Application</h2>
+            <label for="living-conditions">Describe your living conditions:</label><br>
+            <textarea id="living-conditions" name="living_conditions" required></textarea><br>
+            <label for="animal-alone">How long will the animal be alone during the day?</label><br>
+            <input type="text" id="animal-alone" name="animal_alone" required><br>
+            <label for="animal-scenario">How would you react if the animal damages something in your home?</label><br>
+            <textarea id="animal-scenario" name="animal_scenario" required></textarea><br>
+            <label for="animal-health">What would you do if the animal gets sick?</label><br>
+            <textarea id="animal-health" name="animal_health" required></textarea><br>
+            <button type="submit">Submit Application</button>
+        </form>
+    </main>
+    <script src="../js/global-theme.js"></script>
+    <script src="../js/adopt.js"></script>
+</body>
+</html>
