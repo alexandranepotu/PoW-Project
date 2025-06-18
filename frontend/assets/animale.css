@@ -145,58 +145,73 @@ main {
   background-color: var(--primary-hover);
 }
 
-#animalList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
+footer {
+  background: var(--bg-tertiary);
+  color: var(--text-light);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
 }
 
-.animal-card {
-  background: var(--linear-light);
+/* === Card Styles (pentru adoptii) === */
+
+.adoption-card {
+  border: 1px solid var(--primary-color);
   border-radius: var(--border-radius-large);
-  box-shadow: var(--shadow-large);
-  overflow: hidden;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-small);
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 
-:root[data-theme="dark"] .animal-card {
-  background: var(--linear-dark);
+.adoption-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-large);
 }
 
-.animal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.2);
-}
-
-.animal-card img {
+.adoption-card img {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
+  border-radius: var(--border-radius-medium);
+  margin-bottom: 1rem;
 }
 
-.animal-card h2 {
-  margin: 0.75rem 1rem 0;
-  font-size: 1.2rem;
+.adoption-card h3 {
   color: var(--primary-color);
+  font-size: 1.3rem;
+  margin: 0 0 1rem 0;
 }
 
-.animal-card p {
-  margin: 0.5rem 1rem;
+.adoption-card .animal-details {
+  margin-bottom: 1rem;
 }
 
-.animal-card button {
-  display: block;
-  margin: 1rem auto 1.5rem;
-  padding: 0.5rem 1rem;
+.adoption-card .animal-details p {
+  margin: 0.3rem 0;
+  color: var(--text-primary);
+}
+
+.adoption-card .animal-details strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.adoption-card .adopt-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
   background-color: var(--accent-color);
   color: var(--text-light);
   border: none;
   border-radius: var(--border-radius-full);
   cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
   transition: background-color var(--transition-speed);
 }
 
-.animal-card button:hover {
+.adoption-card .adopt-btn:hover {
   background-color: var(--primary-hover);
 }
 
