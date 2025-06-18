@@ -1,0 +1,86 @@
+/* stiluri pt pagina formular */
+#adoption-form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+#adoption-form h2 {
+    margin-bottom: 15px;
+}
+#adoption-form label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+#adoption-form textarea, #adoption-form input[type="text"] {
+    width: 100%;
+    min-width: 320px;
+    max-width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    box-sizing: border-box;
+    overflow-y: auto;
+    transition: height 0.2s;
+}
+#adoption-form textarea:focus {
+    height: 120px;
+}
+#adoption-form textarea {
+    min-height: 60px;
+    height: 60px;
+    max-height: 300px;
+}
+#adoption-form button {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+#adoption-form button:hover {
+    background: var(--primary-hover) !important;
+}
+#animal-details {
+    max-width: 600px;
+    margin: 30px auto 0 auto;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 20px;
+    text-align: center;
+}
+#animal-details img {
+    max-width: 300px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+[data-theme="dark"] #adoption-form,
+[data-theme="dark"] #adoption-form label,
+[data-theme="dark"] #adoption-form textarea,
+[data-theme="dark"] #adoption-form input[type="text"],
+[data-theme="dark"] #adoption-form h2,
+[data-theme="dark"] #animal-details {
+    color: var(--primary-color) !important;
+    background: #222 !important;
+}
+
+[data-theme="dark"] #adoption-form textarea,
+[data-theme="dark"] #adoption-form input[type="text"] {
+    border: 1px solid var(--primary-color);
+}
+
+[data-theme="dark"] #adoption-form button {
+    background: var(--accent-color) !important;
+    color: #222 !important;
+}
