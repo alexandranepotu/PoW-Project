@@ -58,38 +58,62 @@ footer {
   margin-top: 2rem;
 }
 
-/* === Card Styles (pentru adoptii) === */
+/* === stilurile de card-uri (pentru adoptii) === */
 
-.adoption-card {
-  border: 1px solid var(--primary-color);
-  border-radius: var(--border-radius-large);
-  padding: 1rem;
-  margin: 1rem 0;
-  background: var(--bg-primary);
-  box-shadow: var(--shadow-small);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+#animalList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem 3.5rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+  max-width: 1100px;
 }
 
-.adoption-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-large);
+.adoption-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 1 calc(33% - 3.5rem);
+  width: 320px;
+  min-width: 240px;
+  max-width: 340px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  padding: 1.2rem 1rem 1.5rem 1rem;
+  transition: box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .adoption-card {
+  background: #232323;
 }
 
 .adoption-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: var(--border-radius-medium);
-  margin-bottom: 1rem;
+  display: block;
+  max-width: 100%;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  margin: 0 auto 1rem auto;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
 .adoption-card h3 {
-  color: var(--primary-color);
-  font-size: 1.3rem;
-  margin: 0 0 1rem 0;
+  margin: 0.5rem 0 0.7rem 0;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
 .adoption-card .animal-details {
+  width: 100%;
+  font-size: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -104,20 +128,26 @@ footer {
 }
 
 .adoption-card .adopt-btn {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  background-color: var(--accent-color);
-  color: var(--text-light);
+  background: var(--primary-color) !important;
+  color: #fff !important;
   border: none;
-  border-radius: var(--border-radius-full);
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: auto;
+  width: 100%;
   cursor: pointer;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color var(--transition-speed);
+  transition: background 0.2s;
 }
 
 .adoption-card .adopt-btn:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .adoption-card .adopt-btn {
+  background: var(--accent-color) !important;
+  color: #222 !important;
 }
 
 footer {
