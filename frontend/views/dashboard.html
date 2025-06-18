@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pet Adoption</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="../assets/navbar.css">
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="../assets/dashboard.css">
@@ -50,45 +52,19 @@
       </ul>
     </section>
   </div>
-
-  <div class="scroll-cards" aria-label="Carduri scrollabile">
-    <div class="card">
-      <h3>Card 1</h3>
-      <p>Conținut exemplu pentru primul card</p>
-    </div>
-    <div class="card">
-      <h3>Card 2</h3>
-      <p>Conținut exemplu pentru al doilea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 3</h3>
-      <p>Conținut exemplu pentru al treilea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 4</h3>
-      <p>Conținut exemplu pentru al patrulea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 5</h3>
-      <p>Conținut exemplu pentru al cincilea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 6</h3>
-      <p>Conținut exemplu pentru al șaselea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 7</h3>
-      <p>Conținut exemplu pentru al șaptelea card</p>
-    </div>
-    <div class="card">
-      <h3>Card 8</h3>
-      <p>Conținut exemplu pentru al optulea card</p>
-    </div>
-  </div>
+  <!-- Map Section -->
+  <section class="map-section">
+    <h2>Community Map</h2>
+    <p>Discover users and animals in your area</p>
+    <div id="map"></div>
+  </section>
 </main>
 
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="../js/global-theme.js"></script>
 <script src="../js/navbar.js"></script>
+<script src="../js/map.js"></script>
 <script src="../js/dashboard.js"></script>
 
 </body>

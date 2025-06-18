@@ -132,6 +132,37 @@
   background-color: var(--primary-color);
 }
 
+.map-section {
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.map-section h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.map-section p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: var(--shadow-large);
+}
+
+@media (max-width: 768px) {
+  #map {
+    height: 300px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 1100px) {
   .chenare {
@@ -160,6 +191,39 @@
   
   .card {
     min-width: 150px;
+  }
+}
+
+.popup-content {
+  text-align: center;
+  padding: 5px;
+}
+
+.popup-content strong {
+  color: var(--primary-color);
+}
+
+.location-message {
+  background: var(--bg-secondary);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.location-message p {
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.location-message small {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .location-message {
+    padding: 10px;
   }
 }
 

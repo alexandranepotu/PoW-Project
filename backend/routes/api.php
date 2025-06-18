@@ -252,6 +252,18 @@ try {
             echo json_encode(['error' => 'Method not allowed']);
         }
         exit;
+    }    //map api -> obtine locatiile tuturor utilizatorilor
+    if ($path === '/api/users/locations' && $method === 'GET') {
+        require_once __DIR__ . '/../controllers/MapController.php';
+        $controller = new MapController($pdo);
+        $controller->getUsersLocations();
+        exit;
+    }    // map api -> obtine locatia curenta a utilizatorului
+    if ($path === '/api/user/location' && $method === 'GET') {
+        require_once __DIR__ . '/../controllers/MapController.php';
+        $controller = new MapController($pdo);
+        $controller->getCurrentUserLocation();
+        exit;
     }
 
     //ruta pentru animale (adopt)
