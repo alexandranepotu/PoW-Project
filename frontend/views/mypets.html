@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Adoption</title>  <link rel="stylesheet" href="../assets/style.css">
+  <title>Pet Adoption</title>
+  <link rel="stylesheet" href="../assets/navbar.css">
+  <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="../assets/mypets-base.css">
   <link rel="stylesheet" href="../assets/mypets-components.css">
   <link rel="stylesheet" href="../assets/mypets-forms.css">
@@ -11,22 +13,23 @@
 </head>
 <body>
 <header>
-  <div class="logo">Pet Adoption</div>
+  <a href="dashboard.html" class="logo">Pet Adoption</a>
   <nav>
     <input type="search" placeholder="Caută..." />
-    <a href="#about">About Us</a>
-    <a href="#contact">Contact</a>
+    <a href="animale.html">Adopt</a>
     <div class="profile-dropdown">
       <div class="profile-text">
-        <i class="fas fa-user"></i>
         <span>Profile</span>
       </div>
       <div class="dropdown-content">
-        <a href="profile.html"><i class="fas fa-user-circle"></i> My Account</a>
-        <a href="#logout"><i class="fas fa-user-circle"></i> Logout</a>
+        <a href="mypets.html">My Pets</a>
+        <a href="profile.html">My Profile</a>
+        <a href="#logout">Logout</a>
       </div>
     </div>
-    <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+    <button class="theme-toggle" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+    </button>
   </nav>
 </header>
 
@@ -200,7 +203,8 @@
 </div>
 
   </main>
-  <script src="../js/global-theme.js"></script>
+  <script src="../js/global-theme.js"></script>  <!-- NAVBAR FUNCTIONALITY -->
+  <script src="../js/navbar.js"></script>
   <!-- TEMPLATEURI DINAMICE HTML -->
   <script src="../js/mypets-templates.js"></script>
   <!-- DOM MANAGEMENT(adauga/sterge/modifica)-->

@@ -1,11 +1,8 @@
-/* MyPets extends style.css variables - using variables from parent */
 :root {
-  /* MyPets specific variables only */
   --text-secondary: #666;
   --border-color: #ddd;
 }
 
-/* Dark theme variables for MyPets */
 :root[data-theme="dark"] {
   --text-secondary: #aaa;
   --border-color: #444;
@@ -21,99 +18,9 @@ body {
   padding-top: 60px; /* spatiu pentru navbar fix */
 }
 
-/* Dark mode support using data-theme attribute */
 [data-theme="dark"] body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-}
-
-/* NAVBAR FIX SUS */
-header {
-  position: fixed;
-  top: 0; 
-  left: 0; 
-  right: 0;
-  height: 60px;
-  background: var(--primary-color);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-header .logo {
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
-header nav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-header nav input[type="search"] {
-  padding: 5px 10px;
-  border-radius: 20px;
-  border: none;
-  font-size: 1rem;
-}
-
-header nav a, header nav button {
-  color: white;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-header nav button:hover,
-header nav a:hover {
-  text-decoration: underline;
-}
-
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.profile-dropdown .dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 120%;
-  min-width: 160px;
-  background: var(--bg-primary);
-  border: 1px solid var(--bg-secondary);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-  z-index: 1001;
-  padding: 0.5rem 0;
-  transition: background-color var(--transition-speed);
-}
-
-.profile-dropdown:hover .dropdown-content,
-.profile-dropdown:focus-within .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 0.7rem 1.2rem;
-  color: var(--text-primary);
-  text-decoration: none;
-  font-size: 1rem;
-  transition: background var(--transition-speed), color var(--transition-speed);
-}
-
-.dropdown-content a:hover {
-  background: var(--primary-color);
-  color: white;
 }
 
 .mypets-bar {

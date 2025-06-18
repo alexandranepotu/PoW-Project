@@ -1,48 +1,39 @@
-/* Variabile și reset */
-:root {
-  --primary-color: #8ECAE6;
-  --secondary-color: #219EBC;
-  --accent-color: #023047;
-  --bg-light: #F9F5F9;
-  --bg-dark: #121212;
-  --text-light: #000000;
-  --text-dark: #ffffff;
-}
+/* css pentru toata aplicatia - variabilele sunt definite mai jos */
 
 [data-theme="dark"] body {
-  background-color: var(--bg-dark);
-  color: var(--text-dark);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] .about-adopt,
 [data-theme="dark"] .news {
   background-color: rgba(34, 34, 34, 0.85);
-  color: var(--text-dark);
+  color: var(--text-primary);
   border: 1px solid #555;
 }
 
 [data-theme="dark"] nav,
 [data-theme="dark"] footer {
   background-color: #1e1e1e;
-  color: var(--text-dark);
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] nav a,
 [data-theme="dark"] footer a {
-  color: var(--text-dark);
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] input,
 [data-theme="dark"] textarea,
 [data-theme="dark"] select {
   background-color: #2c2c2c;
-  color: var(--text-dark);
+  color: var(--text-primary);
   border: 1px solid #555;
 }
 
 [data-theme="dark"] button {
   background-color: var(--accent-color);
-  color: var(--text-dark);
+  color: var(--text-primary);
   border: none;
 }
 
@@ -50,12 +41,12 @@
 [data-theme="dark"] .container,
 [data-theme="dark"] .modal {
   background-color: #1e1e1e;
-  color: var(--text-dark);
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] table {
   background-color: #1e1e1e;
-  color: var(--text-dark);
+  color: var(--text-primary);
   border: 1px solid #444;
 }
 
@@ -73,7 +64,6 @@
     --c5: #5E2E65;    /* Purple brand */
     --c6: #D4D7CF;    /* Sage neutral */
     
-    /* Functional Variables with Fallbacks */
     --bg-primary: var(--c1, #F9F5F9);
     --bg-secondary: var(--c6, #D4D7CF);
     --bg-tertiary: var(--c5, #5E2E65);
@@ -86,32 +76,26 @@
     --primary-hover: var(--c3, #5C9E9A);
     --accent-color: var(--c4, #EEA525);
     
-    /* Shadows and Effects */
     --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
     --shadow-large: 0 4px 12px rgba(0, 0, 0, 0.2);
     
-    /* Borders */
     --border-radius-full: 999px;
     --border-radius-medium: 8px;
     --border-radius-large: 12px;
     
-    /* Transitions */
     --transition-speed-fast: 0.2s;
     --transition-speed: 0.3s;
     --transition-speed-slow: 0.5s;
     
-    /* Gradients */
     --linear-light: linear-gradient(135deg, rgba(249, 245, 249, 0.95), rgba(212, 215, 207, 0.95));
     --linear-dark: linear-gradient(135deg, rgba(18, 16, 18, 0.95), rgba(44, 47, 43, 0.95));
     
-    /* RGB Values for Advanced Effects */
-    --primary-rgb: 94, 46, 101;  /* RGB values for --c5 */
-    --accent-rgb: 238, 165, 37;  /* RGB values for --c4 */
-    --secondary-rgb: 92, 158, 154;  /* RGB values for --c3 */
+    --primary-rgb: 94, 46, 101; 
+    --accent-rgb: 238, 165, 37;
+    --secondary-rgb: 92, 158, 154;  
 }
 
 :root[data-theme="dark"] {
-    /* Dark Mode Overrides */
     --bg-primary: var(--c2, #121212);
     --bg-secondary: var(--c6, #2C2F2B);
     --bg-tertiary: var(--c3, #5C9E9A);
@@ -130,7 +114,6 @@
     --linear-gradient: var(--linear-dark);
 }
 
-/* Global transition styles */
 body, button, input, nav, .dashboard-section {
     transition: background-color var(--transition-speed),
                 color var(--transition-speed),
@@ -139,7 +122,6 @@ body, button, input, nav, .dashboard-section {
                 transform var(--transition-speed-fast);
 }
 
-/* Smoother transitions for background elements */
 .navbar,
 .search-bar,
 .dashboard-section {
@@ -147,7 +129,6 @@ body, button, input, nav, .dashboard-section {
                 box-shadow var(--transition-speed);
 }
 
-/* Instant transitions for theme icon */
 .theme-toggle {
     transition: transform var(--transition-speed-fast),
                 background-color var(--transition-speed-fast),
@@ -155,7 +136,6 @@ body, button, input, nav, .dashboard-section {
                 color var(--transition-speed-fast);
 }
 
-/* Global styles */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -170,6 +150,7 @@ body {
     min-height: 100%;
     margin: 0;
     padding: 0;
+    padding-top: 80px;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);

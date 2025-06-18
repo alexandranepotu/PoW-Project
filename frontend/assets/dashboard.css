@@ -1,99 +1,3 @@
-:root {
-  --bg-light: #f9f9f9;
-  --bg-dark: #121212;
-  --text-light: #222;
-  --text-dark: #eee;
-  --primary-color: #5E2E65;
-  
-  /* Using variables from style.css for consistency */
-  --c1: #F9F5F9;
-  --c2: #121212;
-  --c3: #5C9E9A;
-  --c4: #EEA525;
-  --c5: #5E2E65;
-  --c6: #D4D7CF;
-  
-  --bg-primary: var(--c1);
-  --bg-secondary: var(--c6);
-  --text-primary: var(--c2);
-  --accent-color: var(--c4);
-  --transition-speed: 0.3s;
-}
-
-/* Dark theme variables */
-:root[data-theme="dark"] {
-  --bg-primary: var(--c2);
-  --bg-secondary: #2C2F2B;
-  --text-primary: var(--c1);
-  --primary-color: var(--c3);
-}
-
-body {
-  padding: 0;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-  padding-top: 60px; /* spatiu pentru navbar fix */
-}
-
-/* Dark mode support using data-theme attribute */
-[data-theme="dark"] body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-/* NAVBAR FIX SUS */
-header {
-  position: fixed;
-  top: 0; 
-  left: 0; 
-  right: 0;
-  height: 60px;
-  background: var(--primary-color);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-header .logo {
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
-header nav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-header nav input[type="search"] {
-  padding: 5px 10px;
-  border-radius: 20px;
-  border: none;
-  font-size: 1rem;
-}
-
-header nav a, header nav button {
-  color: white;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-header nav button:hover,
-header nav a:hover {
-  text-decoration: underline;
-}
-
 /* Container pentru cele doua chenare - dimensiuni actualizate */
 .chenare {
   display: flex;
@@ -175,15 +79,15 @@ header nav a:hover {
 }
 
 .about-adopt button:hover {
-  background-color: #5E2E65;
+  background-color: var(--primary-hover);
 }
 
 [data-theme="dark"] .about-adopt button {
-  background-color: var(--c3);
+  background-color: var(--primary-color);
 }
 
 [data-theme="dark"] .about-adopt button:hover {
-  background-color: var(--c4);
+  background-color: var(--accent-color);
 }
 
 /* Zona carduri scrollabile - 90% din lățimea paginii */
@@ -225,7 +129,7 @@ header nav a:hover {
 }
 
 [data-theme="dark"] .scroll-cards::-webkit-scrollbar-thumb {
-  background-color: var(--c3);
+  background-color: var(--primary-color);
 }
 
 /* Responsive design */
@@ -259,57 +163,3 @@ header nav a:hover {
   }
 }
 
-/* Dropdown profil */
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.profile-dropdown .dropdown-content {
-  display: none;
-  position: absolute;
-  background: white;
-  padding: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  border-radius: 8px;
-  z-index: 10;
-  right: 0;
-}
-
-.profile-dropdown.active .dropdown-content {
-  display: block;
-}
-
-[data-theme="dark"] .profile-dropdown .dropdown-content {
-  background: #222;
-  color: var(--text-primary);
-  border-color: #555;
-}
-
-.profile-dropdown:hover .dropdown-content,
-.profile-dropdown:focus-within .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 0.7rem 1.2rem;
-  color: #222;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: background var(--transition-speed), color var(--transition-speed);
-}
-
-[data-theme="dark"] .dropdown-content a {
-  color: var(--text-primary);
-}
-
-.dropdown-content a:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-[data-theme="dark"] .dropdown-content a:hover {
-  background: var(--c3);
-  color: #fff;
-}
