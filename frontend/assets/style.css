@@ -93,6 +93,11 @@
     --primary-rgb: 94, 46, 101; 
     --accent-rgb: 238, 165, 37;
     --secondary-rgb: 92, 158, 154;  
+    
+    --success-color: var(--primary-hover);
+    --warning-color: var(--accent-color);
+    --error-color: var(--primary-color);
+    --info-color: var(--primary-hover);
 }
 
 :root[data-theme="dark"] {
