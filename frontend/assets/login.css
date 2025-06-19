@@ -9,10 +9,13 @@
 
 body {
     min-height: 100vh;
+    height: 100vh;
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    overflow: hidden;
+    position: relative;
 }
 
 .login-box {
@@ -31,7 +34,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: fixed;
     right: 0;
     top: 0;
     font-size: 1.1rem;
