@@ -381,25 +381,8 @@ class PetModel {
         } catch (PDOException $e) {
             error_log('Error deleting pet: ' . $e->getMessage());
             return false;
-        }
-    }
+        }    }
     
-    // statistici-> mai tb?????????????
-    public function getPetStatistics($userId) {
-        try {
-            $stats = [];
-            
-            //nr total de animale
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) as total_pets FROM animals WHERE added_by = ?");
-            $stmt->execute([$userId]);
-            $stats['total_pets'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_pets'];
-            
-            
-        } catch (PDOException $e) {
-            error_log('Error getting pet statistics: ' . $e->getMessage());
-            return [];
-        }
-    }   
     public function updatePickupAddress($petId, $userId) {
         try {
             $stmt = $this->pdo->prepare("SELECT animal_id FROM animals WHERE animal_id = ? AND added_by = ?");

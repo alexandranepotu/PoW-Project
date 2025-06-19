@@ -3,7 +3,6 @@ class MyPetsDOMManager {
     constructor() {
         this.containers = {
             pets: null,
-            stats: null,
             messages: null
         };
     }
@@ -23,27 +22,7 @@ class MyPetsDOMManager {
         
         const main = document.querySelector('main') || document.body;
         main.appendChild(container);
-        
-        return container;
-    }
-
-    // creeaza/gaseste containerul pentru statistici
-    getStatsContainer() {
-        if (!this.containers.stats) {
-            this.containers.stats = document.getElementById('statsContainer') || this.createStatsContainer();
-        }
-        return this.containers.stats;
-    }
-
-    createStatsContainer() {
-        const container = document.createElement('div');
-        container.id = 'statsContainer';
-        container.className = 'stats-container';
-        
-        const main = document.querySelector('main') || document.body;
-        main.insertBefore(container, main.firstChild);
-        
-        return container;
+          return container;
     }
 
     // creeaza modal generic

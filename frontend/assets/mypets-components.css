@@ -102,11 +102,6 @@
   text-transform: uppercase;
 }
 
-.status-excellent { background: var(--primary-hover); color: var(--text-light); }
-.status-good { background: var(--accent-color); color: var(--text-light); }
-.status-fair { background: var(--primary-color); color: var(--text-light); }
-.status-poor { background: var(--accent-color); color: var(--text-light); }
-
 /* MEDIA GALLERY SECTION */
 .media-gallery h3 {
   margin: 0 0 16px 0;

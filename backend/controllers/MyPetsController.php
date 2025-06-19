@@ -7,19 +7,16 @@ class MyPetsController {
     
     public function __construct() {
         $this->petModel = new PetModel();    }
-    
-    // GET /api/mypets -> lista animalelor utilizatorului
+      // GET /api/mypets -> lista animalelor utilizatorului
     public function getMyPets() {
         $user = AuthMiddleware::requireAuth(); //verifica daca userul e autentificat
         
         try {
             $pets = $this->petModel->getPetsByUserId($user->user_id);
-            $stats = $this->petModel->getPetStatistics($user->user_id);
             
             echo json_encode([
                 'success' => true,
-                'pets' => $pets,
-                'statistics' => $stats
+                'pets' => $pets
             ]);
             
         } catch (Exception $e) {

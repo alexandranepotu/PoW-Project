@@ -4,101 +4,19 @@ const MyPetsTemplates = {
     petCard: (pet, formatHealthStatus) => `
         <div class="pet-card" data-pet-id="${pet.animal_id}">
             <div class="pet-header">
-                <h3>${pet.name}</h3>
-                <div class="pet-actions">
-                    <button onclick="myPetsManager.viewPetDetails(${pet.animal_id})" class="btn-view">Details</button>
-                    <button onclick="myPetsManager.editPet(${pet.animal_id})" class="btn-edit">Edit</button>
+                <h3>${pet.name}</h3>                <div class="pet-actions">
+                    <button onclick="myPetsManager.editPet(${pet.animal_id})" class="btn-edit">View & Edit</button>
                     <button onclick="myPetsManager.deletePet(${pet.animal_id})" class="btn-delete">Delete</button>
                 </div>
-            </div>
-            <div class="pet-info">
+            </div>            <div class="pet-info">
                 <p><strong>Specie:</strong> ${pet.species}</p>
                 <p><strong>Breed:</strong> ${pet.breed || 'N/A'}</p>
                 <p><strong>Age:</strong> ${pet.age || 'N/A'} years</p>
-                <p><strong>Sex:</strong> ${pet.sex ? 'Female' : 'Male'}</p>
+                <p><strong>Sex:</strong> ${pet.sex === 'female' ? 'Female' : pet.sex === 'male' ? 'Male' : 'Unknown'}</p>
                 <p><strong>Health Status:</strong> ${formatHealthStatus(pet.health_status)}</p>
                 <p><strong>Available for adoption:</strong> ${pet.available ? 'Yes' : 'No'}</p>
             </div>
-            <div class="pet-description">
-                <p>${pet.description || 'No description'}</p>
-            </div>
-        </div>
-    `,
-
-    // Template pentru statistici->tb??
-    statisticsGrid: (stats) => `
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h4>All pets</h4>
-                <span class="stat-number">${stats.total_pets || 0}</span>
-            </div>
-            <div class="stat-card">
-                <h4>Recent feedings</h4>
-                <span class="stat-number">${stats.recent_feedings || 0}</span>
-                <small>Last week</small>
-            </div>
-            <div class="stat-card">
-                <h4>Medical emergencies</h4>
-                <span class="stat-number">${stats.emergency_records || 0}</span>
-            </div>
-        </div>
-    `,
-
-    // Template pentru detalii animal (modal)
-    petDetailsModal: (pet, renderFeedingRecords, renderMedicalRecords, renderMediaGallery) => `
-        <div class="pet-details">
-            <div class="pet-basic-info">
-                <h3>${pet.name}</h3>
-                <div class="info-grid">
-                    <p><strong>Specie:</strong> ${pet.species}</p>
-                    <p><strong>Breed:</strong> ${pet.breed || 'N/A'}</p>
-                    <p><strong>Age:</strong> ${pet.age || 'N/A'} years</p>
-                    <p><strong>Sex:</strong> ${pet.sex ? 'Female' : 'Male'}</p>
-                    <p><strong>Health status:</strong> ${pet.health_status}</p>
-                    <p><strong>Pickup address:</strong> ${pet.pickup_address || 'N/A'}</p>
-                </div>
-                <div class="description">
-                    <strong>Description:</strong>
-                    <p>${pet.description || 'No description'}</p>
-                </div>
-            </div>
-            
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="feeding">Feeding calendar</button>
-                <button class="tab-btn" data-tab="medical">Medical history</button>
-                <button class="tab-btn" data-tab="media">Media</button>
-            </div>
-            
-            <div class="tab-content">
-                <div class="tab-pane active" id="feeding-tab">
-                    <div class="section-header">
-                        <h4>Feeding calendar</h4>
-                        <button onclick="myPetsManager.showAddFeedingForm(${pet.animal_id})" class="btn-add-small">+ Add</button>
-                    </div>
-                    <div class="feeding-list">
-                        ${renderFeedingRecords(pet.feeding_calendar || [])}
-                    </div>
-                </div>
-                
-                <div class="tab-pane" id="medical-tab">
-                    <div class="section-header">
-                        <h4>Medical history</h4>
-                        <button onclick="myPetsManager.showAddMedicalForm(${pet.animal_id})" class="btn-add-small">+ Add</button>
-                    </div>
-                    <div class="medical-list">
-                        ${renderMedicalRecords(pet.medical_history || [])}
-                    </div>
-                </div>
-                
-                <div class="tab-pane" id="media-tab">
-                    <div class="section-header">
-                        <h4>Media</h4>
-                        <button onclick="myPetsManager.showUploadForm(${pet.animal_id})" class="btn-add-small">+ Upload</button>
-                    </div>
-                    <div class="media-gallery">
-                        ${renderMediaGallery(pet.media || [])}
-                    </div>
-                </div>
+            <div class="pet-description">                <p>${pet.description || 'No description'}</p>
             </div>
         </div>
     `,
@@ -200,25 +118,23 @@ const MyPetsTemplates = {
             </div>
             <div class="modal-body"></div>
         </div>
-    `,
-
-    // Template pentru editarea unui animal
-    editPetForm: (pet) => `
+    `,    // Template pentru editarea unui animal
+    editPetForm: (pet) => {
+        return `
         <form id="editPetForm" class="edit-pet-form">
             <div class="form-section">
                 <h3>Basic Information</h3>
                 <div class="form-group">
                     <label for="edit_name">Name:</label>                    <input type="text" id="edit_name" name="name" value="${pet.name || ''}" required>
                 </div>
-                
-                <div class="form-group">
+                  <div class="form-group">
                     <label for="edit_species">Species:</label>
                     <select id="edit_species" name="species" required>
-                        <option value="dog" ${(pet.species || '') === 'dog' ? 'selected' : ''}>Dog</option>
-                        <option value="cat" ${(pet.species || '') === 'cat' ? 'selected' : ''}>Cat</option>
-                        <option value="bird" ${(pet.species || '') === 'bird' ? 'selected' : ''}>Bird</option>
-                        <option value="rabbit" ${(pet.species || '') === 'rabbit' ? 'selected' : ''}>Rabbit</option>
-                        <option value="other" ${(pet.species || '') === 'other' ? 'selected' : ''}>Other</option>
+                        <option value="dog" ${(pet.species || '').toLowerCase() === 'dog' ? 'selected' : ''}>Dog</option>
+                        <option value="cat" ${(pet.species || '').toLowerCase() === 'cat' ? 'selected' : ''}>Cat</option>
+                        <option value="bird" ${(pet.species || '').toLowerCase() === 'bird' ? 'selected' : ''}>Bird</option>
+                        <option value="rabbit" ${(pet.species || '').toLowerCase() === 'rabbit' ? 'selected' : ''}>Rabbit</option>
+                        <option value="other" ${(pet.species || '').toLowerCase() === 'other' ? 'selected' : ''}>Other</option>
                     </select>
                 </div>
                 
@@ -231,28 +147,25 @@ const MyPetsTemplates = {
                     <label for="edit_age">Age (years):</label>
                     <input type="number" id="edit_age" name="age" value="${pet.age || ''}" min="0" max="30">
                 </div>
-                
-                <div class="form-group">
+                  <div class="form-group">
                     <label for="edit_sex">Sex:</label>
                     <select id="edit_sex" name="sex">
                         <option value="">Unknown</option>
-                        <option value="0" ${(pet.sex === '0' || pet.sex === 0) ? 'selected' : ''}>Male</option>
-                        <option value="1" ${(pet.sex === '1' || pet.sex === 1) ? 'selected' : ''}>Female</option>
+                        <option value="male" ${(pet.sex === 'male' || pet.sex === '0' || pet.sex === 0) ? 'selected' : ''}>Male</option>
+                        <option value="female" ${(pet.sex === 'female' || pet.sex === '1' || pet.sex === 1) ? 'selected' : ''}>Female</option>
                     </select>
                 </div>
-                
-                <div class="form-group">
+                  <div class="form-group">
                     <label for="edit_health_status">Health Status:</label>
                     <select id="edit_health_status" name="health_status">
                         <option value="">Select status</option>
                         <option value="healthy" ${(pet.health_status || '') === 'healthy' ? 'selected' : ''}>Healthy</option>
-                        <option value="excellent" ${(pet.health_status || '') === 'excellent' ? 'selected' : ''}>Excellent</option>
                         <option value="good" ${(pet.health_status || '') === 'good' ? 'selected' : ''}>Good</option>
-                        <option value="fair" ${(pet.health_status || '') === 'fair' ? 'selected' : ''}>Fair</option>
                         <option value="poor" ${(pet.health_status || '') === 'poor' ? 'selected' : ''}>Poor</option>
-                        <option value="recovering" ${(pet.health_status || '') === 'recovering' ? 'selected' : ''}>Recovering</option>
                         <option value="injured" ${(pet.health_status || '') === 'injured' ? 'selected' : ''}>Injured</option>
                         <option value="sick" ${(pet.health_status || '') === 'sick' ? 'selected' : ''}>Sick</option>
+                        <option value="critical" ${(pet.health_status || '') === 'critical' ? 'selected' : ''}>Critical</option>
+                        <option value="special_needs" ${(pet.health_status || '') === 'special_needs' ? 'selected' : ''}>Special Needs</option>
                         <option value="under_treatment" ${(pet.health_status || '') === 'under_treatment' ? 'selected' : ''}>Under Treatment</option>
                     </select>
                 </div>
@@ -298,16 +211,16 @@ const MyPetsTemplates = {
                     <div id="currentMediaList" class="media-gallery">                        ${pet.media && pet.media.length > 0 ? 
                             pet.media.slice(0, 6).map(media => `
                                 <div class="media-item edit-mode">
-                                    ${media.file_type && media.file_type.startsWith('image/') ? 
-                                        `<img src="${media.file_path}" alt="Pet media" class="media-preview">` :
-                                        `<video class="media-preview" muted><source src="${media.file_path}"></video>`
+                                    ${media.type === 'image' || (media.file_type && media.file_type.startsWith('image/')) ? 
+                                        `<img src="http://localhost${media.file_path}" alt="Pet media" class="media-preview" loading="lazy">` :
+                                        `<video class="media-preview" muted preload="metadata"><source src="http://localhost${media.file_path}"></video>`
                                     }
                                     <button type="button" onclick="myPetsManager.deleteMedia(${media.media_id})" class="btn-delete-small">Delete</button>
                                 </div>
                             `).join('') + 
                             (pet.media.length > 6 ? `<div class="media-item-more"><span>+${pet.media.length - 6} more...</span></div>` : '') : 
                             '<p>No media files</p>'
-                        }                    </div>
+                        }</div>
                 </div>
             </div>
               <div class="form-section">
@@ -321,12 +234,12 @@ const MyPetsTemplates = {
                     </div>
                     <small class="address-note">Address is automatically set from your profile or default location</small>
                 </div>
-            </div>
-            
+            </div>            
             <div class="form-actions">
                 <button type="submit" class="btn-primary">Save Changes</button>
                 <button type="button" onclick="document.getElementById('editPetModal').remove()" class="btn-secondary">Cancel</button>
             </div>
         </form>
-    `
+        `;
+    }
 };

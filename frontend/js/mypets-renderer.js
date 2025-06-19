@@ -28,28 +28,9 @@ class MyPetsRenderer {
         if (pets.length === 0) {
             return MyPetsTemplates.emptyState();
         }
-        
-        return pets.map(pet => 
+          return pets.map(pet => 
             MyPetsTemplates.petCard(pet, this.formatHealthStatus.bind(this))
         ).join('');
-    }
-
-    // rendereaza statisticile
-    renderStatistics(stats) {
-        if (!stats || Object.keys(stats).length === 0) {
-            return '';
-        }
-        return MyPetsTemplates.statisticsGrid(stats);
-    }
-
-    // rendereaza detaliile unui animal
-    renderPetDetails(pet) {
-        return MyPetsTemplates.petDetailsModal(
-            pet,
-            this.renderFeedingRecords.bind(this),
-            this.renderMedicalRecords.bind(this),
-            this.renderMediaGallery.bind(this)
-        );
     }
 
     // rendereaza inregistrarile de hranire
@@ -61,7 +42,7 @@ class MyPetsRenderer {
         return records.map(record => `
             <div class="record-item">
                 <div class="record-info">
-                    <strong>${new Date(record.feed_time).toLocaleString('ro-RO')}</strong>
+                    <strong>${new Date(record.feed_time).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}</strong>
                     <p>Food type: ${record.food_type}</p>
                     ${record.notes ? `<p>Note: ${record.notes}</p>` : ''}
                 </div>
@@ -87,17 +68,15 @@ class MyPetsRenderer {
                 <button onclick="myPetsManager.deleteMedicalRecord(${record.record_id})" class="btn-delete-small">🗑️</button>
             </div>
         `).join('');
-    }
-
-    // rendereaza galeria media
+    }    // rendereaza galeria media
     renderMediaGallery(media) {
         if (!media || media.length === 0) {
             return '<p class="empty-message">No media</p>';
         }        return media.map(item => `
             <div class="media-item">
-                ${item.type === 'image' ? 
-                    `<img src="http://localhost/${item.file_path}" alt="${item.description || 'Pet image'}" loading="lazy">` :
-                    `<video src="http://localhost/${item.file_path}" muted preload="metadata" controls="false"></video>`
+                ${item.type === 'image' || (item.file_type && item.file_type.startsWith('image/')) ? 
+                    `<img src="http://localhost${item.file_path}" alt="${item.description || 'Pet image'}" loading="lazy">` :
+                    `<video src="http://localhost${item.file_path}" muted preload="metadata" controls="false"></video>`
                 }
                 <div class="media-controls">
                     <p class="media-description">${item.description || ''}</p>
