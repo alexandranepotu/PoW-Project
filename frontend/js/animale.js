@@ -154,13 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Animal ID not available');
       return;
     }
-    
-    const confirmAdopt = confirm(`Are you sure you want to start the adoption process for ${animalName}?`);
-    if (confirmAdopt) {
-      alert(`Starting adoption process for ${animalName} (ID: ${animalId})\n\nThis would redirect to the adoption form.`);
-      //urmeaza logica pt adoptie aici
-      //window.location.href = `adoption-form.html?animal_id=${animalId}`;
-    }
+    //redirect la pagina de adoptie cu id-ul animalului
+    window.location.href = `adopt.html?id=${animalId}`;
   };
 
   //incarc initial animalele
