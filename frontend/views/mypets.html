@@ -4,14 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pet Adoption</title>
-  <link rel="stylesheet" href="../assets/navbar.css" />
-  <link rel="stylesheet" href="../assets/style.css" />
-  <link rel="stylesheet" href="../assets/animale.css" />
-  <link rel="stylesheet" href="../assets/adopt-form.css" />
-  <link rel="stylesheet" href="../assets/mypets-base.css" />
-  <link rel="stylesheet" href="../assets/mypets-components.css" />
-  <link rel="stylesheet" href="../assets/mypets-forms.css" />
-  <link rel="stylesheet" href="../assets/mypets-dark-theme.css" />
+  <link rel="stylesheet" href="../assets/navbar.css">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/mypets-base.css">
+  <link rel="stylesheet" href="../assets/mypets-components.css">
+  <link rel="stylesheet" href="../assets/mypets-forms.css">
+  <link rel="stylesheet" href="../assets/mypets-dark-theme.css">
 </head>
 <body>
 <header>
@@ -213,69 +211,15 @@
 </div>
 
   </main>
-  <script src="../js/global-theme.js"></script>  <!-- functionalitate navbar -->
+  <script src="../js/global-theme.js"></script>  <!-- NAVBAR FUNCTIONALITY -->
   <script src="../js/navbar.js"></script>
-  <!-- templateuri dinamice HTML -->
+  <!-- TEMPLATEURI DINAMICE HTML -->
   <script src="../js/mypets-templates.js"></script>
-  <!-- dom management (adauga/sterge/modifica)-->
+  <!-- DOM MANAGEMENT(adauga/sterge/modifica)-->
   <script src="../js/mypets-dom.js"></script>
-  <!-- rendering -->
+  <!-- RENDERING -->
   <script src="../js/mypets-renderer.js"></script>
-  <!-- logica principala -->
+  <!-- LOGICA PRINCIPALA -->
   <script src="../js/mypets.js"></script>
-  <!-- dropdown inbox -->
-<script>
-  (function() {
-  const inboxDropdown = document.querySelector('.inbox-dropdown');
-  if (!inboxDropdown) return;
-  const inboxText = inboxDropdown.querySelector('.inbox-text');
-  const dropdownContent = inboxDropdown.querySelector('.dropdown-content');
-  let open = false;
-
-  function openDropdown() {
-    dropdownContent.classList.add('show');
-    open = true;
-  }
-  function closeDropdown() {
-    dropdownContent.classList.remove('show');
-    open = false;
-  }
-  inboxText.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (open) closeDropdown();
-    else openDropdown();
-  });
-  document.addEventListener('click', function(e) {
-    if (!inboxDropdown.contains(e.target)) closeDropdown();
-  });
-})();
-</script>
-<!-- dropdown profil -->
-<script>
-  (function() {
-    const profileDropdown = document.querySelector('.profile-dropdown');
-    if (!profileDropdown) return;
-    const profileText = profileDropdown.querySelector('.profile-text');
-    const dropdownContent = profileDropdown.querySelector('.dropdown-content');
-    let open = false;
-
-    function openDropdown() {
-      dropdownContent.classList.add('show');
-      open = true;
-    }
-    function closeDropdown() {
-      dropdownContent.classList.remove('show');
-      open = false;
-    }
-    profileText.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (open) closeDropdown();
-      else openDropdown();
-    });
-    document.addEventListener('click', function(e) {
-      if (!profileDropdown.contains(e.target)) closeDropdown();
-    });
-  })();
-</script>
 </body>
 </html>

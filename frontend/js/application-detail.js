@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             medicalHtml = '<h2>Medical Visits</h2><p>No medical records found.</p>';
         }
+        // get current user id (assume localStorage.user_id)
+        const currentUserId = localStorage.getItem('user_id');
+        console.log('Current user id:', currentUserId, 'Owner id:', owner.id);
         //randez detaliile ca la adoptie
         container.innerHTML = `
             <section class="adopt-form-view">
@@ -80,8 +83,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <p><strong>Name:</strong> ${owner.full_name || owner.username || ''}</p>
                 <p><strong>Email:</strong> ${owner.email || ''}</p>
                 <div id="application-action-buttons" style="display:flex;justify-content:center;align-items:center;gap:20px;margin-top:30px;">
+                    ${currentUserId && owner.id && String(currentUserId) === String(owner.id) ? `
                     <button id="reject-btn" class="adopt-form-view" style="background:#d1b3ff;color:#fff;min-width:120px;">Reject</button>
                     <button id="accept-btn" class="adopt-form-view" style="background:#6c3483;color:#fff;min-width:120px;">Accept</button>
+                    ` : ''}
                 </div>
             </section>
         `;
@@ -110,25 +115,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         //logica butoanelor de accept/reject
         const acceptBtn = document.getElementById('accept-btn');
         const rejectBtn = document.getElementById('reject-btn');
-        function updateStatus(newStatus) {
-            fetch(`http://localhost/PoW-Project/backend/public/api/applications/${appId}/status`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            })
-            .then(res => res.json())
-            .then(result => {
-                if (result && !result.error) {
-                    //update la UI sa arate statusul nou
-                    document.getElementById('application-action-buttons').innerHTML = `<span style="color:${newStatus==='accepted'?'#4caf50':'#d32f2f'};font-weight:bold;">Application ${newStatus.charAt(0).toUpperCase()+newStatus.slice(1)}!</span>`;
-                } else {
-                    alert(result.error || 'Failed to update status');
-                }
-            })
-            .catch(() => alert('Failed to update status'));
+        // hide buttons if already decided
+        if (app.status === 'accepted' || app.status === 'rejected') {
+            document.getElementById('application-action-buttons').innerHTML = `<span style="color:${app.status==='accepted'?'#4caf50':'#d32f2f'};font-weight:bold;">Application ${app.status.charAt(0).toUpperCase()+app.status.slice(1)}!</span>`;
+        } else {
+            function updateStatus(newStatus) {
+                fetch(`http://localhost/PoW-Project/backend/public/api/applications/${appId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result && !result.error) {
+                        document.getElementById('application-action-buttons').innerHTML = `<span style=\"color:${newStatus==='accepted'?'#4caf50':'#d32f2f'};font-weight:bold;\">Application ${newStatus.charAt(0).toUpperCase()+newStatus.slice(1)}!</span>`;
+                    } else {
+                        alert(result.error || 'Failed to update status');
+                    }
+                })
+                .catch(() => alert('Failed to update status'));
+            }
+            if (acceptBtn) acceptBtn.onclick = () => updateStatus('accepted');
+            if (rejectBtn) rejectBtn.onclick = () => updateStatus('rejected');
         }
-        if (acceptBtn) acceptBtn.onclick = () => updateStatus('accepted');
-        if (rejectBtn) rejectBtn.onclick = () => updateStatus('rejected');
     } catch (err) {
         container.innerHTML = `<p style=\"color:red\">Error loading application details: ${err}</p>`;
     }

@@ -56,6 +56,13 @@ class AdoptionApplicationController {
         $userModel = new User($this->model->getDb());
         $applicant = $userModel->findById($app['applicant_id']);
         $owner = $userModel->findById($app['owner_id']);
+        //id ul de user in loc de user_id
+        if ($owner && isset($owner['user_id'])) {
+            $owner['id'] = (string)$owner['user_id'];
+        }
+        if ($applicant && isset($applicant['user_id'])) {
+            $applicant['id'] = (string)$applicant['user_id'];
+        }
         echo json_encode([
             'application' => $app,
             'pet' => $pet,
