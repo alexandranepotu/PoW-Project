@@ -1,3 +1,17 @@
+CREATE TABLE IF NOT EXISTS news (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO news (title, content) VALUES
+('Adoptathon Weekend!', 'Join us this weekend for our big Adoptathon event! Dozens of cats and dogs are looking for loving homes. Free starter kits for all adopters.'),
+('Pet Vaccination Drive', 'A free vaccination drive for all adopted pets will be held on July 5th at the city park. Bring your adoption papers!'),
+('New Feature: Pet Profiles', 'You can now create detailed profiles for your pets, including photos and medical history. Check out the new feature on your dashboard.'),
+('Volunteer Opportunities', 'We are looking for volunteers to help with our upcoming events and daily shelter activities. Sign up through your profile page.'),
+('Success Story: Bella Finds a Home', 'Bella, our 2-year-old Labrador, has found her forever family! Thank you to everyone who shared her story.');
+
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,

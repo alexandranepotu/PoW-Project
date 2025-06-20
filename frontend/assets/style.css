@@ -46,6 +46,17 @@
   border: 1px solid #444;
 }
 
+/* Dark mode pentru imagini - previne fundaluri albe */
+[data-theme="dark"] img {
+  background: transparent !important;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] video {
+  background: var(--bg-primary) !important;
+  border-radius: 4px;
+}
+
 [data-theme="dark"] th,
 [data-theme="dark"] td {
   border: 1px solid #444;

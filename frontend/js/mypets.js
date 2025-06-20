@@ -51,11 +51,9 @@ class MyPetsManager {
                 credentials: 'include'
             });
             
-            if (response.ok) {
-                const data = await response.json();
+            if (response.ok) {                const data = await response.json();
                 this.pets = data.pets || [];
                 this.renderPetsList(this.pets);  //afisez lissta animalelor
-                this.renderStatistics(data.statistics || {}); //statistici->tb???????
             } else if (response.status === 401) {
                 this.showMessage('You must authenticate', 'error');
                 setTimeout(() => {
@@ -68,45 +66,16 @@ class MyPetsManager {
         } catch (error) {
             this.showMessage('Error loading pets: ' + error.message, 'error');
         }
-    }
-      renderPetsList(pets) {
+    }      renderPetsList(pets) {
         const container = this.domManager.getPetsContainer();
         container.innerHTML = this.renderer.renderPetsList(pets);
     }
     
     createPetsContainer() {
         return this.domManager.createPetsContainer();
-    }    renderStatistics(stats) {
-        const container = this.domManager.getStatsContainer();
-        container.innerHTML = this.renderer.renderStatistics(stats);
     }
-    
-    createStatsContainer() {
-        return this.domManager.createStatsContainer();
-    }
-      async viewPetDetails(petId) {
-        try {
-            const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}`, {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                this.showPetDetailsModal(data.pet);  //afisare modal cu detalii
-            } else {
-                throw new Error('Failed to load pet details');
-            }
-        } catch (error) {
-            this.showMessage('Error loading pet details', 'error');
-        }
-    }
-      showPetDetailsModal(pet) {
-        const modal = this.domManager.createModal('petDetailsModal', 'Pet details - ' + pet.name);
-        modal.querySelector('.modal-body').innerHTML = this.renderer.renderPetDetails(pet);
-        this.domManager.setupTabSwitching(modal);
-        this.currentPetId = pet.animal_id;
-    }
-      renderFeedingRecords(records) {
+
+    renderFeedingRecords(records) {
         return this.renderer.renderFeedingRecords(records);
     }
     
@@ -181,10 +150,9 @@ class MyPetsManager {
                     throw new Error('Failed to add feeding record');
                 }
             }
-            
-            this.showMessage(`${feedingRecords.length} feeding records added successfully!`, 'success');
+              this.showMessage(`${feedingRecords.length} feeding records added successfully!`, 'success');
             document.getElementById('addFeedingModal').remove();
-            this.viewPetDetails(petId);
+            this.editPet(petId);
             
         } catch (error) {
             this.showMessage('Error adding feeding records', 'error');
@@ -240,10 +208,9 @@ class MyPetsManager {
                 if (!response.ok) {
                     throw new Error('Failed to add medical record');
                 }
-            }
-            this.showMessage(`${medicalRecords.length} medical records added successfully!`, 'success');
+            }            this.showMessage(`${medicalRecords.length} medical records added successfully!`, 'success');
             document.getElementById('addMedicalModal').remove();
-            this.viewPetDetails(petId);     
+            this.editPet(petId);
         } catch (error) {
             this.showMessage('Error adding medical records', 'error');
         }
@@ -310,9 +277,8 @@ class MyPetsManager {
             if (failed.length > 0) {
                 this.showMessage(`${failed.length} files failed to upload: ${failed.map(f => f.filename).join(', ')}`, 'error');
             }
-            
-            document.getElementById('uploadModal').remove();
-            this.viewPetDetails(petId);
+              document.getElementById('uploadModal').remove();
+            this.editPet(petId);
             
         } catch (error) {
             console.error('Error during multiple upload:', error);
@@ -328,10 +294,9 @@ class MyPetsManager {
                 method: 'DELETE',
                 credentials: 'include'
             });
-            
-            if (response.ok) {
+              if (response.ok) {
                 this.showMessage('Record deleted succesfully!', 'success');
-                this.viewPetDetails(this.currentPetId);
+                this.editPet(this.currentPetId);
             } else {
                 throw new Error('Failed to delete feeding record');
             }
@@ -349,10 +314,9 @@ class MyPetsManager {
                 method: 'DELETE',
                 credentials: 'include'
             });
-            
-            if (response.ok) {
+              if (response.ok) {
                 this.showMessage('Medical record deleted succesfully!', 'success');
-                this.viewPetDetails(this.currentPetId);
+                this.editPet(this.currentPetId);
             } else {
                 throw new Error('Failed to delete medical record');
             }
@@ -370,10 +334,9 @@ class MyPetsManager {
                 method: 'DELETE',
                 credentials: 'include'
             });
-            
-            if (response.ok) {
+              if (response.ok) {
                 this.showMessage('Media file deleted succesfully!', 'success');
-                this.viewPetDetails(this.currentPetId);
+                this.editPet(this.currentPetId);
             } else {
                 throw new Error('Failed to delete media');
             }
@@ -381,8 +344,7 @@ class MyPetsManager {
             console.error('Error deleting media:', error);
             this.showMessage('Error deleting media', 'error');
         }
-    }
-      async editPet(petId) {
+    }      async editPet(petId) {
         try {
             // Încarcă datele curente ale animalului
             const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}`, {
@@ -765,8 +727,54 @@ class MyPetsManager {
                     Emergency
                 </label>
             </div>        `;        
-        container.appendChild(newEntry);
-    }    
+        container.appendChild(newEntry);    }    
+
+    async handleEditPet(e, petId) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        
+        //ia datele din formular
+        const petData = {
+            name: formData.get('name'),
+            species: formData.get('species'),
+            breed: formData.get('breed') || '',
+            age: parseInt(formData.get('age')) || null,
+            sex: formData.get('sex') || null,
+            health_status: formData.get('health_status') || '',
+            description: formData.get('description') || ''
+        };
+        
+        //validare date obligatorii
+        if (!petData.name || !petData.species) {
+            this.showMessage('Please fill in the required fields (Name and Species)', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(petData)
+            });
+            
+            if (response.ok) {
+                this.showMessage('Pet updated successfully!', 'success');
+                document.getElementById('editPetModal').remove();
+                this.loadMyPets(); // Reîncarcă lista de animale
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to update pet');
+            }
+        } catch (error) {
+            console.error('Error updating pet:', error);
+            this.showMessage('Error updating pet: ' + error.message, 'error');
+        }
+    }
+    
     formatHealthStatus(healthStatus) {
         return this.renderer.formatHealthStatus(healthStatus);
     }
