@@ -9,13 +9,10 @@
 
 body {
     min-height: 100vh;
-    height: 100vh;
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    overflow: hidden;
-    position: relative;
 }
 
 .login-box {
@@ -34,9 +31,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: fixed;
+    position: relative;
     right: 0;
-    top: 0;
+    top: -80px; /* Move the login box upwards */
     font-size: 1.1rem;
 }
 
@@ -158,12 +155,14 @@ body {
 
 @media (max-width: 600px) {
     .login-box {
+        top: -30px;
         width: 100%;
         max-width: 340px;
         padding: 30px 10px;
         margin: 40px 5px 20px 5px; /* crește margin-top */
         height: auto;
         border-radius: var(--border-radius-large);
+        margin-top: 30px;
     }
     body {
         align-items: flex-start;

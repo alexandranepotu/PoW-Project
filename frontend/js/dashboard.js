@@ -54,7 +54,7 @@ class AuthManager {
             this.redirectToLogin();
         }
     }    clearLocalStorage() {
-        // Clear all authentication data (JWT is handled by httpOnly cookie on server)
+        //eliberez toate datele din localStorage
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userData');
         localStorage.removeItem('userToken');
@@ -70,7 +70,7 @@ class AuthManager {
     }
 }
 
-// Global logout function for onclick events
+//logout functie 
 async function logout() {
     if (window.authManager) {
         await window.authManager.logout();
@@ -78,12 +78,11 @@ async function logout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inițializează AuthManager pentru a verifica autentificarea
+    //initializare AuthManager  
     window.authManager = new AuthManager();
     
-    // Doar dacă utilizatorul este autentificat, setup logout listener
+    //daca utilizatorul este autentificat, adauga event listener pentru logout
     if (window.authManager.checkAuth()) {
-        // Adaugă event listener pentru logout
         const logoutLink = document.querySelector('a[href="#logout"]');
         if (logoutLink) {
             logoutLink.addEventListener('click', async (e) => {

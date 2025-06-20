@@ -286,6 +286,12 @@ try {
             echo json_encode(['error' => 'Method not allowed']);        }        exit;
         }
 
+    // rute pentru aplicatii de adoptie
+require_once __DIR__ . '/applications.php'; //pt endpoint-uri
+// rutele pentru aplicatii de adoptie sunt handle-uite in applications.php
+// - GET /api/applications/submitted?user_id=... (submitted applications)
+// - GET /api/applications/received?user_id=... (received applications)
+
     //daca nicio ruta nu se potriveste
     http_response_code(404);
     echo json_encode(['error' => 'Route not found: ' . $path]);

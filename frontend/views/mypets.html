@@ -3,19 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Adoption</title>  <link rel="stylesheet" href="../assets/navbar.css">
-  <link rel="stylesheet" href="../assets/style.css">
-  <link rel="stylesheet" href="../assets/mypets-base.css">
-  <link rel="stylesheet" href="../assets/mypets-components.css">
-  <link rel="stylesheet" href="../assets/mypets-forms.css">
-  <link rel="stylesheet" href="../assets/mypets-dark-theme.css">
+  <title>Pet Adoption</title>
+  <link rel="stylesheet" href="../assets/navbar.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="../assets/animale.css" />
+  <link rel="stylesheet" href="../assets/adopt-form.css" />
+  <link rel="stylesheet" href="../assets/mypets-base.css" />
+  <link rel="stylesheet" href="../assets/mypets-components.css" />
+  <link rel="stylesheet" href="../assets/mypets-forms.css" />
+  <link rel="stylesheet" href="../assets/mypets-dark-theme.css" />
 </head>
 <body>
 <header>
   <a href="dashboard.html" class="logo">Pet Adoption</a>
   <nav>
-    <input type="search" placeholder="Caută..." />
     <a href="animale.html">Adopt</a>
+    <div class="inbox-dropdown">
+      <div class="inbox-text profile-text">
+        <span>Inbox</span>
+      </div>
+      <div class="dropdown-content">
+        <a href="submitted-applications.html">Submitted Applications</a>
+        <a href="received-applications.html">Received Applications</a>
+      </div>
+    </div>
     <div class="profile-dropdown">
       <div class="profile-text">
         <span>Profile</span>
@@ -109,18 +120,26 @@
         <option value="">-- Select --</option>
         <option value="female">Female</option>
         <option value="male">Male</option>
-    </select>    
-    <label for="healthStatus">Health Status:</label>   
-     <select id="healthStatus" name="healthStatus">
+    </select>    <label for="healthStatus">Health Status:</label>
+    <select id="healthStatus" name="healthStatus">
         <option value="">-- Select Health Status --</option>
         <option value="healthy">Healthy</option>
+        <option value="excellent">Excellent</option>
         <option value="good">Good</option>
+        <option value="fair">Fair</option>
         <option value="poor">Poor</option>
+        <option value="recovering">Recovering</option>
         <option value="injured">Injured</option>
         <option value="sick">Sick</option>
         <option value="critical">Critical</option>
+        <option value="vaccinated">Vaccinated</option>
+        <option value="spayed_neutered">Spayed/Neutered</option>
+        <option value="pregnant">Pregnant</option>
+        <option value="elderly">Elderly</option>
         <option value="special_needs">Special Needs</option>
         <option value="under_treatment">Under Treatment</option>
+        <option value="quarantine">Quarantine</option>
+        <option value="unknown">Unknown</option>
     </select>
 
     <label for="description">Description:</label>
@@ -194,15 +213,69 @@
 </div>
 
   </main>
-  <script src="../js/global-theme.js"></script>  <!-- NAVBAR FUNCTIONALITY -->
+  <script src="../js/global-theme.js"></script>  <!-- functionalitate navbar -->
   <script src="../js/navbar.js"></script>
-  <!-- TEMPLATEURI DINAMICE HTML -->
+  <!-- templateuri dinamice HTML -->
   <script src="../js/mypets-templates.js"></script>
-  <!-- DOM MANAGEMENT(adauga/sterge/modifica)-->
+  <!-- dom management (adauga/sterge/modifica)-->
   <script src="../js/mypets-dom.js"></script>
-  <!-- RENDERING -->
+  <!-- rendering -->
   <script src="../js/mypets-renderer.js"></script>
-  <!-- LOGICA PRINCIPALA -->
+  <!-- logica principala -->
   <script src="../js/mypets.js"></script>
+  <!-- dropdown inbox -->
+<script>
+  (function() {
+  const inboxDropdown = document.querySelector('.inbox-dropdown');
+  if (!inboxDropdown) return;
+  const inboxText = inboxDropdown.querySelector('.inbox-text');
+  const dropdownContent = inboxDropdown.querySelector('.dropdown-content');
+  let open = false;
+
+  function openDropdown() {
+    dropdownContent.classList.add('show');
+    open = true;
+  }
+  function closeDropdown() {
+    dropdownContent.classList.remove('show');
+    open = false;
+  }
+  inboxText.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (open) closeDropdown();
+    else openDropdown();
+  });
+  document.addEventListener('click', function(e) {
+    if (!inboxDropdown.contains(e.target)) closeDropdown();
+  });
+})();
+</script>
+<!-- dropdown profil -->
+<script>
+  (function() {
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    if (!profileDropdown) return;
+    const profileText = profileDropdown.querySelector('.profile-text');
+    const dropdownContent = profileDropdown.querySelector('.dropdown-content');
+    let open = false;
+
+    function openDropdown() {
+      dropdownContent.classList.add('show');
+      open = true;
+    }
+    function closeDropdown() {
+      dropdownContent.classList.remove('show');
+      open = false;
+    }
+    profileText.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (open) closeDropdown();
+      else openDropdown();
+    });
+    document.addEventListener('click', function(e) {
+      if (!profileDropdown.contains(e.target)) closeDropdown();
+    });
+  })();
+</script>
 </body>
 </html>

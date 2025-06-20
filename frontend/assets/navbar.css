@@ -146,6 +146,72 @@ header nav a.active {
   color: #333 !important;
 }
 
+/* Inbox dropdown */
+.inbox-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.inbox-dropdown .inbox-text {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color var(--transition-speed, 0.3s);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  background: transparent;
+}
+.inbox-dropdown .inbox-text:hover,
+.inbox-dropdown .inbox-text.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.inbox-dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1001;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.inbox-dropdown .dropdown-content.show {
+  display: block;
+}
+.inbox-dropdown .dropdown-content a {
+  color: #333 !important;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-weight: normal !important;
+  transition: background-color var(--transition-speed, 0.3s);
+}
+.inbox-dropdown .dropdown-content a:hover {
+  background-color: #f1f1f1;
+  color: #333 !important;
+}
+[data-theme="dark"] .inbox-dropdown .inbox-text {
+  color: #e0e0e0;
+}
+[data-theme="dark"] .inbox-dropdown .inbox-text:hover,
+[data-theme="dark"] .inbox-dropdown .inbox-text.active {
+  background-color: #404040;
+}
+[data-theme="dark"] .inbox-dropdown .dropdown-content {
+  background-color: #2c2c2c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .inbox-dropdown .dropdown-content a {
+  color: #e0e0e0 !important;
+}
+[data-theme="dark"] .inbox-dropdown .dropdown-content a:hover {
+  background-color: #404040;
+  color: #e0e0e0 !important;
+}
+
 /* Dark mode navbar */
 [data-theme="dark"] header {
   background: #121212;

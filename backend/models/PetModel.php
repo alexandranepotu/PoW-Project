@@ -6,8 +6,8 @@ class PetModel {
     private $pdo;
     
     public function __construct() {
-        global $pdo;
-        $this->pdo = $pdo;    }    //operatii crud
+        global $pdo; // foloseste conexiunea la baza de date din config
+        $this->pdo = $pdo; }    //operatii crud
     public function insertPet($data) {
         try {
             // obtine adresa utilizatorului
@@ -69,19 +69,19 @@ class PetModel {
     }    
     public function insertMedicalRecords($petId, $medicalRecords) {
         try {
-            $stmt = $this->pdo->prepare("INSERT INTO medical_records (animal_id, record_date, description, treatment, emergency) VALUES (?, ?, ?, ?, ?)");
-
+            $stmt = $this->pdo->prepare("INSERT INTO medical_history (animal_id, date_of_event, description, treatment, emergency) VALUES (?, ?, ?, ?, ?)");
             foreach ($medicalRecords as $m) {
-                $stmt->execute([
-                    $petId, 
-                    $m['date_of_event'], 
-                    $m['description'], 
-                    $m['treatment'] ?? '', 
-                    $m['emergency'] ? 'Yes' : 'No'
-                ]);
+                $emergency = $m['emergency'] ?? false;
+                if (empty($emergency) || $emergency === '' || $emergency === null) {
+                    $emergency = false;
+                }
+                $emergency = ($emergency === true) ? true : false;
+                error_log('EMERGENCY FINAL VALUE: ' . var_export($emergency, true));
+                $params = [$petId, $m['date_of_event'], $m['description'], $m['treatment'] ?? '', $emergency ? 1 : 0];
+                error_log('SQL PARAMS: ' . var_export($params, true));
+                $stmt->execute($params);
             }
             return true;
-            
         } catch (PDOException $e) {
             error_log('Error inserting medical records: ' . $e->getMessage());
             return false;
@@ -243,9 +243,16 @@ class PetModel {
     
     public function addMedicalRecord($petId, $dateOfEvent, $description, $treatment = '', $emergency = false) {
         try {
+            error_log('EMERGENCY RAW VALUE: ' . var_export($emergency, true));
+            if (empty($emergency) || $emergency === '' || $emergency === null) {
+                $emergency = false;
+            }
+            $emergency = ($emergency === true) ? true : false;
+            error_log('EMERGENCY FINAL VALUE: ' . var_export($emergency, true));
+            $params = [$petId, $dateOfEvent, $description, $treatment, $emergency ? 1 : 0];
+            error_log('SQL PARAMS: ' . var_export($params, true));
             $stmt = $this->pdo->prepare("INSERT INTO medical_history (animal_id, date_of_event, description, treatment, emergency) VALUES (?, ?, ?, ?, ?)");
-            return $stmt->execute([$petId, $dateOfEvent, $description, $treatment, $emergency]);
-            
+            return $stmt->execute($params);
         } catch (PDOException $e) {
             error_log('Error adding medical record: ' . $e->getMessage());
             return false;
@@ -310,7 +317,7 @@ class PetModel {
     
     public function deleteMediaResource($mediaId) {
         try {
-            //calea fifierului media->file_path
+            //calea fisierului media->file_path
             $stmt = $this->pdo->prepare("SELECT file_path FROM media_resources WHERE media_id = ?");
             $stmt->execute([$mediaId]);
             $media = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -381,8 +388,25 @@ class PetModel {
         } catch (PDOException $e) {
             error_log('Error deleting pet: ' . $e->getMessage());
             return false;
-        }    }
+        }
+    }
     
+    // statistici-> mai tb?????????????
+    public function getPetStatistics($userId) {
+        try {
+            $stats = [];
+            
+            //nr total de animale
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) as total_pets FROM animals WHERE added_by = ?");
+            $stmt->execute([$userId]);
+            $stats['total_pets'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_pets'];
+            
+            
+        } catch (PDOException $e) {
+            error_log('Error getting pet statistics: ' . $e->getMessage());
+            return [];
+        }
+    }   
     public function updatePickupAddress($petId, $userId) {
         try {
             $stmt = $this->pdo->prepare("SELECT animal_id FROM animals WHERE animal_id = ? AND added_by = ?");

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      credentials: 'include', // Include cookies in request/response
+      credentials: 'include', //includ cookie-urile pentru sesiune
       body: JSON.stringify(data)
     }).then(function(res) {
       console.log('Response status:', res.status);
@@ -41,25 +41,30 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('JSON parse error:', e);
         alert('Server returned invalid JSON: ' + text);
         return;
-      }      var messageDiv = document.getElementById('message');      // Check both response.ok and result.success
+      }      var messageDiv = document.getElementById('message');      //verific daca am primit un mesaj de succes sau eroare
       if (result.success) {
         console.log('Login successful');
         messageDiv.style.color = 'green';        
         messageDiv.textContent = result.message;
         
-        // JWT is now stored in httpOnly cookie, so we only store basic user info
+        //JWT bagat in cookie httpOnly
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userData', JSON.stringify(result.user));
-        
+        if (result.user && (result.user.user_id || result.user.id)) {
+          localStorage.setItem('user_id', result.user.user_id || result.user.id);
+          console.log('LocalStorage set - user_id:', result.user.user_id || result.user.id);
+        } else {
+          console.warn('No user_id found in login response!');
+        }
         console.log('LocalStorage set - isLoggedIn:', localStorage.getItem('isLoggedIn'));
         console.log('LocalStorage set - userData:', localStorage.getItem('userData'));
         console.log('JWT token stored securely in httpOnly cookie');
-        
         loginForm.reset();
-        
-        // Redirect to dashboard
-        console.log('Redirecting to dashboard...');
-        window.location.href = '/PoW-Project/frontend/views/dashboard.html';
+        //delay la redirect 
+        setTimeout(function() {
+          console.log('Redirecting to dashboard...');
+          window.location.href = '/PoW-Project/frontend/views/dashboard.html';
+        }, 100);
       } else {
         console.log('Login failed');
         messageDiv.style.color = 'red';

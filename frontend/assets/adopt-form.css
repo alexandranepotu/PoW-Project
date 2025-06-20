@@ -1,0 +1,36 @@
+/* stilurile carusel pt imagini */
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+button.carousel-arrow, .carousel-arrow {
+    background-image: linear-gradient(135deg, #a259c6 0%, #f9d923 100%) !important;
+    background-color: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    font-size: 2rem !important;
+    border-radius: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+    transition: background 0.2s, transform 0.2s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    outline: none !important;
+}
+button.carousel-arrow:hover, .carousel-arrow:hover {
+    background-image: linear-gradient(135deg, #f9d923 0%, #a259c6 100%) !important;
+    background-color: transparent !important;
+    transform: scale(1.1) !important;
+}
+.carousel-img {
+    max-width: 350px;
+    max-height: 350px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+}

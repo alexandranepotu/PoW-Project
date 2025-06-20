@@ -78,15 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         
-        if (data.length === 0) {
+        //scot animlele adaugate de utilizatorul logat
+        const userId = localStorage.user_id || localStorage.id;
+        const filteredData = data.filter(animal => String(animal.added_by) !== String(userId));
+        if (filteredData.length === 0) {
           list.innerHTML = '<p style="color: orange; text-align: center; padding: 20px;">No animals found matching your criteria.</p>';
           return;
         }
-
-        console.log(`Displaying ${data.length} animals`);
+        console.log(`Displaying ${filteredData.length} animals (excluding user's own)`);
         
         //creare carduri pt fiecare animal
-        data.forEach((animal, index) => {
+        filteredData.forEach((animal, index) => {
           console.log(`Creating card for animal ${index + 1}:`, animal);
           
           const card = document.createElement('article');

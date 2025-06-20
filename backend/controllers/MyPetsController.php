@@ -7,16 +7,19 @@ class MyPetsController {
     
     public function __construct() {
         $this->petModel = new PetModel();    }
-      // GET /api/mypets -> lista animalelor utilizatorului
+    
+    // GET /api/mypets -> lista animalelor utilizatorului
     public function getMyPets() {
         $user = AuthMiddleware::requireAuth(); //verifica daca userul e autentificat
         
         try {
             $pets = $this->petModel->getPetsByUserId($user->user_id);
+            $stats = $this->petModel->getPetStatistics($user->user_id);
             
             echo json_encode([
                 'success' => true,
-                'pets' => $pets
+                'pets' => $pets,
+                'statistics' => $stats
             ]);
             
         } catch (Exception $e) {
@@ -344,7 +347,10 @@ class MyPetsController {
                 'sex' => $input['sex'] ?? null,
                 'health_status' => $input['healthStatus'] ?? $input['health_status'] ?? '',
                 'description' => $input['description'] ?? '',
-                'added_by' => $user->user_id            ];
+                'added_by' => $user->user_id
+            ];
+            //log de debug
+            error_log('[DEBUG] Adding new pet with added_by user_id: ' . print_r($user->user_id, true));
             
             $result = $this->petModel->insertPet($petData);
             

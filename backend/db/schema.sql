@@ -125,3 +125,20 @@ CREATE TABLE user_addresses (
 
 CREATE INDEX idx_user_addresses_user_id ON user_addresses(user_id);
 --performanta la cautare dupa user_id, optimizare join, fk
+
+--aplicatii adoptii 
+CREATE TABLE adoption_applications (
+    application_id SERIAL PRIMARY KEY,
+    pet_id INT REFERENCES animals(animal_id),
+    applicant_id INT REFERENCES users(user_id),
+    owner_id INT REFERENCES users(user_id),
+    answers TEXT, -- data sub forma de json sau text
+    status VARCHAR(20) DEFAULT 'pending', -- pending/accepted/declined
+    response_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_applications_applicant_id ON adoption_applications(applicant_id);
+CREATE INDEX idx_applications_owner_id ON adoption_applications(owner_id);
+CREATE INDEX idx_applications_pet_id ON adoption_applications(pet_id);
