@@ -84,5 +84,89 @@ class PetPageModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getAnimalById($animalId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM animals WHERE animal_id = ? LIMIT 1");
+        $stmt->execute([$animalId]);
+        $animal = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$animal) {
+            return null;
+        }
+        
+        if (isset($animal['added_by'])) {
+            $animal['owner_id'] = $animal['added_by'];
+        }
+        
+        if (!isset($animal['owner_id'])) {
+            $ownerStmt = $this->pdo->prepare('SELECT added_by FROM animals WHERE animal_id = ?');
+            $ownerStmt->execute([$animalId]);
+            $owner = $ownerStmt->fetch(PDO::FETCH_ASSOC);
+            $animal['owner_id'] = $owner ? $owner['added_by'] : null;
+        }
+        
+        return $animal;
+    }
+
+    public function getAnimalImages($animalId) {
+        $stmt = $this->pdo->prepare("SELECT file_path FROM media_resources WHERE animal_id = ?");
+        $stmt->execute([$animalId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+ 
+    public function getCompleteAnimalDetails($animalId) {
+        $animal = $this->getAnimalById($animalId);
+        
+        if (!$animal) {
+            return null;
+        }
+    
+        $animal['images'] = $this->getAnimalImages($animalId);
+        $animal['id'] = $animal['animal_id'];
+        
+        return $animal;
+    }
+
+    public function getFeedingCalendar($animalId) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    date,
+                    food_type,
+                    quantity,
+                    notes
+                FROM feeding_schedule 
+                WHERE animal_id = ? 
+                ORDER BY date DESC
+            ");
+            $stmt->execute([$animalId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error getting feeding calendar: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public function getMedicalHistory($animalId) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    visit_date,
+                    veterinarian,
+                    diagnosis,
+                    treatment,
+                    notes,
+                    next_visit
+                FROM medical_history 
+                WHERE animal_id = ? 
+                ORDER BY visit_date DESC
+            ");
+            $stmt->execute([$animalId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error getting medical history: " . $e->getMessage());
+            return [];
+        }
+    }
 }
 ?>
