@@ -62,11 +62,6 @@ header nav button:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-header nav a.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  font-weight: bold;
-}
-
 /* Theme toggle button */
 .theme-toggle {
   background: none;
@@ -146,7 +141,47 @@ header nav a.active {
   color: #333 !important;
 }
 
-/* Inbox dropdown */
+/* Active link styling in dropdowns - REMOVED */
+/* No active states should be applied to dropdown links */
+
+/* Remove active state from inbox dropdown button */
+.inbox-dropdown .inbox-text.active {
+  background-color: transparent !important;
+}
+
+/* Explicitly override active states for inbox button on any page */
+.inbox-dropdown .inbox-text,
+.inbox-dropdown .inbox-text:focus,
+.inbox-dropdown .inbox-text.active {
+  background-color: transparent !important;
+  font-weight: 600 !important;
+}
+
+.inbox-dropdown .inbox-text:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dropdown-content a[href="inbox.html"] {
+  position: relative;
+}
+
+.dropdown-content a[href="inbox.html"]:before {
+  margin-right: 8px;
+}
+
+.dropdown-content a[href="submitted-applications.html"]:before {
+  margin-right: 8px;
+}
+
+.dropdown-content a[href="received-applications.html"]:before {
+  margin-right: 8px;
+}
+
+.dropdown-content a {
+  display: flex !important;
+  align-items: center !important;
+}
+
 .inbox-dropdown {
   position: relative;
   display: inline-block;
@@ -161,9 +196,12 @@ header nav a.active {
   font-size: 1rem;
   background: transparent;
 }
-.inbox-dropdown .inbox-text:hover,
-.inbox-dropdown .inbox-text.active {
+.inbox-dropdown .inbox-text:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+.inbox-dropdown .inbox-text.active {
+  background: transparent !important;
+  color: white !important;
 }
 .inbox-dropdown .dropdown-content {
   display: none;
@@ -196,9 +234,20 @@ header nav a.active {
 [data-theme="dark"] .inbox-dropdown .inbox-text {
   color: #e0e0e0;
 }
-[data-theme="dark"] .inbox-dropdown .inbox-text:hover,
+
+[data-theme="dark"] .inbox-dropdown .inbox-text:hover {
+  background-color: #404040 !important;
+}
+
+[data-theme="dark"] .inbox-dropdown .inbox-text,
+[data-theme="dark"] .inbox-dropdown .inbox-text:focus,
 [data-theme="dark"] .inbox-dropdown .inbox-text.active {
-  background-color: #404040;
+  background-color: transparent !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .inbox-dropdown .inbox-text:hover {
+  background-color: #404040 !important;
 }
 [data-theme="dark"] .inbox-dropdown .dropdown-content {
   background-color: #2c2c2c;
@@ -248,7 +297,30 @@ header nav a.active {
   color: #e0e0e0 !important;
 }
 
-/* Responsive design */
+.messages-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.messages-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.messages-btn svg {
+  fill: currentColor;
+  width: 18px;
+  height: 18px;
+}
+
 @media (max-width: 768px) {
   header {
     padding: 0 10px;
@@ -265,6 +337,14 @@ header nav a.active {
     header .logo,
   header h1 {
     font-size: 1.2rem;
+  }
+  
+  .messages-btn span {
+    display: none;
+  }
+  
+  .messages-btn {
+    padding: 0.5rem;
   }
 }
 

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Inbox dropdown logic
     (function() {
       const inboxDropdown = document.querySelector('.inbox-dropdown');
       if (!inboxDropdown) return;
@@ -25,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     })();
 
-    // Profile dropdown logic
     (function() {
       const profileDropdown = document.querySelector('.profile-dropdown');
       if (!profileDropdown) return;
@@ -51,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     })();
 
-    // Search input logic
     const searchInput = document.querySelector('nav input[type="search"]');
     if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -64,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Logout logic
     const logoutLink = document.querySelector('a[href="#logout"]');
     if (logoutLink) {
         logoutLink.addEventListener('click', function(e) {
@@ -80,15 +76,4 @@ document.addEventListener('DOMContentLoaded', function() {
     highlightCurrentPage();
 });
 
-function highlightCurrentPage() {
-    const currentPage = window.location.pathname.split('/').pop();
-    const navLinks = document.querySelectorAll('nav a[href]');
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (!link.classList.contains('logo') && !link.closest('.dropdown-content')) {
-            if (href === currentPage || (currentPage === '' && href === 'dashboard.html')) {
-                link.classList.add('active');
-            }
-        }
-    });
-}
+
