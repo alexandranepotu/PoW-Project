@@ -6,11 +6,10 @@ class MapController {
 
     public function __construct($pdo) {
         $this->mapModel = new MapModel($pdo);
-    }
-
-    public function getUsersLocations() {
+    }    public function getUsersLocations() {
         try {           
             $currentUserId = $this->getCurrentUserId();
+            error_log("MapController::getUsersLocations - Current user ID: " . ($currentUserId ?? 'null'));
             
             $users = $this->mapModel->getUsersLocations($currentUserId);
 
@@ -170,8 +169,52 @@ class MapController {
                 'lng' => floatval($data[0]['lon'])
             ];
         }
-        
-        return null;
+          return null;
+    }    public function getCurrentUserLocation() {
+        try {
+            $currentUserId = $this->getCurrentUserId();
+            error_log("MapController::getCurrentUserLocation - Current user ID: " . ($currentUserId ?? 'null'));
+            
+            if (!$currentUserId) {
+                throw new Exception("User not authenticated");
+            }
+            
+            $userAddress = $this->mapModel->getUserAddress($currentUserId);
+            
+            if (!$userAddress) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'No address found for current user'
+                ]);
+                return;
+            }
+            $coordinates = $this->geocodeAddress($userAddress);
+            
+            if ($coordinates) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'location' => $coordinates,
+                    'address' => $userAddress
+                ]);
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Could not geocode user address'
+                ]);
+            }
+            
+        } catch (Exception $e) {
+            error_log("MapController::getCurrentUserLocation - Error: " . $e->getMessage());
+            
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to get user location'
+            ]);
+        }
     }
 }
 ?>

@@ -35,21 +35,19 @@ class MapModel {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getUserAnimals($userId) {
+    }    public function getUserAnimals($userId) {
         $sql = "SELECT 
                 animal_id,
                 name,
                 species,
                 breed,
                 age,
-                gender,
-                size,
-                color,
-                status
+                sex,
+                health_status,
+                available,
+                description
             FROM animals 
-            WHERE added_by = ? AND status = 'available'
+            WHERE added_by = ? AND available = TRUE
             ORDER BY name";
         
         $stmt = $this->pdo->prepare($sql);

@@ -24,15 +24,13 @@ class CommunityMap {
             const response = await fetch('/PoW-Project/backend/public/api/user/location', {
                 method: 'GET',
                 credentials: 'include'
-            });
-
-            if (response.ok) {
+            });            if (response.ok) {
                 const userData = await response.json();
                 
-                if (userData.latitude && userData.longitude) {
+                if (userData.success && userData.location && userData.location.lat && userData.location.lng) {
                     this.userLocation = {
-                        lat: userData.latitude,
-                        lng: userData.longitude
+                        lat: userData.location.lat,
+                        lng: userData.location.lng
                     };
 
                     this.map.setView([this.userLocation.lat, this.userLocation.lng], 12);
@@ -43,10 +41,10 @@ class CommunityMap {
                     userMarker.bindPopup(`
                         <div class="popup-content">
                             <strong>🏠 My address</strong><br>
-                            <small>📍 ${userData.city}, ${userData.county}</small><br>
+                            <small>📍 ${userData.address || 'Your address'}</small><br>
                             <small>From your profile</small>
                         </div>
-                    `).openPopup();                    return; 
+                    `).openPopup();return; 
                 }
             }
         } catch (error) {
@@ -117,15 +115,28 @@ class CommunityMap {
             });
 
             if (response.ok) {
-                this.users = await response.json();
-                this.displayCommunityUsers();
+                const data = await response.json();
+                if (data.success && data.users) {
+                    this.users = data.users;
+                    this.displayCommunityUsers();
+                } else {
+                    console.error('API returned error:', data.error || 'Unknown error');
+                    this.users = [];
+                }
+            } else {
+                console.error('HTTP error:', response.status, response.statusText);
+                this.users = [];
             }
         } catch (error) {
             console.error('Error loading community users:', error);
+            this.users = [];
         }
-    }
-
-    displayCommunityUsers() {
+    }    displayCommunityUsers() {
+        if (!Array.isArray(this.users)) {
+            console.error('Users is not an array:', this.users);
+            return;
+        }
+        
         this.users.forEach(user => {
             if (user.latitude && user.longitude) {
                 const marker = L.marker([user.latitude, user.longitude])
