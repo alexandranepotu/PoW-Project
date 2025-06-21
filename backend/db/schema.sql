@@ -19,7 +19,7 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     full_name VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    phone VARCHAR(20)
+    phone VARCHAR(20),
 );
 
 CREATE TABLE animals (
@@ -156,3 +156,47 @@ CREATE TABLE adoption_applications (
 CREATE INDEX idx_applications_applicant_id ON adoption_applications(applicant_id);
 CREATE INDEX idx_applications_owner_id ON adoption_applications(owner_id);
 CREATE INDEX idx_applications_pet_id ON adoption_applications(pet_id);
+
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;
+
+--user admin initial (parola e admin123)
+INSERT INTO users (username, password_hash, email, full_name, is_admin) 
+VALUES (
+    'admin', 
+    '$2y$10$NQ4C7PJHu3gXr4JJF0RJo.pI5vBpFr1G9YjOQ4YYDsAOTgCEhb1Uy',
+    'admin@petadoption.com',
+    'System Administrator',
+    TRUE
+) ON CONFLICT (username) DO UPDATE 
+SET is_admin = TRUE,
+    password_hash = '$2y$10$NQ4C7PJHu3gXr4JJF0RJo.pI5vBpFr1G9YjOQ4YYDsAOTgCEhb1Uy'
+WHERE users.username = 'admin';
+
+--chat rooms pt fiecare conv la fiecare animal
+CREATE TABLE chat_rooms (
+    room_id SERIAL PRIMARY KEY,
+    animal_id INT REFERENCES animals(animal_id),
+    interested_user_id INT REFERENCES users(user_id),
+    owner_id INT REFERENCES users(user_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'active' -- active, closed
+);
+
+-- msj in fiecare chat room
+CREATE TABLE chat_messages (
+    message_id SERIAL PRIMARY KEY,
+    room_id INT REFERENCES chat_rooms(room_id),
+    sender_id INT REFERENCES users(user_id),
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'sent' -- sent, delivered, read
+);
+
+-- index pt preluare msj repede
+CREATE INDEX idx_chat_messages_room_id ON chat_messages(room_id);
+
+-- index pt gasirea chat rooms a user-ului
+CREATE INDEX idx_chat_rooms_interested_user ON chat_rooms(interested_user_id);
+CREATE INDEX idx_chat_rooms_owner ON chat_rooms(owner_id);

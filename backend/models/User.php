@@ -68,11 +68,13 @@ class User {
             if (!password_verify($password, $user['password_hash'])) {
                 error_log("Invalid password for user: " . $username);
                 return ['success' => false, 'message' => 'Invalid username or password'];
-            }            return ['success' => true, 'user' => [
-                'id' => $user['user_id'],
+            }
+            
+            return ['success' => true, 'user' => [                'id' => $user['user_id'],
                 'username' => $user['username'],
                 'full_name' => $user['full_name'],
-                'email' => $user['email']
+                'email' => $user['email'],
+                'is_admin' => $user['is_admin'] === 't' || $user['is_admin'] === true || $user['is_admin'] === '1' || $user['is_admin'] === 1
             ]];
         } catch (PDOException $e) {
             error_log('Database error during login: ' . $e->getMessage());

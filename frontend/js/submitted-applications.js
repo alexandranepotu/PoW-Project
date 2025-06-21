@@ -1,5 +1,3 @@
-// frontend/js/submitted-applications.js
-
 console.log("Script loaded");
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOMContentLoaded event fired");

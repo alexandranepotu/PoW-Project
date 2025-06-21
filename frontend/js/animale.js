@@ -1,7 +1,15 @@
 console.log("animale.js loaded successfully");
 
+//init chat manager
+let chatManager;
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log("DOM Content Loaded");
+  
+  if (!window.chatManager) {
+      window.chatManager = new ChatManager();
+  }
+  chatManager = window.chatManager;
   
   const form = document.getElementById('filterForm');
   const list = document.getElementById('animalList');
@@ -115,10 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
               <p><strong>Sex:</strong> ${sex}</p>
               <p><strong>Health:</strong> ${health}</p>
             </div>
-            
-            <button class="adopt-btn" onclick="adoptAnimal('${animal.animal_id || ''}', '${name}')">
-              🐾 Adopt ${name}
-            </button>
+              <div class="animal-actions">
+              <button class="adopt-btn" onclick="adoptAnimal('${animal.animal_id || ''}', '${name}')">
+                🐾 Adopt ${name}
+              </button>
+              <button class="chat-btn" onclick="window.chatManager.createChatRoom('${animal.animal_id || ''}')">
+                💬 Chat with Owner
+              </button>
+            </div>
           `;
           
           list.appendChild(card);

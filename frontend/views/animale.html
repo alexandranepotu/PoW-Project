@@ -2,11 +2,12 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <title>Pet Adoption</title>
-  <link rel="stylesheet" href="../assets/navbar.css" />
+  <title>Pet Adoption</title>  <link rel="stylesheet" href="../assets/navbar.css" />
   <link rel="stylesheet" href="../assets/style.css" />
   <link rel="stylesheet" href="../assets/animale.css" />
   <link rel="stylesheet" href="../assets/adopt-form.css" />
+  <link rel="stylesheet" href="../assets/chat-new.css" />
+  <link rel="stylesheet" href="../assets/animal-buttons.css" />
 </head>
 <body>
   <header>
@@ -63,10 +64,15 @@
 
   <footer>
     <p>&copy; 2025 PoW. All rights reserved to Nepotu Alexandra-Maria and Plamada Bianca-Elena.</p>
-  </footer>
-
-  <script src="../js/animale.js" 
-          onerror="console.error('Failed to load animale.js from ../js/animale.js'); document.getElementById('animalList').innerHTML = '<p style=color:red>Failed to load animale.js - check file path</p>'">  </script>
+  </footer>  <script>
+    //init data user ului curent
+    const currentUserId = localStorage.getItem('user_id');
+    if (!currentUserId) {
+      window.location.href = 'login.html';
+    }
+  </script>
+  <script src="../js/chat-manager.js"></script>
+  <script src="../js/animale.js"></script>
   <script src="../js/global-theme.js"></script>
   <script src="../js/navbar.js"></script>
 </body>

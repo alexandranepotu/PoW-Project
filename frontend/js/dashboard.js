@@ -7,6 +7,7 @@ class AuthManager {
     init() {
         //verifica daca userul este autentificat la incarcarea paginii
         this.checkAuth();
+        this.checkAdminStatus();
     }    checkAuth() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = localStorage.getItem('userData');
@@ -22,6 +23,26 @@ class AuthManager {
         
         console.log('User authenticated');
         return true;
+    }
+
+    async checkAdminStatus() {
+        try {
+            const adminLink = document.getElementById('adminLink');
+            if (!adminLink) return;
+
+            const response = await fetch(`${this.apiUrl}/auth/check-admin`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.isAdmin) {
+                    adminLink.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+        }
     }
 
     async logout() {

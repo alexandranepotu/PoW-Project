@@ -33,38 +33,68 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(function(text) {
       console.log('Raw response text:', text);
       
-      var result;
-      try {
+      var result;      try {
         result = JSON.parse(text);
         console.log('Parsed result:', result);
+        //verif admin debug
+        if (result.user) {
+            console.log('User data:', result.user);
+            console.log('Is admin?', result.user.is_admin);
+        }
       } catch (e) {
         console.error('JSON parse error:', e);
         alert('Server returned invalid JSON: ' + text);
         return;
-      }      var messageDiv = document.getElementById('message');      //verific daca am primit un mesaj de succes sau eroare
-      if (result.success) {
-        console.log('Login successful');
+      }      var messageDiv = document.getElementById('message');      if (result.success) {
+        console.log('Login successful, full response:', result);
+        // Store user data in localStorage
+        if (result.user) {
+            localStorage.setItem('userData', JSON.stringify(result.user));
+            console.log('Stored user data in localStorage:', result.user);
+            
+            // Redirect based on admin status
+            if (result.user.is_admin) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
         messageDiv.style.color = 'green';        
         messageDiv.textContent = result.message;
         
-        //JWT bagat in cookie httpOnly
+        //data user in localstorage
+        const userData = result.user;
+        console.log('Storing user data:', userData);
+        
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userData', JSON.stringify(result.user));
-        if (result.user && (result.user.user_id || result.user.id)) {
-          localStorage.setItem('user_id', result.user.user_id || result.user.id);
-          console.log('LocalStorage set - user_id:', result.user.user_id || result.user.id);
+        localStorage.setItem('userData', JSON.stringify(userData));
+        
+        //user ID in localstorage
+        const userId = userData.user_id || userData.id;
+        if (userId) {
+          localStorage.setItem('user_id', userId);
+          console.log('User ID stored:', userId);
         } else {
           console.warn('No user_id found in login response!');
         }
-        console.log('LocalStorage set - isLoggedIn:', localStorage.getItem('isLoggedIn'));
-        console.log('LocalStorage set - userData:', localStorage.getItem('userData'));
-        console.log('JWT token stored securely in httpOnly cookie');
+        
+        //verif daca e admin
+        console.log('Checking admin status...');
+        const isAdmin = userData.is_admin === true;
+        console.log('Is admin?', isAdmin, 'Raw value:', userData.is_admin);
+        
         loginForm.reset();
-        //delay la redirect 
+        
+        //redirect bazat pe admin sau nu        // Allow some time for localStorage to be updated
         setTimeout(function() {
-          console.log('Redirecting to dashboard...');
-          window.location.href = '/PoW-Project/frontend/views/dashboard.html';
-        }, 100);
+          if (isAdmin) {
+            console.log('Redirecting to admin panel...');
+            window.location.href = 'admin.html';
+          } else {
+            console.log('Redirecting to dashboard...');
+            window.location.href = 'dashboard.html';
+          }
+        }, 500);
       } else {
         console.log('Login failed');
         messageDiv.style.color = 'red';
