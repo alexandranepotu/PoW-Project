@@ -106,28 +106,25 @@ class AuthController {
                 echo json_encode(['error' => $loginResult['message']]);
                 return;
             }            // succes!!!!
-            $_SESSION['user_id'] = $loginResult['user']['id'];
-            $_SESSION['username'] = $loginResult['user']['username'];
-            
             // genereaza JWT token
             $jwtToken = JwtManager::generateToken([
                 'user_id' => $loginResult['user']['id'],
                 'username' => $loginResult['user']['username'],
                 'email' => $loginResult['user']['email']
-            ]);
-            
-            // Set JWT in cookie -> httpOnly pentru securitate
-            setcookie(
+            ]);            // Set JWT in cookie -> httpOnly pentru securitate
+            $cookieSet = setcookie(
                 'auth_token', 
                 $jwtToken, 
                 time() + (24 * 60 * 60), // 24 ore
                 '/', 
-                '', 
+                'localhost', // domain explicit
                 false, // set to true for HTTPS
-                true   // httpOnly
+                true   // httpOnly - reactivat pentru securitate
             );
             
-            echo json_encode([
+            error_log("JWT cookie set result: " . ($cookieSet ? 'SUCCESS' : 'FAILED'));
+            error_log("JWT token length: " . strlen($jwtToken));
+            error_log("Cookie will expire at: " . date('Y-m-d H:i:s', time() + (24 * 60 * 60)));            echo json_encode([
                 'success' => true,
                 'message' => 'Login successful',
                 'user' => $loginResult['user']
@@ -144,28 +141,10 @@ class AuthController {
         try {
             error_log("\n=== Logout attempt started ===");
             
-            //distruge sesiunea
-            session_start();
-            
-            //sterge toate datele din sesiune
-            $_SESSION = array();
-            
-            // Șterge cookie-ul JWT
+            // Sterge cookie-ul JWT 
             setcookie('auth_token', '', time() - 3600, '/');
             
-            //pt cookie
-            if (ini_get("session.use_cookies")) {
-                $params = session_get_cookie_params();
-                setcookie(session_name(), '', time() - 42000,
-                    $params["path"], $params["domain"],
-                    $params["secure"], $params["httponly"]
-                );
-            }
-            
-            //distruge sesiunea
-            session_destroy();
-            
-            error_log("Session destroyed successfully");
+            error_log("JWT token cookie cleared successfully");
             
             http_response_code(200);
             echo json_encode([
@@ -179,6 +158,59 @@ class AuthController {
             http_response_code(500);
             echo json_encode(['error' => 'Server error occurred during logout']);
             return;
+        }
+    }    public function checkAdminStatus() {
+        try {
+            // verifica autentificarea prin JWT token din cookie
+            if (!isset($_COOKIE['auth_token'])) {
+                echo json_encode([
+                    'success' => false,
+                    'is_admin' => false,
+                    'error' => 'No authentication token found'
+                ]);
+                return;
+            }            // valideaza tokenul JWT
+            $decoded = JwtManager::validateToken($_COOKIE['auth_token']);
+            
+            if ($decoded === null) {
+                echo json_encode([
+                    'success' => false,
+                    'is_admin' => false,
+                    'error' => 'Invalid or expired token'
+                ]);
+                return;
+            }
+            
+            $userId = $decoded->user_id;
+            $user = $this->userModel->findById($userId);
+            
+            if (!$user) {
+                echo json_encode([
+                    'success' => false,
+                    'is_admin' => false,
+                    'error' => 'User not found'
+                ]);
+                return;
+            }
+
+            // verifica daca e admin
+            $isAdmin = isset($user['is_admin']) && $user['is_admin'] == true;
+            
+            echo json_encode([
+                'success' => true,
+                'is_admin' => $isAdmin,
+                'user_id' => $userId,
+                'username' => $user['username'] ?? ''
+            ]);
+            
+        } catch (Exception $e) {
+            error_log('Check admin status error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'is_admin' => false,
+                'error' => 'Server error occurred'
+            ]);
         }
     }
 }

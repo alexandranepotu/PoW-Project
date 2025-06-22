@@ -1,12 +1,13 @@
 <?php
 require_once __DIR__ . '/../models/MapModel.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
 class MapController {
     private $mapModel;
 
     public function __construct($pdo) {
         $this->mapModel = new MapModel($pdo);
-    }    public function getUsersLocations() {
+    }public function getUsersLocations() {
         try {           
             $currentUserId = $this->getCurrentUserId();
             error_log("MapController::getUsersLocations - Current user ID: " . ($currentUserId ?? 'null'));
@@ -125,10 +126,10 @@ class MapController {
                 'error' => 'Failed to get users by city'
             ]);
         }
-    }
-
-    private function getCurrentUserId() {
-        return $_SESSION['user_id'] ?? null;
+    }    private function getCurrentUserId() {
+        // Foloseste JWT pentru a obtine ID-ul utilizatorului autentificat
+        $user = AuthMiddleware::getAuthenticatedUser();
+        return $user ? $user->user_id : null;
     }
 
     private function geocodeAddress($user) {

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../middleware/AdminMiddleware.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../models/AdminModel.php';
 require_once __DIR__ . '/../config/db.php';
 
@@ -11,12 +12,12 @@ class AdminController {
             $pdo = getDbConnection();
         }
         $this->adminModel = new AdminModel($pdo);
-    }
-
-    public function getAllUsers() {
+    }    public function getAllUsers() {
         try {
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception("No user session found");
+            // Verifica autentificarea prin JWT
+            $user = AuthMiddleware::getAuthenticatedUser();
+            if (!$user) {
+                throw new Exception("User not authenticated");
             }
             
             AdminMiddleware::requireAdmin();
@@ -24,11 +25,20 @@ class AdminController {
             header('Content-Type: application/json');
             header("Cache-Control: no-cache, no-store, must-revalidate");
             
+            $currentUserId = $user->user_id;
             $users = $this->adminModel->getAllUsersWithStats();
+            
+            // Exclude utilizatorul curent (admin-ul logat) din lista de users
+            $filteredUsers = array_filter($users, function($userItem) use ($currentUserId) {
+                return $userItem['user_id'] != $currentUserId;
+            });
+            
+            // Reindex array pentru a avea indexi consecutivi
+            $filteredUsers = array_values($filteredUsers);
             
             echo json_encode([
                 'success' => true,
-                'users' => $users
+                'users' => $filteredUsers
             ]);
             
         } catch (Exception $e) {
