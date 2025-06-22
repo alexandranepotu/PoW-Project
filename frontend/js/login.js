@@ -47,6 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }      var messageDiv = document.getElementById('message');      if (result.success) {
         console.log('Login successful, full response:', result);
+        
+        // Debug cookies
+        console.log('All cookies after login:', document.cookie);
+        if (result.token) {
+            console.log('JWT token received:', result.token.substring(0, 50) + '...');
+        }
+        if (result.cookie_set !== undefined) {
+            console.log('Cookie set result:', result.cookie_set);
+        }
+        
         // Store user data in localStorage
         if (result.user) {
             localStorage.setItem('userData', JSON.stringify(result.user));
@@ -54,8 +64,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Redirect based on admin status
             if (result.user.is_admin) {
+                console.log('User is admin, redirecting to admin panel');
                 window.location.href = 'admin.html';
             } else {
+                console.log('User is not admin, redirecting to dashboard');
                 window.location.href = 'dashboard.html';
             }
         }

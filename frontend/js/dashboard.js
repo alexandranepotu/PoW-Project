@@ -23,25 +23,45 @@ class AuthManager {
         
         console.log('User authenticated');
         return true;
-    }
-
-    async checkAdminStatus() {
+    }    async checkAdminStatus() {
         try {
             const adminLink = document.getElementById('adminLink');
             if (!adminLink) return;
 
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            console.log('Dashboard - Checking admin status for user:', userData.username);
+            console.log('Dashboard - User is_admin value:', userData.is_admin);
+              if (!userData.is_admin) {
+                console.log('Dashboard - User is not admin, hiding admin link');
+                adminLink.style.display = 'none';
+                adminLink.style.visibility = 'hidden';
+                adminLink.remove(); 
+                return;
+            }
             const response = await fetch(`${this.apiUrl}/auth/check-admin`, {
                 credentials: 'include'
             });
             
             if (response.ok) {
                 const data = await response.json();
-                if (data.isAdmin) {
+                console.log('Dashboard - Server admin check response:', data);
+                if (data.success && data.is_admin) {
+                    console.log('Dashboard - Server confirms admin status, showing admin link');
                     adminLink.style.display = 'block';
+                } else {
+                    console.log('Dashboard - Server denies admin status, hiding admin link');
+                    adminLink.style.display = 'none';
                 }
+            } else {
+                console.log('Dashboard - Server check failed, hiding admin link');
+                adminLink.style.display = 'none';
             }
         } catch (error) {
             console.error('Error checking admin status:', error);
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) {
+                adminLink.style.display = 'none';
+            }
         }
     }
 
@@ -70,7 +90,6 @@ class AuthManager {
         } catch (error) {
             console.error('Logout API call failed:', error);
         } finally {
-            //indiferent daca logout-ul a reusit sau nu, curata localStorage si redirectioneaza la pagina de login
             this.clearLocalStorage();
             this.redirectToLogin();
         }
