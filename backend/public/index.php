@@ -1,8 +1,13 @@
 <?php
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../../logs/php_errors.log');
+
+error_log("\n\n=== REQUEST STARTED IN INDEX.PHP ===");
+error_log("REQUEST_URI: " . $_SERVER['REQUEST_URI']);
+error_log("SCRIPT_NAME: " . $_SERVER['SCRIPT_NAME']);
+error_log("DOCUMENT_ROOT: " . $_SERVER['DOCUMENT_ROOT']);
 
 //headere pentru CORS și JSON
 header('Access-Control-Allow-Origin: *');

@@ -2,7 +2,9 @@ CREATE TABLE IF NOT EXISTS news (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT REFERENCES users(user_id),
+    is_public BOOLEAN DEFAULT TRUE
 );
 
 INSERT INTO news (title, content) VALUES
@@ -32,9 +34,12 @@ CREATE TABLE animals (
     health_status TEXT,
     available BOOLEAN DEFAULT TRUE,
     added_by INT REFERENCES users(user_id),
-    pickup_address TEXT,
-    description TEXT
+    pickup_address TEXT,    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+--sa ne asiguram ca toate animalele au created_at setat
+UPDATE animals SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL;
 
 CREATE TABLE adoptions (
     adoption_id SERIAL PRIMARY KEY,
@@ -200,3 +205,11 @@ CREATE INDEX idx_chat_messages_room_id ON chat_messages(room_id);
 -- index pt gasirea chat rooms a user-ului
 CREATE INDEX idx_chat_rooms_interested_user ON chat_rooms(interested_user_id);
 CREATE INDEX idx_chat_rooms_owner ON chat_rooms(owner_id);
+
+-- coloane lipsa pt rss
+ALTER TABLE animals ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE news ADD COLUMN IF NOT EXISTS user_id INT REFERENCES users(user_id);
+ALTER TABLE news ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT TRUE;
+
+-- sa aiba user_id si is_public setate pentru toate inregistrarile existente
+UPDATE news SET user_id = (SELECT MIN(user_id) FROM users), is_public = TRUE WHERE user_id IS NULL;

@@ -177,6 +177,30 @@ class PetPageModel {
             error_log("Error getting medical history: " . $e->getMessage());
             return [];
         }
+    }      public function getAnimalsByUser($userId) {
+        try {
+            $query = "
+                SELECT 
+                    a.*,
+                    COALESCE(m.file_path, '') as media_url,
+                    u.username as owner_username
+                FROM animals a
+                LEFT JOIN (
+                    SELECT DISTINCT ON (animal_id) animal_id, file_path
+                    FROM media_resources
+                    WHERE type = 'image'
+                ) m ON a.animal_id = m.animal_id
+                LEFT JOIN users u ON a.added_by = u.user_id
+                WHERE a.added_by = ?
+                ORDER BY a.animal_id DESC";
+
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([intval($userId)]);
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Database error while fetching pets");
+        }
     }
 }
 ?>

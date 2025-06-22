@@ -46,7 +46,7 @@
     gap: 0.5rem;
 }
 
-/* Profile Dropdown Styles */
+/* dropdown profil */
 .profile-dropdown {
     position: relative;
     cursor: pointer;
@@ -87,7 +87,7 @@
     background-color: var(--hover-color);
 }
 
-/* Show dropdown when active */
+/* dropdown activ */
 .profile-dropdown.active .dropdown-content {
     display: block;
 }
@@ -107,7 +107,7 @@
     background: #c82333;
 }
 
-/* Modal styles */
+/* modale */
 .modal {
     display: none;
     position: fixed;
@@ -171,4 +171,141 @@
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
+}
+
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.pet-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.pet-card:hover {
+    transform: translateY(-5px);
+}
+
+.pet-card .pet-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.pet-card .pet-info {
+    padding: 15px;
+}
+
+.pet-card h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.pet-card p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.view-pets-btn {
+    background-color: #5E2E65;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.view-pets-btn:hover {
+    background-color: #421a48;
+}
+
+/* butoane */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.error-message {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 8px;
+    margin: 20px;
+}
+
+.error-message h3 {
+    color: #d32f2f;
+    margin-bottom: 10px;
+}
+
+.retry-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.retry-btn:hover {
+    background-color: #1976D2;
+}
+
+.no-pets {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-size: 1.1em;
+}
+
+.back-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 1.1em;
+}
+
+.error {
+    color: #d32f2f;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
 }

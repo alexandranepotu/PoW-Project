@@ -35,6 +35,16 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
 }
 
 .about-adopt:hover,
@@ -234,10 +244,12 @@
     padding: 24px 20px;
     margin-bottom: 32px;
     color: #fff;
-    max-height: 500px;
-    overflow-y: auto;
+    height: 400px;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .news-item {
     margin-bottom: 18px;
@@ -279,6 +291,80 @@
     #news-section {
         max-height: 300px;
         padding: 10px 4px;
+    }
+}
+
+.news-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.news-rss-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.news-rss-link:hover {
+  background-color: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+.news-rss-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .news-rss-link {
+  background-color: var(--dark-bg-secondary);
+  border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .news-rss-link:hover {
+  background-color: var(--dark-hover-color);
+}
+
+.news-hint {
+  font-size: 1.1em;
+  color: var(--text-primary);
+  margin: 1rem 0;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-medium);
+  opacity: 0.9;
+}
+
+[data-theme="dark"] .news-hint {
+  color: var(--text-light);
+  background: var(--bg-primary);
+}
+
+.news-message {
+    color: #fff;
+    font-size: 60px;
+    text-align: left;
+    margin: 0;
+    line-height: 1.2;
+    font-family: inherit;
+}
+
+@media (max-width: 768px) {
+    .news-message {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        padding: 1rem;
+        min-height: 150px;
     }
 }
 

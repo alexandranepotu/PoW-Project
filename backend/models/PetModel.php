@@ -111,13 +111,41 @@ class PetModel {
     // obtine animalele unui utilizator
     public function getPetsByUserId($userId) {
         try {
-            $stmt = $this->pdo->prepare("SELECT * FROM animals WHERE added_by = ? ORDER BY animal_id DESC");
-            $stmt->execute([$userId]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("PetModel: Fetching pets for user ID " . $userId);
             
-        } catch (PDOException $e) {
-            error_log('Error getting pets by user: ' . $e->getMessage());
-            return [];
+            $query = "
+                SELECT DISTINCT
+                    a.*,
+                    m.file_path as media_url,
+                    u.username as owner_username
+                FROM animals a
+                LEFT JOIN media_resources m ON a.animal_id = m.animal_id AND m.type = 'image'
+                LEFT JOIN users u ON a.added_by = u.user_id
+                WHERE a.added_by = ?
+                ORDER BY a.created_at DESC
+            ";
+            
+            $stmt = $this->pdo->prepare($query);
+            
+            if (!$stmt) {
+                error_log("PetModel: Error preparing statement: " . print_r($this->pdo->errorInfo(), true));
+                throw new PDOException("Failed to prepare statement");
+            }
+            
+            $stmt->bindValue(1, $userId, PDO::PARAM_INT);
+            $success = $stmt->execute();
+            
+            if (!$success) {
+                error_log("PetModel: Error executing statement: " . print_r($stmt->errorInfo(), true));
+                throw new PDOException("Failed to execute statement");
+            }
+            
+            $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("PetModel: Found " . count($pets) . " pets");
+              return $pets ?: [];
+            
+        } catch (PDOException $e) {            error_log("PetModel: Database error in getPetsByUserId: " . $e->getMessage());
+            throw new Exception("Database error while fetching pets: " . $e->getMessage());
         }
     }
     

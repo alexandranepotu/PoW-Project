@@ -113,8 +113,13 @@ class AdminManager {
                 <td>
                     Adoptions Made: ${user.adoptions_made || 0}<br>
                     Pets Given: ${user.pets_adopted || 0}
-                </td>
-                <td>
+                </td>                <td>
+                    <button 
+                        class="view-pets-btn" 
+                        onclick="adminManager.viewUserPets(${user.user_id}, '${this.escapeHtml(user.username)}')"
+                    >
+                        View Pets
+                    </button>
                     <button 
                         class="btn-delete" 
                         onclick="adminManager.showDeleteConfirmation(${user.user_id}, '${this.escapeHtml(user.username)}')"
@@ -230,6 +235,10 @@ class AdminManager {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    viewUserPets(userId, username) {
+        window.location.href = `user-pets.html?userId=${userId}&username=${encodeURIComponent(username)}`;
     }
 }
 

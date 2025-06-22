@@ -18,26 +18,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 try {
+    error_log("\n\n=== NEW REQUEST STARTED ===");
     $uri = $_SERVER['REQUEST_URI'];
     $method = $_SERVER['REQUEST_METHOD'];
 
-    // Log complet pentru debug    error_log("\n=== REQUEST DEBUG INFO ===");
     error_log("REQUEST_URI: " . $_SERVER['REQUEST_URI']);
     error_log("REQUEST_METHOD: " . $_SERVER['REQUEST_METHOD']);
-    error_log("CONTENT_TYPE: " . $_SERVER['CONTENT_TYPE']);
+    error_log("SCRIPT_NAME: " . $_SERVER['SCRIPT_NAME']);
+    error_log("SCRIPT_FILENAME: " . $_SERVER['SCRIPT_FILENAME']);
+    error_log("CONTENT_TYPE: " . ($_SERVER['CONTENT_TYPE'] ?? 'Not set'));
     error_log("RAW POST DATA: " . file_get_contents('php://input'));
     error_log("PHP_SELF: " . $_SERVER['PHP_SELF']);
     error_log("Raw URI: " . $uri);
-    error_log("Raw Method: " . $method);
-
-    $basePath = '/PoW-Project/backend/public';
-    $path = parse_url($uri, PHP_URL_PATH);
+    error_log("Raw Method: " . $method);    $path = parse_url($uri, PHP_URL_PATH);
+    error_log("Original path: " . $path);
     
-    if (str_starts_with($path, $basePath)) {
-        $path = substr($path, strlen($basePath));
+    // base path uri potentiale
+    $possibleBasePaths = [
+        '/PoW-Project/backend/public',
+        '/PoW-Project/backend',
+        '/backend/public',
+        '/backend'
+    ];
+    
+    error_log("Checking base paths:");
+      foreach ($possibleBasePaths as $basePath) {
+        error_log("Checking if path starts with: " . $basePath);
+        if (str_starts_with($path, $basePath)) {
+            $path = substr($path, strlen($basePath));
+            error_log("Match found! Path after removing " . $basePath . ": " . $path);
+            break;
+        }
     }
 
-    error_log("Path after replace: " . $path);
+    error_log("Final processed path: " . $path);
+      //rute rss
+    if ($path === '/api/rss/test' && $method === 'GET') {
+        require_once __DIR__ . '/../controllers/RssController.php';
+        $controller = new RssController();
+        error_log("RSS Feed - Test route matched");
+        $controller->test();
+        exit;
+    }
+      //verif ruta rss
+    error_log("Checking RSS feed route match...");
+    error_log("Current path: " . $path);
+    error_log("Current method: " . $method);
+    error_log("RSS controller file path: " . __DIR__ . '/../controllers/RssController.php');
+    
+    if (($path === '/api/rss/feed' || $path === '/rss/feed') && $method === 'GET') {
+        error_log("RSS Feed route matched!");
+        $controllerFile = __DIR__ . '/../controllers/RssController.php';
+        
+        if (!file_exists($controllerFile)) {
+            error_log("ERROR: RssController.php not found at: " . $controllerFile);
+            http_response_code(500);
+            echo "RSS Controller not found";
+            exit;
+        }
+        
+        require_once $controllerFile;
+        error_log("RssController.php included successfully");
+        
+        $controller = new RssController();
+        error_log("RSS Feed - Feed route matched, generating feed");
+        $controller->generateFeed();
+        exit;
+    } else {
+        error_log("RSS Feed route NOT matched");
+    }
 
     // ruta pentru register
     if ($path === '/api/register' && $method === 'POST') {
@@ -341,7 +390,14 @@ try {
     if ($path === '/api/profile/update' && $method === 'POST') {
         require_once __DIR__ . '/../controllers/ProfileController.php';
         $controller = new ProfileController($pdo);
-        $controller->updateProfile();        exit;    }
+        $controller->updateProfile();        exit;    }    // RSS Feed route
+    if ($path === '/api/rss/feed' && $method === 'GET') {
+        header('Content-Type: application/rss+xml; charset=utf-8');
+        require_once __DIR__ . '/../controllers/RssController.php';
+        $controller = new RssController();
+        $controller->generateFeed();
+        exit;
+    }
 
     } catch (Exception $e) {
     error_log('API Error: ' . $e->getMessage());
