@@ -266,13 +266,11 @@ try {
         $controller = new MapController($pdo);
         $controller->getCurrentUserLocation();
         exit;
-    }
-
-    //ruta pentru animale (adopt)
+    }    //ruta pentru animale (adopt)
     if ($path === '/api/animals' && $method === 'GET') {
     require_once __DIR__ . '/../controllers/PetPageController.php';
-    $controller = new AnimalController();
-    $controller->getAnimals();
+    $controller = new PetPageController();
+    $controller->handleRequest();
     exit;
     }
 

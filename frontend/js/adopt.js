@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             return null;
         }
-    }
-
-    if (animalId) {
+    }    if (animalId) {
         fetchAnimalDetails(animalId)
             .then(animal => {
                 if (animal && animal.animal_id) {
@@ -35,19 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
                             animal.medical_visits.map(m => `<li>${m.record_date || m.date_of_event || m.date || ''}: ${m.description || ''} (${m.treatment || ''})</li>`).join('') + '</ul>';
                     } else {
                         medicalHtml = '<h2>Medical Visits</h2><p>No medical records found.</p>';
-                    }
-
-                    let images = Array.isArray(animal.images) ? animal.images : (animal.images ? [animal.images] : []);
-                    let currentImg = 0;
-                    function renderCarousel() {
-                        if (images.length === 0) return '';
-                        let imgPath = images[currentImg];
-                        let showArrows = images.length > 1;
+                    }                    let images = Array.isArray(animal.images) ? animal.images : (animal.images ? [animal.images] : []);
+                    let videos = Array.isArray(animal.videos) ? animal.videos : (animal.videos ? [animal.videos] : []);
+                    let allMedia = [...images.map(img => ({type: 'image', src: img})), ...videos.map(vid => ({type: 'video', src: vid}))];
+                    let currentMedia = 0;
+                      function renderCarousel() {
+                        if (allMedia.length === 0) return '';
+                        let mediaItem = allMedia[currentMedia];
+                        let showArrows = allMedia.length > 1;
+                        let mediaElement = '';
+                        
+                        if (mediaItem.type === 'image') {
+                            mediaElement = `<img id="animal-media" src="${mediaItem.src}" alt="${animal.name}" class="carousel-img">`;
+                        } else if (mediaItem.type === 'video') {
+                            mediaElement = `<video id="animal-media" controls class="carousel-video" style="max-width: 100%; max-height: 400px;">
+                                <source src="${mediaItem.src}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>`;
+                        }
+                        
                         return `
                             <div class="carousel-container">
-                                ${showArrows ? '<button id="prev-img" class="carousel-arrow">&#8592;</button>' : ''}
-                                <img id="animal-img" src="${imgPath}" alt="${animal.name}" class="carousel-img">
-                                ${showArrows ? '<button id="next-img" class="carousel-arrow">&#8594;</button>' : ''}
+                                ${showArrows ? '<button id="prev-media" class="carousel-arrow">&#8592;</button>' : ''}
+                                ${mediaElement}
+                                ${showArrows ? '<button id="next-media" class="carousel-arrow">&#8594;</button>' : ''}
                             </div>
                         `;
                     }
@@ -61,28 +70,74 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p><strong>Description:</strong> ${animal.description}</p>
                         ${feedingHtml}
                         ${medicalHtml}
-                    `;
-
-                    //navigare carusel 
-                    if (images.length > 0) {
-                        const img = document.getElementById('animal-img');
-                        img.onerror = function() {
-                            this.onerror = null;
-                            this.src = '../assets/images/default.jpg';
-                        };
-                        const prevBtn = document.getElementById('prev-img');
-                        const nextBtn = document.getElementById('next-img');
+                    `;                    //navigare carusel 
+                    if (allMedia.length > 0) {
+                        const mediaElement = document.getElementById('animal-media');
+                        if (mediaElement && mediaElement.tagName === 'IMG') {                            mediaElement.onerror = function() {
+                                this.onerror = null;
+                                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+                            };
+                        }
+                        
+                        const prevBtn = document.getElementById('prev-media');
+                        const nextBtn = document.getElementById('next-media');
+                        
                         if (prevBtn) {
                             prevBtn.onclick = function() {
-                                currentImg = (currentImg - 1 + images.length) % images.length;
-                                img.src = images[currentImg];
+                                currentMedia = (currentMedia - 1 + allMedia.length) % allMedia.length;
+                                updateMediaDisplay();
                             };
                         }
                         if (nextBtn) {
                             nextBtn.onclick = function() {
-                                currentImg = (currentImg + 1) % images.length;
-                                img.src = images[currentImg];
+                                currentMedia = (currentMedia + 1) % allMedia.length;
+                                updateMediaDisplay();
                             };
+                        }
+                          function updateMediaDisplay() {
+                            const container = document.querySelector('.carousel-container');
+                            const mediaItem = allMedia[currentMedia];
+                            let mediaElement = '';
+                            
+                            if (mediaItem.type === 'image') {
+                                mediaElement = `<img id="animal-media" src="${mediaItem.src}" alt="${animal.name}" class="carousel-img">`;
+                            } else if (mediaItem.type === 'video') {
+                                mediaElement = `<video id="animal-media" controls class="carousel-video" style="max-width: 100%; max-height: 400px;">
+                                    <source src="${mediaItem.src}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>`;
+                            }
+                            
+                            const showArrows = allMedia.length > 1;
+                            container.innerHTML = `
+                                ${showArrows ? '<button id="prev-media" class="carousel-arrow">&#8592;</button>' : ''}
+                                ${mediaElement}
+                                ${showArrows ? '<button id="next-media" class="carousel-arrow">&#8594;</button>' : ''}
+                            `;
+                            
+                            // Re-attach event listeners după update
+                            const newPrevBtn = document.getElementById('prev-media');
+                            const newNextBtn = document.getElementById('next-media');
+                            const newMediaElement = document.getElementById('animal-media');
+                              if (newMediaElement && newMediaElement.tagName === 'IMG') {
+                                newMediaElement.onerror = function() {
+                                    this.onerror = null;
+                                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+                                };
+                            }
+                            
+                            if (newPrevBtn) {
+                                newPrevBtn.onclick = function() {
+                                    currentMedia = (currentMedia - 1 + allMedia.length) % allMedia.length;
+                                    updateMediaDisplay();
+                                };
+                            }
+                            if (newNextBtn) {
+                                newNextBtn.onclick = function() {
+                                    currentMedia = (currentMedia + 1) % allMedia.length;
+                                    updateMediaDisplay();
+                                };
+                            }
                         }
                     }
                 } else {

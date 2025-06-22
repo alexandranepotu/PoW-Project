@@ -92,10 +92,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
         //logica carusel
         if (images.length > 0) {
-            const img = document.getElementById('animal-img');
-            img.onerror = function() {
+            const img = document.getElementById('animal-img');            img.onerror = function() {
                 this.onerror = null;
-                this.src = '../assets/images/default.jpg';
+                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
             };
             const prevBtn = document.getElementById('prev-img');
             const nextBtn = document.getElementById('next-img');

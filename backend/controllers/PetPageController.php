@@ -2,14 +2,6 @@
 require_once __DIR__ . '/../models/PetPageModel.php';
 require_once __DIR__ . '/../models/PetModel.php';
 
-//header json
-header('Content-Type: application/json');
-
-//CORS
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
 class PetPageController {
     private $petPageModel;
     private $petModel;
@@ -18,12 +10,11 @@ class PetPageController {
         $this->petPageModel = new PetPageModel();
         $this->petModel = new PetModel();
     }
-    
-    public function handleRequest() {
+      public function handleRequest() {
         try {
             if (isset($_GET['action']) && $_GET['action'] === 'getAvailable') {
                 $this->getAvailableAnimals();
-            } elseif (isset($_GET['action']) && $_GET['action'] === 'getAnimalById' && isset($_GET['id'])) {
+            } elseif (isset($_GET['id'])) {
                 $this->getAnimalById();
             } else {
                 // Filtrare animale cu parametri
@@ -45,31 +36,24 @@ class PetPageController {
         $animals = $this->petPageModel->getAvailableAnimals();
         echo json_encode($animals);
     }
-    
-    private function getAnimalById() {
+      private function getAnimalById() {
         $id = intval($_GET['id']);
+
+        $animals = $this->petPageModel->getAnimals(['id' => $id]);
         
-        $animal = $this->petPageModel->getCompleteAnimalDetails($id);
-        
-        if (!$animal) {
+        if (empty($animals)) {
             echo json_encode(['error' => 'Animal not found']);
             return;
         }
         
-        $animal['feeding_journal'] = $this->petModel->getFeedingCalendar($id);
-        $animal['medical_visits'] = $this->petModel->getMedicalHistory($id);
-        
-        echo json_encode($animal);
+        echo json_encode($animals[0]);
     }
     
     private function getFilteredAnimals() {
         $filters = $_GET; 
         unset($filters['action']); 
-        
-        $animals = $this->petPageModel->getAnimals($filters);
+          $animals = $this->petPageModel->getAnimals($filters);
         echo json_encode($animals);
     }
 }
-$controller = new PetPageController();
-$controller->handleRequest();
 ?>

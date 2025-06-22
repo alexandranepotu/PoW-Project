@@ -49,13 +49,20 @@ class PetPageModel {
                 $ownerStmt->execute([$animal['animal_id']]);
                 $owner = $ownerStmt->fetch(PDO::FETCH_ASSOC);
                 $animal['owner_id'] = $owner ? $owner['added_by'] : null;
-            }
-            //array de img pt fiecare animal
+            }            //array de img si video pt fiecare animal
             if (isset($animal['animal_id'])) {
-                $imgStmt = $this->pdo->prepare('SELECT file_path FROM media_resources WHERE animal_id = ?');
-                $imgStmt->execute([$animal['animal_id']]);
+                // Imagini
+                $imgStmt = $this->pdo->prepare('SELECT file_path FROM media_resources WHERE animal_id = ? AND type = ?');
+                $imgStmt->execute([$animal['animal_id'], 'image']);
                 $images = $imgStmt->fetchAll(PDO::FETCH_COLUMN);
                 $animal['images'] = $images;
+                
+                // Video-uri
+                $videoStmt = $this->pdo->prepare('SELECT file_path FROM media_resources WHERE animal_id = ? AND type = ?');
+                $videoStmt->execute([$animal['animal_id'], 'video']);
+                $videos = $videoStmt->fetchAll(PDO::FETCH_COLUMN);
+                $animal['videos'] = $videos;
+                
                 //media_url ca prima imagine sau null daca nu exista
                 $animal['media_url'] = isset($images[0]) ? $images[0] : null;
             }
@@ -106,15 +113,17 @@ class PetPageModel {
         }
         
         return $animal;
-    }
-
-    public function getAnimalImages($animalId) {
-        $stmt = $this->pdo->prepare("SELECT file_path FROM media_resources WHERE animal_id = ?");
+    }    public function getAnimalImages($animalId) {
+        $stmt = $this->pdo->prepare("SELECT file_path FROM media_resources WHERE animal_id = ? AND type = 'image'");
         $stmt->execute([$animalId]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
- 
-    public function getCompleteAnimalDetails($animalId) {
+
+    public function getAnimalVideos($animalId) {
+        $stmt = $this->pdo->prepare("SELECT file_path FROM media_resources WHERE animal_id = ? AND type = 'video'");
+        $stmt->execute([$animalId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }    public function getCompleteAnimalDetails($animalId) {
         $animal = $this->getAnimalById($animalId);
         
         if (!$animal) {
@@ -122,6 +131,7 @@ class PetPageModel {
         }
     
         $animal['images'] = $this->getAnimalImages($animalId);
+        $animal['videos'] = $this->getAnimalVideos($animalId);
         $animal['id'] = $animal['animal_id'];
         
         return $animal;

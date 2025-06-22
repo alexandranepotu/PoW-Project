@@ -28,17 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function loadAnimals(params = '') {
     console.log("Loading animals with params:", params);
-    
-    //daca nu am filtre, incarc toate animalele
+      //daca nu am filtre, incarc toate animalele
     //daca am filtre, nu mai folosesc action=getAvailable
     let url;
     if (params && params.trim() !== '') {
       //pt filtrare, folosesc parametrii din form
-      url = `/PoW-Project/backend/controllers/PetPageController.php?${params}`;
+      url = `/PoW-Project/backend/public/api/animals?${params}`;
       console.log("Filtering with params");
-    } else {
-      //incarcare initiala
-      url = `/PoW-Project/backend/controllers/PetPageController.php?action=getAvailable`;
+    } else {//incarcare initiala
+      url = `/PoW-Project/backend/public/api/animals?action=getAvailable`;
       console.log("Loading all available animals");
     }
     
@@ -103,12 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
           card.className = 'adoption-card';
           
           const name = animal.name || 'Unnamed';
-          const species = animal.species || 'Unknown';
-          const breed = animal.breed || 'Mixed';
+          const species = animal.species || 'Unknown';          const breed = animal.breed || 'Mixed';
           const age = animal.age || 'Unknown';
           const sex = animal.sex || 'Unknown';
           const health = animal.health_status || 'Unknown';
-          const mediaUrl = animal.media_url || '../assets/images/default.jpg';
+          const mediaUrl = animal.media_url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
           
           card.innerHTML = `
             <img src="${mediaUrl}" 
