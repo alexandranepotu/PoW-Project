@@ -4,6 +4,8 @@ class MyPetsManager {
         this.pets = [];
         this.domManager = new MyPetsDOMManager();
         this.renderer = new MyPetsRenderer();
+        this.feedingManager = null;
+        this.medicalManager = null;
         this.init();
     }
 
@@ -11,17 +13,18 @@ class MyPetsManager {
         await this.loadMyPets();
         this.setupEventListeners();
     }
-    //pt gestionarea eventurilor
-     setupEventListeners() {
+
+    setupEventListeners() {
         const addBtn = document.querySelector('.btn-add');
         const modal = document.getElementById('addPetModal');
         const closeBtn = modal?.querySelector('.close-btn');
         const form = document.getElementById('addPetForm');
         
-        // sa nu fie deschis automat modalul
         if (modal) {
             modal.style.display = 'none';
-        }        if (addBtn && modal) {
+        }
+
+        if (addBtn && modal) {
             addBtn.addEventListener('click', () => {
                 modal.style.display = 'flex';
                 this.setupFormEntryManagement();
@@ -45,28 +48,23 @@ class MyPetsManager {
                 }
             });
         }
-    }    async loadMyPets() {   //incarcare + afisare animale
-        try {
-            const response = await fetch('/PoW-Project/backend/public/api/mypets', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {                const data = await response.json();
-                this.pets = data.pets || [];
-                this.renderPetsList(this.pets);  //afisez lissta animalelor
-            } else if (response.status === 401) {
-                this.showMessage('You must authenticate', 'error');
+    }
+
+    async loadMyPets() {        try {
+            const data = await apiClient.get('/mypets');
+            this.pets = data.pets || [];
+            this.renderPetsList(this.pets);
+        } catch (error) {
+            if (error.message.includes('Authentication required')) {
+                SharedUtilities.showMessage('You must authenticate', 'error');
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 2000);
             } else {
-                const errorData = await response.text();
-                throw new Error('Failed to load pets: ' + response.status);
+                SharedUtilities.showMessage('Error loading pets: ' + error.message, 'error');
             }
-        } catch (error) {
-            this.showMessage('Error loading pets: ' + error.message, 'error');
         }
-    }      renderPetsList(pets) {
+    }renderPetsList(pets) {
         const container = this.domManager.getPetsContainer();
         container.innerHTML = this.renderer.renderPetsList(pets);
     }
@@ -96,125 +94,90 @@ class MyPetsManager {
         const modal = this.createModal('addFeedingModal', 'Add Feeding Records - Multiple Entries');
         modal.querySelector('.modal-body').innerHTML = MyPetsTemplates.feedingForm();
         
-        let entryCount = 0; 
-        //mai multe inregistrarile de feeding
+        const feedingContainer = modal.querySelector('#feedingEntries');
+        this.feedingManager = FormEntryFactory.createFeedingManager(feedingContainer);
+        
         modal.querySelector('#addMoreFeeding').addEventListener('click', () => {
-            entryCount++;
-            const feedingEntries = modal.querySelector('#feedingEntries');
-            this.domManager.addFeedingEntry(feedingEntries, entryCount);
+            this.feedingManager.addEntry();
         });
           
         modal.querySelector('#addFeedingForm').addEventListener('submit', (e) => {
             this.handleMultipleFeeding(e, petId);
         });
-    }
-
-    async handleMultipleFeeding(e, petId) {
+    }    async handleMultipleFeeding(e, petId) {
         e.preventDefault();
         
-        const formData = new FormData(e.target);
-        const today = new Date().toISOString().split('T')[0]; //data curenta
-        
-        //toate inregistrarile
-        const feedingRecords = [];
-        let index = 0;
-        
-        while (formData.has(`feed_time_${index}`)) {
-            const feedTime = formData.get(`feed_time_${index}`);
-            const foodType = formData.get(`food_type_${index}`);
-            
-            if (feedTime && foodType) {
-                // Combine current date with the time
-                const fullDateTime = `${today}T${feedTime}:00`;
-                
-                feedingRecords.push({
-                    feed_time: fullDateTime,
-                    food_type: foodType,
-                    notes: formData.get(`notes_${index}`) || ''
-                });
-            }
-            index++;
+        if (!this.feedingManager) return;
+          const validation = this.feedingManager.validateEntries();
+        if (!validation.isValid) {
+            SharedUtilities.showMessage('Please fill in all required fields: ' + validation.errors.join(', '), 'error');
+            return;
         }
+
+        const feedingData = this.feedingManager.getAllEntryData();
+        const today = SharedUtilities.getCurrentDate();
         
-        //trimite toate inregistrarile 
         try {
-            for (const record of feedingRecords) {
-                const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}/feeding`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(record),
-                    credentials: 'include'
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to add feeding record');
-                }
+            const processedRecords = feedingData.map(data => ({
+                feed_time: SharedUtilities.combineDateAndTime(today, data.feed_time_0 || data.feed_time),
+                food_type: data.food_type_0 || data.food_type,
+                notes: data.notes_0 || data.notes || ''
+            }));            for (const record of processedRecords) {
+                await apiClient.post(`/mypets/${petId}/feeding`, record);
             }
-              this.showMessage(`${feedingRecords.length} feeding records added successfully!`, 'success');
+            
+            SharedUtilities.showMessage(`${processedRecords.length} feeding records added successfully!`, 'success');
             document.getElementById('addFeedingModal').remove();
             this.editPet(petId);
             
         } catch (error) {
-            this.showMessage('Error adding feeding records', 'error');
+            SharedUtilities.showMessage('Error adding feeding records', 'error');
         }
-    }    showAddMedicalForm(petId) {
+    }showAddMedicalForm(petId) {
         const modal = this.createModal('addMedicalModal', 'Add Medical Records - Multiple Entries');
         modal.querySelector('.modal-body').innerHTML = MyPetsTemplates.medicalForm();
         
-        let entryCount = 0;
+        const medicalContainer = modal.querySelector('#medicalEntries');
+        this.medicalManager = FormEntryFactory.createMedicalManager(medicalContainer);
         
-        //add inregistrari medicale
         modal.querySelector('#addMoreMedical').addEventListener('click', () => {
-            entryCount++;
-            const medicalEntries = modal.querySelector('#medicalEntries');
-            this.domManager.addMedicalEntry(medicalEntries, entryCount);
+            this.medicalManager.addEntry();
         });
-        
-        modal.querySelector('#addMedicalForm').addEventListener('submit', (e) => {
+          modal.querySelector('#addMedicalForm').addEventListener('submit', (e) => {
             this.handleMultipleMedical(e, petId);
         });
     }
+
     async handleMultipleMedical(e, petId) {
         e.preventDefault();
         
-        const formData = new FormData(e.target);
-      //colecteaza toate inregistrarile medicale
-        const medicalRecords = [];
-        let index = 0;
-        
-        while (formData.has(`date_of_event_${index}`)) {
-            const eventDate = formData.get(`date_of_event_${index}`);
-            const description = formData.get(`description_${index}`);
-            
-            if (eventDate && description) {
-                medicalRecords.push({
-                    date_of_event: eventDate,
-                    description: description,
-                    treatment: formData.get(`treatment_${index}`) || '',
-                    emergency: formData.has(`emergency_${index}`)
-                });
-            }
-            index++;
+        if (!this.medicalManager) return;
+          const validation = this.medicalManager.validateEntries();
+        if (!validation.isValid) {
+            SharedUtilities.showMessage('Please fill in all required fields: ' + validation.errors.join(', '), 'error');
+            return;
         }
-        try {    //trimite fiecare inregistrare in parte
-            for (const record of medicalRecords) {
-                const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}/medical`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(record),
-                    credentials: 'include'
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to add medical record');
-                }
-            }            this.showMessage(`${medicalRecords.length} medical records added successfully!`, 'success');
+
+        const medicalData = this.medicalManager.getAllEntryData();
+        
+        try {
+            const processedRecords = medicalData.map(data => ({
+                date_of_event: data.date_of_event_0 || data.date_of_event,
+                description: data.description_0 || data.description,
+                treatment: data.treatment_0 || data.treatment || '',
+                emergency: data.emergency_0 || data.emergency || false
+            }));
+
+            for (const record of processedRecords) {
+                await apiClient.post(`/mypets/${petId}/medical`, record);
+            }
+              SharedUtilities.showMessage(`${processedRecords.length} medical records added successfully!`, 'success');
             document.getElementById('addMedicalModal').remove();
             this.editPet(petId);
         } catch (error) {
-            this.showMessage('Error adding medical records', 'error');
+            SharedUtilities.showMessage('Error adding medical records', 'error');
         }
-    }    showUploadForm(petId) {
+    }showUploadForm(petId) {
         const modal = this.createModal('uploadModal', 'Upload Media - Multiple Files');
         modal.querySelector('.modal-body').innerHTML = MyPetsTemplates.uploadForm();
         
@@ -284,69 +247,44 @@ class MyPetsManager {
             console.error('Error during multiple upload:', error);
             this.showMessage('Error uploading files', 'error');
         }
-    }
-    
-    async deleteFeedingRecord(feedId) {
-        if (!confirm('Are you sure you want to delete this feeding record?')) return;
+    }      async deleteFeedingRecord(feedId) {
+        if (!SharedUtilities.confirm('Are you sure you want to delete this feeding record?')) return;
         
         try {
-            const response = await fetch(`/PoW-Project/backend/public/api/mypets/feeding/${feedId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-              if (response.ok) {
-                this.showMessage('Record deleted succesfully!', 'success');
-                this.editPet(this.currentPetId);
-            } else {
-                throw new Error('Failed to delete feeding record');
-            }
+            await apiClient.delete(`/mypets/feeding/${feedId}`);
+            SharedUtilities.showMessage('Record deleted successfully!', 'success');
+            this.editPet(this.currentPetId);
         } catch (error) {
             console.error('Error deleting feeding record:', error);
-            this.showMessage('Error deleting feeding record', 'error');
+            SharedUtilities.showMessage('Error deleting feeding record', 'error');
         }
     }
-    
+
     async deleteMedicalRecord(recordId) {
-        if (!confirm('Are you sure you want to delete this medical record?')) return;
+        if (!SharedUtilities.confirm('Are you sure you want to delete this medical record?')) return;
         
         try {
-            const response = await fetch(`/PoW-Project/backend/public/api/mypets/medical/${recordId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-              if (response.ok) {
-                this.showMessage('Medical record deleted succesfully!', 'success');
-                this.editPet(this.currentPetId);
-            } else {
-                throw new Error('Failed to delete medical record');
-            }
+            await apiClient.delete(`/mypets/medical/${recordId}`);
+            SharedUtilities.showMessage('Medical record deleted successfully!', 'success');
+            this.editPet(this.currentPetId);
         } catch (error) {
             console.error('Error deleting medical record:', error);
-            this.showMessage('Error deleting medical record', 'error');
+            SharedUtilities.showMessage('Error deleting medical record', 'error');
         }
     }
-    
+
     async deleteMedia(mediaId) {
-        if (!confirm('Are you sure you want to delete this media file?')) return;
+        if (!SharedUtilities.confirm('Are you sure you want to delete this media file?')) return;
         
-        try {
-            const response = await fetch(`/PoW-Project/backend/public/api/mypets/media/${mediaId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-              if (response.ok) {
-                this.showMessage('Media file deleted succesfully!', 'success');
-                this.editPet(this.currentPetId);
-            } else {
-                throw new Error('Failed to delete media');
-            }
+        try {            await apiClient.delete(`/mypets/media/${mediaId}`);
+            SharedUtilities.showMessage('Media file deleted successfully!', 'success');
+            this.editPet(this.currentPetId);
         } catch (error) {
             console.error('Error deleting media:', error);
-            this.showMessage('Error deleting media', 'error');
+            SharedUtilities.showMessage('Error deleting media', 'error');
         }
-    }      async editPet(petId) {
+    }async editPet(petId) {
         try {
-            // Încarcă datele curente ale animalului
             const response = await fetch(`/PoW-Project/backend/public/api/mypets/${petId}`, {
                 credentials: 'include'
             });
@@ -412,7 +350,6 @@ class MyPetsManager {
         
         const formData = new FormData(e.target);
         
-        // calculeaza varsta cu ani si luni-> poate ar trebui modificat??????????????????/
         const ageYears = parseInt(formData.get('ageYears')) || 0;
         const ageMonths = parseInt(formData.get('ageMonths')) || 0;
         const totalAge = ageYears + (ageMonths / 12);
@@ -446,7 +383,6 @@ class MyPetsManager {
             petData.medical = medical;
         }
 
-        // mai trebuie modificat???????????????????????????????????
         const mediaFiles = document.getElementById('petMediaFiles').files;
         const mediaDescription = formData.get('mediaDescription') || '';
         
@@ -462,12 +398,10 @@ class MyPetsManager {
                 const result = await response.json();
                 const petId = result.pet_id;
                 
-                // de verificat?????????????????????????
                 if (mediaFiles && mediaFiles.length > 0) {
                     await this.uploadMediaForNewPet(petId, mediaFiles, mediaDescription);
                 }
-                
-                // Verifică dacă utilizatorul are adresă reală
+
                 if (!result.hasRealAddress) {
                     const goToProfile = confirm(
                         'Pet added successfully! However, you are using a default address. Would you like to go to your Profile page to add your real address for better accuracy?'
@@ -485,11 +419,9 @@ class MyPetsManager {
                 
                 document.getElementById('addPetModal').style.display = 'none';
                 
-                // Reset form
                 e.target.reset();
                 this.resetFormEntries();
                 
-                // Reload pets list
                 this.loadMyPets();
             } else {
                 const errorData = await response.json();
@@ -619,25 +551,13 @@ class MyPetsManager {
             }
         }
         
-        // curata preview media
-        const mediaPreview = document.getElementById('mediaPreview');
         if (mediaPreview) {
             mediaPreview.innerHTML = '';
         }
-    }    setupFormEntryManagement() {
-        const addFeedingBtn = document.getElementById('btnAddFeeding');
-        if (addFeedingBtn) {
-            addFeedingBtn.onclick = () => {
-                this.addFeedingEntry();
-            };
-        }
-        
-        const addMedicalBtn = document.getElementById('btnAddMedical');
-        if (addMedicalBtn) {
-            addMedicalBtn.onclick = () => {
-                this.addMedicalEntry();
-            };
-        }        const mediaFiles = document.getElementById('petMediaFiles');
+    }
+
+    setupFormEntryManagement() {
+        const mediaFiles = document.getElementById('petMediaFiles');
         if (mediaFiles) {
             mediaFiles.addEventListener('change', (e) => {
                 const previewContainer = document.getElementById('mediaPreview');
@@ -646,88 +566,7 @@ class MyPetsManager {
                 }
             });
         }
-    }    addFeedingEntry() {
-        const container = document.getElementById('feedingEntries');
-        if (!container) {
-            return;
-        }
-        
-        // cauta numarul maxim de inregistrari existente pentru a evita conflictele
-        const existingEntries = container.querySelectorAll('.feeding-entry');
-        let maxEntryNum = -1;
-        existingEntries.forEach(entry => {
-            const entryNum = parseInt(entry.dataset.entry);
-            if (entryNum > maxEntryNum) {
-                maxEntryNum = entryNum;
-            }
-        });
-        
-        const newEntryNum = maxEntryNum + 1;
-        const newEntry = document.createElement('div');
-        newEntry.className = 'feeding-entry';
-        newEntry.dataset.entry = newEntryNum;
-        
-        newEntry.innerHTML = `
-            <h4>Feeding Entry #${container.children.length + 1} 
-                <button type="button" class="remove-feeding-entry" onclick="this.parentElement.parentElement.remove()">Remove</button>
-            </h4>            <div class="form-group">
-                <label for="feedTime_${newEntryNum}">Time:</label>
-                <input type="time" id="feedTime_${newEntryNum}" name="feedTime_${newEntryNum}">
-            </div>
-            <div class="form-group">
-                <label for="foodType_${newEntryNum}">Food Type:</label>
-                <input type="text" id="foodType_${newEntryNum}" name="foodType_${newEntryNum}" placeholder="e.g. Dry kibble, Wet food">
-            </div>            <div class="form-group">
-                <label for="feedNotes_${newEntryNum}">Notes (optional):</label>
-                <textarea id="feedNotes_${newEntryNum}" name="feedNotes_${newEntryNum}" placeholder="Feeding observations..."></textarea>
-            </div>
-        `;        
-        container.appendChild(newEntry);
     }
-       addMedicalEntry() {
-        const container = document.getElementById('medicalEntries');
-        if (!container) {
-            return;
-        }
-        
-        // cauta numarul maxim de inregistrari existente pentru a evita conflictele
-        const existingEntries = container.querySelectorAll('.medical-entry');
-        let maxEntryNum = -1;
-        existingEntries.forEach(entry => {
-            const entryNum = parseInt(entry.dataset.entry);
-            if (entryNum > maxEntryNum) {
-                maxEntryNum = entryNum;
-            }
-        });
-        
-        const newEntryNum = maxEntryNum + 1;
-        const newEntry = document.createElement('div');
-        newEntry.className = 'medical-entry';
-        newEntry.dataset.entry = newEntryNum;
-        
-        newEntry.innerHTML = `
-            <h4>Medical Record #${container.children.length + 1} 
-                <button type="button" class="remove-medical-entry" onclick="this.parentElement.parentElement.remove()">Remove</button>
-            </h4>
-            <div class="form-group">
-                <label for="medicalDate_${newEntryNum}">Event Date:</label>
-                <input type="date" id="medicalDate_${newEntryNum}" name="medicalDate_${newEntryNum}">
-            </div>
-            <div class="form-group">
-                <label for="medicalDescription_${newEntryNum}">Description:</label>
-                <textarea id="medicalDescription_${newEntryNum}" name="medicalDescription_${newEntryNum}" placeholder="Describe the medical event..."></textarea>
-            </div>
-            <div class="form-group">
-                <label for="medicalTreatment_${newEntryNum}">Treatment (optional):</label>
-                <textarea id="medicalTreatment_${newEntryNum}" name="medicalTreatment_${newEntryNum}" placeholder="Treatment applied..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="medicalEmergency_${newEntryNum}" name="medicalEmergency_${newEntryNum}">
-                    Emergency
-                </label>
-            </div>        `;        
-        container.appendChild(newEntry);    }    
 
     async handleEditPet(e, petId) {
         e.preventDefault();

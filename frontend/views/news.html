@@ -1,29 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Adoption Feed</title>
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Pet Adoption Feed</title>
+    <link rel="alternate" type="application/rss+xml" title="PoW Project RSS Feed" href="/PoW-Project/backend/public/api/rss/feed">
+    <link rel="stylesheet" href="../assets/navbar.css">
+    <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="../assets/news.css">
 </head>
-<body>
-    <div class="top-bar">
-        <a href="dashboard.html" class="back-button">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
-            Back to Dashboard
-        </a>
-        <button class="theme-toggle" aria-label="Toggle theme">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-                <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
-            </svg>
-        </button>
-    </div>
-    
-    <div class="header">
+<body>    <header>
+        <a href="dashboard.html" class="logo">Pet Adoption</a>
+        <nav>
+            <a href="animale.html">Adopt</a>
+            <div class="inbox-dropdown">                <div class="inbox-text">
+                    <span>Inbox</span>
+                </div>
+                <div class="dropdown-content">
+                    <a href="inbox.html">Messages</a>
+                    <a href="submitted-applications.html">Submitted Applications</a>
+                    <a href="received-applications.html">Received Applications</a>
+                </div>
+            </div>
+            <div class="profile-dropdown">
+                <div class="profile-text">
+                    <span>Profile</span>
+                </div>
+                <div class="dropdown-content">
+                    <a href="mypets.html">My Pets</a>
+                    <a href="profile.html">My Profile</a>
+                    <a href="#logout">Logout</a>
+                </div>
+            </div>
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                </svg>
+            </button>
+        </nav>
+    </header>
+      <div class="header">
         <h1>PoW Project - Pet Adoption Feed</h1>
-        <p>Latest available pets and news from PoW Project</p>
+        <p>Latest available pets and news from PoW Project</p>        <div class="rss-links">
+            <a href="/PoW-Project/backend/public/api/rss/feed" class="rss-feed-link" title="RSS XML Feed" target="_blank">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                </svg>
+                Subscribe to RSS Feed
+            </a>            <a href="rss-filters.html" class="rss-filter-link" title="Create Custom RSS Feeds">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M15.5,14H20.5L22,15.5V20.5L20.5,22H15.5L14,20.5V15.5L15.5,14M18,16V19H17V16H18M4,6H19V8H4V6M4,11H15V13H4V11M4,16H12V18H4V16Z"/>
+                </svg>
+                Custom RSS Filters
+            </a>
+        </div>
     </div>
     
     <div class="feed-sections">
@@ -41,7 +69,8 @@
             <h2>📰 Latest News</h2>
             <!-- stiri -->
         </div>    </div>
-    
+      <script src="../js/utils/shared-utilities.js"></script>
+    <script src="../js/utils/dropdown-manager.js"></script>
     <script src="../js/global-theme.js"></script>
     <script src="../js/navbar.js"></script>
     <script src="../js/news.js"></script>

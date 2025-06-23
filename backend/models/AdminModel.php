@@ -46,12 +46,10 @@ class AdminModel {
                 a.animal_id,
                 a.name as animal_name,
                 a.species,
-                a.breed,
-                a.age,
+                a.breed,                a.age,
                 a.sex,
                 a.health_status,
                 a.available::boolean,
-                a.created_at,
                 u.username as owner_username,
                 u.full_name as owner_name,
                 u.email as owner_email,
@@ -62,7 +60,7 @@ class AdminModel {
                 ) as applications_count
             FROM animals a
             JOIN users u ON a.added_by = u.user_id
-            ORDER BY a.created_at DESC";
+            ORDER BY a.animal_id DESC";
             
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();

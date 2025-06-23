@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/db.php';
 
 class RssModel {
     private $pdo;
-    private $itemLimit = 50; //limitarea numărului de articole la 50
+    private $itemLimit = 50; //limitare nr articole->50
     private $dbName = 'pet_adoption';
 
     public function __construct() {
@@ -76,18 +76,16 @@ class RssModel {
                     COALESCE(a.species, 'Unknown') as species,
                     COALESCE(a.breed, 'Mixed/Unknown') as breed,
                     COALESCE(a.age::text, 'Unknown') as age,
-                    COALESCE(a.sex, 'Unknown') as sex,
-                    COALESCE(a.health_status, 'Not specified') as health_status,
+                    COALESCE(a.sex, 'Unknown') as sex,                    COALESCE(a.health_status, 'Not specified') as health_status,
                     COALESCE(a.description, 'No description available') as description,
                     COALESCE(a.pickup_address, 'Contact for location') as pickup_address,
-                    COALESCE(a.created_at, CURRENT_TIMESTAMP) as created_at,
                     COALESCE(u.username, 'Anonymous') as owner_name,
                     m.file_path as media_url
                 FROM animals a
                 LEFT JOIN users u ON a.added_by = u.user_id
                 LEFT JOIN MediaImages m ON a.animal_id = m.animal_id
                 WHERE a.available = true
-                ORDER BY a.created_at DESC NULLS LAST, a.animal_id DESC
+                ORDER BY a.animal_id DESC
                 LIMIT $1";
             
             //debugging
@@ -164,17 +162,14 @@ class RssModel {
         } catch (PDOException $e) {
             error_log("RSS Feed - Error checking news table: " . $e->getMessage());
             return [];
-        }
-
-        $query = "
+        }        $query = "
             SELECT 
                 n.id as news_id,
                 n.title,
                 n.content,
                 n.created_at,
-                COALESCE(u.username, 'System') as author_name
+                'System' as author_name
             FROM news n
-            LEFT JOIN users u ON n.user_id = u.user_id
             ORDER BY n.created_at DESC
             LIMIT $1";
 
@@ -237,6 +232,105 @@ class RssModel {
         } catch (PDOException $e) {
             error_log("RSS Feed - Error getting database info: " . $e->getMessage());
             return ['error' => $e->getMessage()];
+        }
+    }
+    
+    public function getFilteredAnimals($filters = []) {
+        try {
+            // verificari existenta pt tabele
+            $tableExists = $this->pdo->query("SELECT to_regclass('public.animals')");
+            $exists = $tableExists->fetch(PDO::FETCH_COLUMN);
+            if (!$exists) {
+                error_log("RSS Filtered Feed - Animals table does not exist");
+                return [];
+            }
+            $query = "
+                SELECT 
+                    a.animal_id,
+                    a.name,
+                    a.species,
+                    a.breed,
+                    a.age,
+                    a.sex,
+                    a.health_status,
+                    a.description,
+                    a.pickup_address,
+                    a.available,
+                    u.username as owner_name,
+                    CURRENT_TIMESTAMP as created_at                FROM animals a
+                LEFT JOIN users u ON a.added_by = u.user_id";
+              $params = [];
+            
+            // adaug conditia where doar daca avem filtre
+            $whereConditions = [];
+            
+            //filtrari dinamice
+            if (!empty($filters['sex'])) {
+                $whereConditions[] = "LOWER(a.sex) = LOWER(?)";
+                $params[] = $filters['sex'];
+            }
+            
+            if (!empty($filters['location'])) {
+                $whereConditions[] = "a.pickup_address ILIKE ?";
+                $params[] = '%' . $filters['location'] . '%';
+            }
+            
+            if (!empty($filters['species'])) {
+                $whereConditions[] = "a.species ILIKE ?";
+                $params[] = '%' . $filters['species'] . '%';
+            }
+            
+            if (!empty($filters['breed'])) {
+                $whereConditions[] = "a.breed ILIKE ?";
+                $params[] = '%' . $filters['breed'] . '%';
+            }
+            
+            if (isset($filters['age_min']) && is_numeric($filters['age_min'])) {
+                $whereConditions[] = "a.age >= ?";
+                $params[] = intval($filters['age_min']);
+            }
+            
+            if (isset($filters['age_max']) && is_numeric($filters['age_max'])) {
+                $whereConditions[] = "a.age <= ?";
+                $params[] = intval($filters['age_max']);
+            }
+            
+            // adaug where doar daca avem conditii
+            if (!empty($whereConditions)) {
+                $query .= " WHERE " . implode(" AND ", $whereConditions);
+            }
+            
+            $query .= " ORDER BY a.animal_id DESC LIMIT ?";
+            $params[] = $this->itemLimit;
+            
+            error_log("RSS Filtered Feed - Executing query with filters: " . json_encode($filters));
+            error_log("RSS Filtered Feed - Query parameters: " . json_encode($params));
+            error_log("RSS Filtered Feed - Final query: " . $query);
+            
+            $stmt = $this->pdo->prepare($query);
+            $success = $stmt->execute($params);
+            
+            if (!$success) {
+                error_log("RSS Filtered Feed - Query error: " . print_r($stmt->errorInfo(), true));
+                return [];
+            }
+            
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("RSS Filtered Feed - Retrieved " . count($results) . " filtered animals");
+            
+            // afisez rezultatele
+            if (!empty($results)) {
+                error_log("RSS Filtered Feed - First result: " . json_encode($results[0], JSON_PRETTY_PRINT));
+            }
+            
+            return $results;
+            
+        } catch (PDOException $e) {
+            error_log("RSS Filtered Feed - Error fetching filtered animals: " . $e->getMessage());
+            error_log("RSS Filtered Feed - SQL State: " . $e->errorInfo[0]);
+            error_log("RSS Filtered Feed - Error Code: " . $e->errorInfo[1]);
+            error_log("RSS Filtered Feed - Error Message: " . $e->errorInfo[2]);
+            return [];
         }
     }
 }

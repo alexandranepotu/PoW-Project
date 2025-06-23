@@ -12,10 +12,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 ob_start(); //buffer output
-//debugging admin
-error_log("Admin route debug - Path: " . $path);
-error_log("Admin route debug - Method: " . $method);
-error_log("Admin route debug - Full URI: " . $_SERVER['REQUEST_URI']);
 
 //verif status admin
 if (!AdminMiddleware::isAdmin()) {

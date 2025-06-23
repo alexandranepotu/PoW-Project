@@ -14,10 +14,9 @@
   <a href="dashboard.html" class="logo">Pet Adoption</a>
   <nav>
     <a href="animale.html">Adopt</a>
-    <div class="inbox-dropdown">
-      <div class="inbox-text profile-text">
+    <div class="inbox-dropdown">      <div class="inbox-text">
         <span>Inbox</span>
-      </div>      <div class="dropdown-content">
+      </div><div class="dropdown-content">
         <a href="inbox.html">Messages</a>
         <a href="submitted-applications.html">Submitted Applications</a>
         <a href="received-applications.html">Received Applications</a>
@@ -48,13 +47,12 @@
       <input type="text" id="username" name="username" required />
 
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required />
-
-      <label for="phone">Phone Number:</label>
+      <input type="email" id="email" name="email" required />      <label for="phone">Phone Number:</label>
       <input type="tel" id="phone" name="phone" />
 
+      <div id="message" class="hidden"></div>
       <button type="submit">Save changes</button>
-    </form>    <form id="addressForm">
+    </form><form id="addressForm">
        <h1>Address</h1>
         <label for="country">Country:</label>
         <input type="text" id="country" name="country" required />
@@ -74,62 +72,10 @@
     <div id="address-message" class="hidden"></div>
     <button type="submit">Save Address</button>
     </form>
-  </main>
+  </main>  <script src="../js/utils/shared-utilities.js"></script>
+  <script src="../js/utils/dropdown-manager.js"></script>
   <script src="../js/global-theme.js"></script>
   <script src="../js/navbar.js"></script>
   <script src="../js/profile.js"></script>
-  <script>
-    //inbox dropdown
-(function() {
-  const inboxDropdown = document.querySelector('.inbox-dropdown');
-  if (!inboxDropdown) return;
-  const inboxText = inboxDropdown.querySelector('.inbox-text');
-  const dropdownContent = inboxDropdown.querySelector('.dropdown-content');
-  let open = false;
-
-  function openDropdown() {
-    dropdownContent.classList.add('show');
-    open = true;
-  }
-  function closeDropdown() {
-    dropdownContent.classList.remove('show');
-    open = false;
-  }
-  inboxText.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (open) closeDropdown();
-    else openDropdown();
-  });
-  document.addEventListener('click', function(e) {
-    if (!inboxDropdown.contains(e.target)) closeDropdown();
-  });
-})();
-
-    //profil dropdown
-    (function() {
-      const profileDropdown = document.querySelector('.profile-dropdown');
-      if (!profileDropdown) return;
-      const profileText = profileDropdown.querySelector('.profile-text');
-      const dropdownContent = profileDropdown.querySelector('.dropdown-content');
-      let open = false;
-
-      function openDropdown() {
-        dropdownContent.classList.add('show');
-        open = true;
-      }
-      function closeDropdown() {
-        dropdownContent.classList.remove('show');
-        open = false;
-      }
-      profileText.addEventListener('click', function(e) {
-        e.stopPropagation();
-        if (open) closeDropdown();
-        else openDropdown();
-      });
-      document.addEventListener('click', function(e) {
-        if (!profileDropdown.contains(e.target)) closeDropdown();
-      });
-    })();
-  </script>
 </body>
 </html>

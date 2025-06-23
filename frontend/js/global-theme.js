@@ -2,9 +2,8 @@ class GlobalThemeManager {
     constructor() {
         this.init();
         this.setupListeners();
-    }
-
-    init() {
+    }    init() {
+        console.log('GlobalThemeManager: Initializing...');
         //aplica tema imediat din localStorage sau preferintele sistemului
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -15,8 +14,11 @@ class GlobalThemeManager {
         //initializeaza butonul de comutare a temei
         const toggleBtn = document.querySelector('.theme-toggle');
         if (toggleBtn) {
+            console.log('GlobalThemeManager: Theme toggle button found, setting up');
             this.updateButtonIcon(initialTheme);
             this.setupToggleButton(toggleBtn);
+        } else {
+            console.log('GlobalThemeManager: No theme toggle button found');
         }
 
         console.log('Global theme initialized:', initialTheme);
@@ -49,13 +51,14 @@ class GlobalThemeManager {
                 console.log('System theme changed:', newTheme);
             }
         });
-    }
-
-    setupToggleButton(toggleBtn) {
+    }    setupToggleButton(toggleBtn) {
+        console.log('GlobalThemeManager: Adding click listener to theme toggle');
         toggleBtn.addEventListener('click', () => {
+            console.log('GlobalThemeManager: Theme toggle clicked');
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
+            console.log('GlobalThemeManager: Switching from', currentTheme, 'to', newTheme);
             this.applyTheme(newTheme);
             this.updateButtonIcon(newTheme);
             
@@ -120,11 +123,6 @@ class GlobalThemeManager {
     }
 }
 
-//initializeaza tema imediat la incarcarea paginii->evita flickering
-document.addEventListener('DOMContentLoaded', () => {
-    window.globalThemeManager = new GlobalThemeManager();
-});
-
 //aplica tema imediat la incarcarea paginii
 //daca nu este deja setata in localStorage sau daca utilizatorul nu are o preferinta
 (function() {
@@ -133,3 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', initialTheme);
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof window.globalThemeManager === 'undefined') {
+        window.globalThemeManager = new GlobalThemeManager();
+        console.log('GlobalThemeManager auto-initialized');
+    }
+});

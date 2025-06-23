@@ -23,9 +23,8 @@ async function loadFeed() {
         if (!petsResponse.ok) {
             throw new Error(`HTTP error! status: ${petsResponse.status}`);
         }
-        
-        const petsData = await petsResponse.json();
-        console.log('Pets data:', petsData);
+          const petsData = await petsResponse.json();
+        console.log('Pets data:', JSON.stringify(petsData, null, 2));
 
         if (!petsData.success) {
             throw new Error('Failed to fetch pets data');
@@ -42,9 +41,8 @@ async function loadFeed() {
         if (!newsResponse.ok) {
             throw new Error(`HTTP error! status: ${newsResponse.status}`);
         }
-        
-        const newsData = await newsResponse.json();
-        console.log('News data:', newsData);
+          const newsData = await newsResponse.json();
+        console.log('News data:', JSON.stringify(newsData, null, 2));
 
         if (!newsData.success) {
             throw new Error('Failed to fetch news data');

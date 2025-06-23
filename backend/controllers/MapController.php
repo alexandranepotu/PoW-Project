@@ -179,8 +179,7 @@ class MapController {
             if (!$currentUserId) {
                 throw new Exception("User not authenticated");
             }
-            
-            $userAddress = $this->mapModel->getUserAddress($currentUserId);
+              $userAddress = $this->mapModel->getUserAddress($currentUserId);
             
             if (!$userAddress) {
                 header('Content-Type: application/json');
@@ -190,6 +189,17 @@ class MapController {
                 ]);
                 return;
             }
+            
+            //formatare adresa ca string
+            $addressString = '';
+            if ($userAddress['street']) $addressString .= $userAddress['street'] . ', ';
+            if ($userAddress['city']) $addressString .= $userAddress['city'] . ', ';
+            if ($userAddress['county']) $addressString .= $userAddress['county'] . ', ';
+            if ($userAddress['country']) $addressString .= $userAddress['country'];
+            if ($userAddress['postal_code']) $addressString .= ', ' . $userAddress['postal_code'];
+            
+            $addressString = rtrim($addressString, ', '); 
+            
             $coordinates = $this->geocodeAddress($userAddress);
             
             if ($coordinates) {
@@ -197,7 +207,8 @@ class MapController {
                 echo json_encode([
                     'success' => true,
                     'location' => $coordinates,
-                    'address' => $userAddress
+                    'address' => $addressString,
+                    'address_details' => $userAddress
                 ]);
             } else {
                 header('Content-Type: application/json');

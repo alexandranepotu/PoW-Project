@@ -25,130 +25,47 @@ document.addEventListener('DOMContentLoaded', () => {
                             animal.feeding_journal.map(f => `<li>${f.feed_time}: ${f.food_type} (${f.notes || ''})</li>`).join('') + '</ul>';
                     } else {
                         feedingHtml = '<h2>Feeding Journal</h2><p>No feeding records found.</p>';
-                    }
-
-                    let medicalHtml = '';
+                    }                    let medicalHtml = '';
                     if (animal.medical_visits && animal.medical_visits.length > 0) {
                         medicalHtml = '<h2>Medical Visits</h2><ul>' +
-                            animal.medical_visits.map(m => `<li>${m.record_date || m.date_of_event || m.date || ''}: ${m.description || ''} (${m.treatment || ''})</li>`).join('') + '</ul>';
+                            animal.medical_visits.map(m => `<li>${SharedUtilities.formatDate(m.record_date || m.date_of_event || m.date) || 'Unknown date'}: ${SharedUtilities.escapeHtml(m.description || '')} ${m.treatment ? `(${SharedUtilities.escapeHtml(m.treatment)})` : ''}</li>`).join('') + '</ul>';
                     } else {
                         medicalHtml = '<h2>Medical Visits</h2><p>No medical records found.</p>';
-                    }                    let images = Array.isArray(animal.images) ? animal.images : (animal.images ? [animal.images] : []);
+                    }// Prepare media for display
+                    let images = Array.isArray(animal.images) ? animal.images : (animal.images ? [animal.images] : []);
                     let videos = Array.isArray(animal.videos) ? animal.videos : (animal.videos ? [animal.videos] : []);
-                    let allMedia = [...images.map(img => ({type: 'image', src: img})), ...videos.map(vid => ({type: 'video', src: vid}))];
-                    let currentMedia = 0;
-                      function renderCarousel() {
-                        if (allMedia.length === 0) return '';
-                        let mediaItem = allMedia[currentMedia];
-                        let showArrows = allMedia.length > 1;
-                        let mediaElement = '';
-                        
-                        if (mediaItem.type === 'image') {
-                            mediaElement = `<img id="animal-media" src="${mediaItem.src}" alt="${animal.name}" class="carousel-img">`;
-                        } else if (mediaItem.type === 'video') {
-                            mediaElement = `<video id="animal-media" controls class="carousel-video" style="max-width: 100%; max-height: 400px;">
-                                <source src="${mediaItem.src}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>`;
-                        }
-                        
-                        return `
-                            <div class="carousel-container">
-                                ${showArrows ? '<button id="prev-media" class="carousel-arrow">&#8592;</button>' : ''}
-                                ${mediaElement}
-                                ${showArrows ? '<button id="next-media" class="carousel-arrow">&#8594;</button>' : ''}
-                            </div>
-                        `;
-                    }
-
-                    detailsDiv.innerHTML = `
-                        ${renderCarousel()}
-                        <h1>${animal.name}</h1>
-                        <p><strong>Species:</strong> ${animal.species}</p>
-                        <p><strong>Breed:</strong> ${animal.breed}</p>
-                        <p><strong>Age:</strong> ${animal.age}</p>
-                        <p><strong>Description:</strong> ${animal.description}</p>
+                    
+                    // Create simple image display (use first image if available)
+                    let imageHtml = '';
+                    if (images.length > 0) {
+                        imageHtml = `<div class="carousel-container">
+                            <img src="${images[0]}" alt="${SharedUtilities.escapeHtml(animal.name)}" class="carousel-img" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                        </div>`;
+                    } else {
+                        imageHtml = `<div class="carousel-container">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="No Image" class="carousel-img">
+                        </div>`;
+                    }                    detailsDiv.innerHTML = `
+                        ${imageHtml}
+                        <h1>${SharedUtilities.escapeHtml(animal.name || 'Unknown name')}</h1>
+                        <p><strong>Species:</strong> ${SharedUtilities.escapeHtml(animal.species || 'Unknown')}</p>
+                        <p><strong>Breed:</strong> ${SharedUtilities.escapeHtml(animal.breed || 'Unknown')}</p>
+                        <p><strong>Age:</strong> ${SharedUtilities.escapeHtml(animal.age || 'Unknown')}</p>
+                        <p><strong>Description:</strong> ${SharedUtilities.escapeHtml(animal.description || 'No description available')}</p>
                         ${feedingHtml}
                         ${medicalHtml}
-                    `;                    //navigare carusel 
-                    if (allMedia.length > 0) {
-                        const mediaElement = document.getElementById('animal-media');
-                        if (mediaElement && mediaElement.tagName === 'IMG') {                            mediaElement.onerror = function() {
-                                this.onerror = null;
-                                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
-                            };
-                        }
-                        
-                        const prevBtn = document.getElementById('prev-media');
-                        const nextBtn = document.getElementById('next-media');
-                        
-                        if (prevBtn) {
-                            prevBtn.onclick = function() {
-                                currentMedia = (currentMedia - 1 + allMedia.length) % allMedia.length;
-                                updateMediaDisplay();
-                            };
-                        }
-                        if (nextBtn) {
-                            nextBtn.onclick = function() {
-                                currentMedia = (currentMedia + 1) % allMedia.length;
-                                updateMediaDisplay();
-                            };
-                        }
-                          function updateMediaDisplay() {
-                            const container = document.querySelector('.carousel-container');
-                            const mediaItem = allMedia[currentMedia];
-                            let mediaElement = '';
-                            
-                            if (mediaItem.type === 'image') {
-                                mediaElement = `<img id="animal-media" src="${mediaItem.src}" alt="${animal.name}" class="carousel-img">`;
-                            } else if (mediaItem.type === 'video') {
-                                mediaElement = `<video id="animal-media" controls class="carousel-video" style="max-width: 100%; max-height: 400px;">
-                                    <source src="${mediaItem.src}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>`;
-                            }
-                            
-                            const showArrows = allMedia.length > 1;
-                            container.innerHTML = `
-                                ${showArrows ? '<button id="prev-media" class="carousel-arrow">&#8592;</button>' : ''}
-                                ${mediaElement}
-                                ${showArrows ? '<button id="next-media" class="carousel-arrow">&#8594;</button>' : ''}
-                            `;
-                            
-                            // Re-attach event listeners după update
-                            const newPrevBtn = document.getElementById('prev-media');
-                            const newNextBtn = document.getElementById('next-media');
-                            const newMediaElement = document.getElementById('animal-media');
-                              if (newMediaElement && newMediaElement.tagName === 'IMG') {
-                                newMediaElement.onerror = function() {
-                                    this.onerror = null;
-                                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
-                                };
-                            }
-                            
-                            if (newPrevBtn) {
-                                newPrevBtn.onclick = function() {
-                                    currentMedia = (currentMedia - 1 + allMedia.length) % allMedia.length;
-                                    updateMediaDisplay();
-                                };
-                            }
-                            if (newNextBtn) {
-                                newNextBtn.onclick = function() {
-                                    currentMedia = (currentMedia + 1) % allMedia.length;
-                                    updateMediaDisplay();
-                                };
-                            }
-                        }
-                    }
+                    `;
                 } else {
-                    detailsDiv.innerHTML = '<p>Animal not found.</p>';
+                    detailsDiv.innerHTML = SharedUtilities.createErrorMessage('Animal not found', false);
                 }
             })
-            .catch(() => {
-                detailsDiv.innerHTML = '<p>Error loading animal details.</p>';
+            .catch((error) => {
+                console.error('Error loading animal details:', error);
+                detailsDiv.innerHTML = SharedUtilities.createErrorMessage('Error loading animal details');
             });
     } else {
-        detailsDiv.innerHTML = '<p>No animal selected.</p>';
+        detailsDiv.innerHTML = SharedUtilities.createEmptyMessage('No animal selected');
     }
 
     document.getElementById('adoption-form').addEventListener('submit', async function(e) {

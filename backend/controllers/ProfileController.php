@@ -19,14 +19,17 @@ class ProfileController {
             http_response_code(404);
             echo json_encode(['error' => 'User not found']);
             return;
-        }
-
-        // trimite doar datele de profil
+        }        // trimite doar datele de profil (inclusiv status admin)
         echo json_encode([
-            'username' => $user['username'],
-            'email' => $user['email'],
-            'full_name' => $user['full_name'] ?? '',
-            'phone' => $user['phone'] ?? ''
+            'success' => true,
+            'user' => [
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'full_name' => $user['full_name'] ?? '',
+                'phone' => $user['phone'] ?? '',
+                'is_admin' => $user['is_admin'] ?? false,
+                'role' => ($user['is_admin'] ?? false) ? 'admin' : 'user'
+            ]
         ]);
     }
 

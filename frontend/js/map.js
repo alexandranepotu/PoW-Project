@@ -100,7 +100,7 @@ class CommunityMap {
             box-shadow: var(--shadow-large);
             font-weight: 500;
         `;        message.innerHTML = `
-            <p><strong>📍 You haven't set your address</strong></p>
+            <p><strong> You haven't set your address</strong></p>
             <p>For a better experience, <a href="profile.html" style="color: var(--text-light); text-decoration: underline;">set your address in your profile</a></p>
             <small>We use GPS location as an alternative</small>
         `;
@@ -164,7 +164,7 @@ class CommunityMap {
             box-shadow: var(--shadow-large);
             font-weight: 500;
         `;        message.innerHTML = `
-            <p><strong>❌ Unable to determine location</strong></p>
+            <p><strong>Unable to determine location</strong></p>
             <p>Please <a href="profile.html" style="color: var(--text-light); text-decoration: underline;">set your address in profile</a> or allow access to location.</p>
             <small>The map will show a general location in Romania.</small>
         `;

@@ -5,9 +5,20 @@ require_once __DIR__ . '/../config/db.php';
 class PetModel {
     private $pdo;
     
-    public function __construct() {
-        global $pdo; // foloseste conexiunea la baza de date din config
-        $this->pdo = $pdo; }    //operatii crud
+    public function __construct($pdo = null) {
+        if ($pdo !== null) {
+            $this->pdo = $pdo;
+        } else {
+            global $pdo; // foloseste conexiunea la baza de date din config
+            $this->pdo = $pdo;
+        }
+        
+        // Verify we have a valid PDO connection
+        if (!$this->pdo instanceof PDO) {
+            error_log("PetModel: Invalid PDO connection");
+            throw new Exception("Database connection not available");
+        }
+    }//operatii crud
     public function insertPet($data) {
         try {
             // obtine adresa utilizatorului
@@ -111,18 +122,21 @@ class PetModel {
     // obtine animalele unui utilizator
     public function getPetsByUserId($userId) {
         try {
-            error_log("PetModel: Fetching pets for user ID " . $userId);
-            
-            $query = "
-                SELECT DISTINCT
+            error_log("PetModel: Fetching pets for user ID " . $userId);            $query = "
+                SELECT 
                     a.*,
-                    m.file_path as media_url,
+                    (
+                        SELECT m.file_path 
+                        FROM media_resources m 
+                        WHERE m.animal_id = a.animal_id AND m.type = 'image' 
+                        ORDER BY m.uploaded_at ASC 
+                        LIMIT 1
+                    ) as media_url,
                     u.username as owner_username
                 FROM animals a
-                LEFT JOIN media_resources m ON a.animal_id = m.animal_id AND m.type = 'image'
                 LEFT JOIN users u ON a.added_by = u.user_id
                 WHERE a.added_by = ?
-                ORDER BY a.created_at DESC
+                ORDER BY a.animal_id DESC
             ";
             
             $stmt = $this->pdo->prepare($query);
@@ -417,24 +431,55 @@ class PetModel {
             error_log('Error deleting pet: ' . $e->getMessage());
             return false;
         }
-    }
-    
-    // statistici-> mai tb?????????????
+    }    // statistici pentru My Pets
     public function getPetStatistics($userId) {
         try {
             $stats = [];
             
+            error_log("PetModel: Getting statistics for user ID " . $userId);
+            
             //nr total de animale
             $stmt = $this->pdo->prepare("SELECT COUNT(*) as total_pets FROM animals WHERE added_by = ?");
             $stmt->execute([$userId]);
-            $stats['total_pets'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_pets'];
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stats['total_pets'] = (int)$result['total_pets'];
+            error_log("PetModel: Total pets count: " . $stats['total_pets']);
+              //nr feeding records din ultima saptamana
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as weekly_feedings 
+                FROM feeding_calendar fc 
+                JOIN animals a ON fc.animal_id = a.animal_id 
+                WHERE a.added_by = ? AND fc.feed_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            ");
+            $stmt->execute([$userId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stats['weekly_feedings'] = (int)$result['weekly_feedings'];
+            error_log("PetModel: Weekly feedings count: " . $stats['weekly_feedings']);
             
+            //nr medical records din ultima luna
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as monthly_medical 
+                FROM medical_history mh 
+                JOIN animals a ON mh.animal_id = a.animal_id 
+                WHERE a.added_by = ? AND mh.date_of_event >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            ");
+            $stmt->execute([$userId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stats['monthly_medical'] = (int)$result['monthly_medical'];
+            error_log("PetModel: Monthly medical count: " . $stats['monthly_medical']);
+            
+            error_log("PetModel: Final statistics: " . json_encode($stats));
+            return $stats;
             
         } catch (PDOException $e) {
             error_log('Error getting pet statistics: ' . $e->getMessage());
-            return [];
+            return [
+                'total_pets' => 0,
+                'weekly_feedings' => 0,
+                'monthly_medical' => 0
+            ];
         }
-    }   
+    }
     public function updatePickupAddress($petId, $userId) {
         try {
             $stmt = $this->pdo->prepare("SELECT animal_id FROM animals WHERE animal_id = ? AND added_by = ?");
@@ -517,6 +562,14 @@ class PetModel {
             return $result['count'] > 0;
         } catch (PDOException $e) {
             error_log('Error checking user address: ' . $e->getMessage());
+            return false;
+        }
+    }     public function updateAvailability($animal_id, $available) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE animals SET available = ? WHERE animal_id = ?");
+            return $stmt->execute([$available, $animal_id]);
+        } catch (PDOException $e) {
+            error_log('Error updating pet availability: ' . $e->getMessage());
             return false;
         }
     }

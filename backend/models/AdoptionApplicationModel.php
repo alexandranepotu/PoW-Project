@@ -35,6 +35,11 @@ class AdoptionApplicationModel {
         return $stmt->execute([$status, $response_message, $application_id]);
     }
 
+    public function rejectOtherApplicationsForPet($pet_id, $accepted_application_id) {
+        $stmt = $this->db->prepare('UPDATE adoption_applications SET status = ?, response_message = ?, updated_at = CURRENT_TIMESTAMP WHERE pet_id = ? AND application_id != ? AND status = ?');
+        return $stmt->execute(['rejected', 'Pet was adopted by another applicant', $pet_id, $accepted_application_id, 'pending']);
+    }
+
     public function getDb() {
         return $this->db;
     }

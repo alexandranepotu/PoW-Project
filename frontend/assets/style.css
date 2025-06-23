@@ -2,30 +2,30 @@
 
 [data-theme="dark"] body {
   background-color: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--text-light);
 }
 
 [data-theme="dark"] .about-adopt,
 [data-theme="dark"] .news {
   background-color: rgba(34, 34, 34, 0.85);
-  color: var(--text-primary);
+  color: var(--text-light);
   border: 1px solid #555;
 }
 
 [data-theme="dark"] nav,
 [data-theme="dark"] footer {
   background-color: #1e1e1e;
-  color: var(--text-primary);
+  color: var(--text-light);
 }
 
 [data-theme="dark"] nav a,
 [data-theme="dark"] footer a {
-  color: var(--text-primary);
+  color: var(--text-light);
 }
 
 [data-theme="dark"] button {
   background-color: var(--primary-color) !important;
-  color: var(--text-primary) !important;
+  color: var(--text-light) !important;
   border: none;
 }
 
@@ -37,12 +37,12 @@
 [data-theme="dark"] .container,
 [data-theme="dark"] .modal {
   background-color: #1e1e1e;
-  color: var(--text-primary);
+  color: var(--text-light);
 }
 
 [data-theme="dark"] table {
   background-color: #1e1e1e;
-  color: var(--text-primary);
+  color: var(--text-light);
   border: 1px solid #444;
 }
 

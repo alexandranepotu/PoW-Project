@@ -1,54 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    (function() {
-      const inboxDropdown = document.querySelector('.inbox-dropdown');
-      if (!inboxDropdown) return;
-      const inboxText = inboxDropdown.querySelector('.inbox-text');
-      const dropdownContent = inboxDropdown.querySelector('.dropdown-content');
-      let open = false;
-
-      function openDropdown() {
-        dropdownContent.classList.add('show');
-        open = true;
-      }
-      function closeDropdown() {
-        dropdownContent.classList.remove('show');
-        open = false;
-      }
-      inboxText.addEventListener('click', function(e) {
-        e.stopPropagation();
-        if (open) closeDropdown();
-        else openDropdown();
-      });
-      document.addEventListener('click', function(e) {
-        if (!inboxDropdown.contains(e.target)) closeDropdown();
-      });
-    })();
-
-    (function() {
-      const profileDropdown = document.querySelector('.profile-dropdown');
-      if (!profileDropdown) return;
-      const profileText = profileDropdown.querySelector('.profile-text');
-      const dropdownContent = profileDropdown.querySelector('.dropdown-content');
-      let open = false;
-
-      function openDropdown() {
-        dropdownContent.classList.add('show');
-        open = true;
-      }
-      function closeDropdown() {
-        dropdownContent.classList.remove('show');
-        open = false;
-      }
-      profileText.addEventListener('click', function(e) {
-        e.stopPropagation();
-        if (open) closeDropdown();
-        else openDropdown();
-      });
-      document.addEventListener('click', function(e) {
-        if (!profileDropdown.contains(e.target)) closeDropdown();
-      });
-    })();
-
+    console.log('Navbar initialized via DropdownManager');
+    
     const searchInput = document.querySelector('nav input[type="search"]');
     if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -62,15 +14,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const logoutLink = document.querySelector('a[href="#logout"]');
+    console.log('Logout link found:', logoutLink);
+    
     if (logoutLink) {
-        logoutLink.addEventListener('click', function(e) {
+        console.log('Adding logout event listener');
+        logoutLink.addEventListener('click', async function(e) {
             e.preventDefault();
+            console.log('Logout clicked');
+            
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('userId');
-                window.location.href = 'login.html';
+                try {
+                    console.log('Making logout request');
+                    const response = await fetch('/PoW-Project/backend/public/api/logout', {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    
+                    console.log('Logout response:', response);
+                    
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('user_id');
+                    
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }
             }
         });
+    } else {
+        console.log('No logout link found on this page');
     }
 
     highlightCurrentPage();

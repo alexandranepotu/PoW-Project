@@ -10,8 +10,7 @@ class PetPageModel {
         if (!empty($filters['id'])) {
             //filtrare dupa id
             $query = "SELECT a.* FROM animals a WHERE a.animal_id = ?";
-            $params = [intval($filters['id'])];
-        } else {
+            $params = [intval($filters['id'])];        } else {
             $query = "SELECT a.* FROM animals a WHERE a.available = TRUE";
             $params = [];
             if (!empty($filters['species'])) {
@@ -34,10 +33,10 @@ class PetPageModel {
                 $query .= " AND a.health_status ILIKE ?";
                 $params[] = '%' . $filters['health_status'] . '%';
             }
-        }
-        $stmt = $this->pdo->prepare($query);
+        }        $stmt = $this->pdo->prepare($query);
         $stmt->execute($params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         //mereu includ owner_id in fiecare animal
         foreach ($results as &$animal) {
             //mapa la id ul de owner pt compatibilitate

@@ -4,7 +4,7 @@
 $origin = $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost';
 header('Access-Control-Allow-Origin: ' . $origin);
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Accept');
 header('Content-Type: application/json');
 header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -333,12 +333,27 @@ try {
         } else {
             http_response_code(405);
             echo json_encode(['error' => 'Method not allowed']);        }        
-            exit;        }   
-     // ruta pentru news
+            exit;        }     // ruta pentru news
     if ($path === '/api/news' && $method === 'GET') {
         require_once __DIR__ . '/../controllers/NewsController.php';
         $controller = new NewsController();
         $controller->getNews();
+        exit;
+    }
+    
+    // ruta pentru adaugare news (admin only)
+    if ($path === '/api/news' && $method === 'POST') {
+        require_once __DIR__ . '/../controllers/NewsController.php';
+        $controller = new NewsController();
+        $controller->addNews();
+        exit;
+    }
+    
+    // ruta pentru stergere news (admin only)
+    if (preg_match('/^\/api\/news\/(\d+)$/', $path, $matches) && $method === 'DELETE') {
+        require_once __DIR__ . '/../controllers/NewsController.php';
+        $controller = new NewsController();
+        $controller->deleteNews($matches[1]);
         exit;
     }
 
@@ -392,11 +407,70 @@ try {
         $controller = new ProfileController($pdo);
         $controller->updateProfile();        exit;    }    // RSS Feed route
     if ($path === '/api/rss/feed' && $method === 'GET') {
-        header('Content-Type: application/rss+xml; charset=utf-8');
         require_once __DIR__ . '/../controllers/RssController.php';
         $controller = new RssController();
         $controller->generateFeed();
         exit;
+    }
+
+    // RSS Filtered Feed route
+    if ($path === '/api/rss/filtered' && $method === 'GET') {
+        require_once __DIR__ . '/../controllers/RssController.php';
+        $controller = new RssController();
+        $controller->generateFilteredFeed();
+        exit;
+    }
+
+    // Applications routes
+    if (str_starts_with($path, '/api/applications')) {
+        require_once __DIR__ . '/../controllers/AdoptionApplicationController.php';
+        $controller = new AdoptionApplicationController($pdo);
+        
+        // GET /api/applications/submitted?user_id=123
+        if ($path === '/api/applications/submitted' && $method === 'GET') {
+            $applicant_id = $_GET['user_id'] ?? null;
+            if ($applicant_id) {
+                $controller->getSubmittedApplications($applicant_id);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'Missing user_id']);
+            }
+            exit;
+        }
+        
+        // GET /api/applications/received?user_id=123
+        if ($path === '/api/applications/received' && $method === 'GET') {
+            $owner_id = $_GET['user_id'] ?? null;
+            if ($owner_id) {
+                $controller->getReceivedApplications($owner_id);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'Missing user_id']);
+            }
+            exit;
+        }
+        
+        // GET /api/applications/{id}
+        if (preg_match('#^/api/applications/(\d+)$#', $path, $matches) && $method === 'GET') {
+            $controller->getApplicationById($matches[1]);
+            exit;
+        }
+        
+        // POST /api/applications/{id}/status
+        if (preg_match('#^/api/applications/(\d+)/status$#', $path, $matches) && $method === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $status = $data['status'] ?? null;
+            $response_message = $data['response_message'] ?? null;
+            $controller->updateApplicationStatus($matches[1], $status, $response_message);
+            exit;
+        }
+        
+        // POST /api/applications (submit new application)
+        if ($path === '/api/applications' && $method === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $controller->submitApplication($data);
+            exit;
+        }
     }
 
     } catch (Exception $e) {

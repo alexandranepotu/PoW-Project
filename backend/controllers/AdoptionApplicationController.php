@@ -69,11 +69,20 @@ class AdoptionApplicationController {
             'applicant' => $applicant,
             'owner' => $owner
         ]);
-    }
-
-    public function updateStatus($application_id, $status, $response_message = null) {
+    }    public function updateStatus($application_id, $status, $response_message = null) {
         $result = $this->model->updateStatus($application_id, $status, $response_message);
         if ($result) {
+            if ($status === 'accepted') {
+                $app = $this->model->getApplicationById($application_id);
+                if ($app && isset($app['pet_id'])) {
+                    require_once __DIR__ . '/../models/PetModel.php';
+                    $petModel = new PetModel($this->model->getDb());
+    
+                    $petModel->updateAvailability($app['pet_id'], false);
+
+                    $this->model->rejectOtherApplicationsForPet($app['pet_id'], $application_id);
+                }
+            }
             echo json_encode(['success' => true]);
         } else {
             http_response_code(500);

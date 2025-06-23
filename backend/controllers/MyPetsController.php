@@ -7,14 +7,19 @@ class MyPetsController {
     
     public function __construct() {
         $this->petModel = new PetModel();    }
-    
-    // GET /api/mypets -> lista animalelor utilizatorului
+      // GET /api/mypets -> lista animalelor utilizatorului
     public function getMyPets() {
-        $user = AuthMiddleware::requireAuth(); //verifica daca userul e autentificat
+        error_log("MyPetsController: getMyPets() called");
         
         try {
+            $user = AuthMiddleware::requireAuth(); //verifica daca userul e autentificat
+            error_log("MyPetsController: User authenticated, ID: " . $user->user_id);
+            
             $pets = $this->petModel->getPetsByUserId($user->user_id);
+            error_log("MyPetsController: Got " . count($pets) . " pets");
+            
             $stats = $this->petModel->getPetStatistics($user->user_id);
+            error_log("MyPetsController: Got statistics: " . json_encode($stats));
             
             echo json_encode([
                 'success' => true,
@@ -23,8 +28,10 @@ class MyPetsController {
             ]);
             
         } catch (Exception $e) {
+            error_log("MyPetsController: Error in getMyPets: " . $e->getMessage());
+            error_log("MyPetsController: Stack trace: " . $e->getTraceAsString());
             http_response_code(500);
-            echo json_encode(['error' => 'Failed to fetch pets']);
+            echo json_encode(['error' => 'Failed to fetch pets: ' . $e->getMessage()]);
         }
     }
       // GET /api/mypets/{id} -> detalii complete pentru un animal
@@ -346,11 +353,8 @@ class MyPetsController {
                 'age' => !empty($input['age']) ? intval($input['age']) : null,
                 'sex' => $input['sex'] ?? null,
                 'health_status' => $input['healthStatus'] ?? $input['health_status'] ?? '',
-                'description' => $input['description'] ?? '',
-                'added_by' => $user->user_id
+                'description' => $input['description'] ?? '',                'added_by' => $user->user_id
             ];
-            //log de debug
-            error_log('[DEBUG] Adding new pet with added_by user_id: ' . print_r($user->user_id, true));
             
             $result = $this->petModel->insertPet($petData);
             

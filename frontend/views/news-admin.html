@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Management - PoW Project</title>    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/admin.css">
+    <link rel="stylesheet" href="../assets/navbar.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>News Management</h1>
+            <p>Manage news articles for PoW Project RSS Feed</p>
+        </div>
+
+        <div class="admin-section">
+            <h2>Add News Article</h2>
+            <form id="addNewsForm" class="admin-form">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <textarea id="content" name="content" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add News Article</button>
+            </form>
+            <div id="addResult"></div>
+        </div>        <div class="admin-section">
+            <h2>Import from CSV/Excel</h2>
+            <p><strong>CSV Format:</strong> Title, Content, Date (optional)</p>
+            <div class="file-input">
+                <input type="file" id="csvFile" accept=".csv,.txt">
+                <p>Select a CSV file to import news articles</p>
+                <button onclick="importCSV()" class="btn btn-secondary">Import from CSV</button>
+            </div>
+            <div id="importResult"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Import from XML</h2>
+            <p><strong>XML Format:</strong> Structured XML with news elements</p>
+            <div class="file-input">
+                <input type="file" id="xmlFile" accept=".xml">
+                <p>Select an XML file to import news articles</p>
+                <button onclick="importXML()" class="btn btn-secondary">Import from XML</button>
+            </div>
+            <div id="importXmlResult"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Export Current News</h2>
+            <p>Download all current news articles as CSV or XML file</p>
+            <div class="export-buttons">
+                <button onclick="exportCSV()" class="btn btn-secondary">Export to CSV</button>
+                <button onclick="exportXML()" class="btn btn-secondary">Export to XML</button>
+            </div>
+            <div id="exportResult"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Current News Articles</h2>
+            <button onclick="loadCurrentNews()" class="btn btn-secondary">Refresh List</button>
+            <div id="currentNews" class="current-news">
+                <p>Loading news articles...</p>
+            </div>
+        </div>    </div>    <script src="../js/utils/shared-utilities.js"></script>
+    <script src="../js/news-admin.js"></script>
+</body>
+</html>

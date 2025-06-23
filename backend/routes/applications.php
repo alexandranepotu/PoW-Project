@@ -1,10 +1,5 @@
 <?php
 
-//debugging
-error_log('DEBUG: Entered applications.php');
-error_log('DEBUG: REQUEST_URI: ' . ($_SERVER['REQUEST_URI'] ?? '')); 
-error_log('DEBUG: REQUEST_METHOD: ' . ($_SERVER['REQUEST_METHOD'] ?? ''));
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../controllers/AdoptionApplicationController.php';
 
@@ -16,10 +11,8 @@ $uri = $_SERVER['REQUEST_URI'];
 //normalizez path ul
 $basePath = '/PoW-Project/backend/public';
 $path = parse_url($uri, PHP_URL_PATH);
-if (str_starts_with($path, $basePath)) {
-    $path = substr($path, strlen($basePath));
+if (str_starts_with($path, $basePath)) {    $path = substr($path, strlen($basePath));
 }
-error_log('DEBUG: Normalized path in applications.php: ' . $path);
 
 if ($method === 'POST' && preg_match('#^/api/applications$#', $path)) {
     $data = json_decode(file_get_contents('php://input'), true);

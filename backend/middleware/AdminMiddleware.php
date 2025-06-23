@@ -52,6 +52,8 @@ class AdminMiddleware {
             error_log("Error checking admin status: " . $e->getMessage());
             return false;
         }
+    }    public function checkAdmin() {
+        return self::isAdmin();
     }
 
     public static function requireAdmin() {

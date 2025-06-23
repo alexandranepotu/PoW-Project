@@ -34,17 +34,17 @@ function loadProfileData() {
         }
         return response.json();
     })    .then(data => {
-        if (data && !data.error) {
+        if (data && data.success && data.user) {
             // populeaza inputurile cu datele primite 
             const fullNameInput = document.getElementById('fullName');
             const usernameInput = document.getElementById('username');
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('phone');
 
-            if (fullNameInput) fullNameInput.value = data.full_name || '';
-            if (usernameInput) usernameInput.value = data.username || '';
-            if (emailInput) emailInput.value = data.email || '';
-            if (phoneInput) phoneInput.value = data.phone || '';
+            if (fullNameInput) fullNameInput.value = data.user.full_name || '';
+            if (usernameInput) usernameInput.value = data.user.username || '';
+            if (emailInput) emailInput.value = data.user.email || '';
+            if (phoneInput) phoneInput.value = data.user.phone || '';
               console.log('Profile data loaded:', data);
         } else if (data && data.error) {
             console.error('Profile data error:', data.error);

@@ -14,10 +14,9 @@
     <a href="dashboard.html" class="logo">Pet Adoption</a>
     <nav>
       <a href="animale.html">Adopt</a>
-      <div class="inbox-dropdown">
-        <div class="inbox-text profile-text">
+      <div class="inbox-dropdown">        <div class="inbox-text">
           <span>Inbox</span>
-        </div>        <div class="dropdown-content">
+        </div><div class="dropdown-content">
           <a href="inbox.html">Messages</a>
           <a href="submitted-applications.html">Submitted Applications</a>
           <a href="received-applications.html">Received Applications</a>
@@ -60,16 +59,35 @@
     <section id="animalList">
       <p style="color: rgb(157, 16, 192);">Loading animals...</p>
     </section>  </main>
-
   <script>
-    //init data user ului curent
-    const currentUserId = localStorage.getItem('user_id');
-    if (!currentUserId) {
-      window.location.href = 'login.html';
+    // Verifică autentificarea prin JWT cookie
+    async function checkAuth() {
+      try {
+        const response = await fetch('/PoW-Project/backend/public/api/auth/check-admin', {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        const userData = await response.json();
+        if (!userData.user_id) {
+          window.location.href = 'login.html';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = 'login.html';
+      }
     }
+    
+    // Verifică autentificarea când pagina se încarcă
+    checkAuth();
   </script>
   <script src="../js/chat-manager.js"></script>
-  <script src="../js/animale.js"></script>
+  <script src="../js/animale.js"></script>  <script src="../js/utils/shared-utilities.js"></script>
+  <script src="../js/utils/dropdown-manager.js"></script>
   <script src="../js/global-theme.js"></script>
   <script src="../js/navbar.js"></script>
 </body>

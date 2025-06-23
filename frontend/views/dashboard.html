@@ -12,13 +12,12 @@
 <body>
 
 <header>
-  <a href="dashboard.html" class="logo">Pet Adoption</a>
-  <nav>
+  <a href="dashboard.html" class="logo">Pet Adoption</a>  <nav>
     <a href="animale.html">Adopt</a>
-    <div class="inbox-dropdown">
-      <div class="inbox-text profile-text">
+    <a href="admin.html" id="adminLink" style="display: none;">Admin Panel</a>    <div class="inbox-dropdown">
+      <div class="inbox-text">
         <span>Inbox</span>
-      </div>      <div class="dropdown-content">
+      </div><div class="dropdown-content">
         <a href="inbox.html">Messages</a>
         <a href="submitted-applications.html">Submitted Applications</a>
         <a href="received-applications.html">Received Applications</a>
@@ -49,12 +48,22 @@
     <button onclick="window.location.href='mypets.html'">My Pets</button>
   </div>    </section>    <section class="news">
       <div class="news-header">
-        <h2>News</h2>        <a href="news.html" class="news-rss-link" title="View News Feed">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path fill="currentColor" d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
-          </svg>
-          <span>View News Feed</span>
-        </a>      </div>
+        <h2>News</h2>        
+        <div class="news-links">
+          <a href="news.html" class="news-rss-link" title="View News Feed">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+            </svg>
+            <span>View News Feed</span>
+          </a>
+          <a href="rss-filters.html" class="rss-filters-link" title="Custom RSS Filters">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M15.5,14H20.5L22,15.5V20.5L20.5,22H15.5L14,20.5V15.5L15.5,14M18,16V19H17V16H18M4,6H19V8H4V6M4,11H15V13H4V11M4,16H12V18H4V16Z"/>
+            </svg>
+            <span>RSS Filters</span>
+          </a>
+        </div>
+      </div>
       <div id="news-section"><!-- stirile --></div>
     </section>
   </div>
@@ -68,64 +77,16 @@
 
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/utils/shared-utilities.js"></script>
+<script src="../js/utils/dropdown-manager.js"></script>
+<script src="../js/utils/api-client.js"></script>
+<script src="../js/utils/auth-manager.js"></script>
 <script src="../js/global-theme.js"></script>
 <script src="../js/navbar.js"></script>
 <script src="../js/map.js"></script>
 <script src="../js/dashboard.js"></script>
 <script src="../js/dashboard-news.js"></script>
-<script>
-  //dropdowm profil
-  (function() {
-    const profileDropdown = document.querySelector('.profile-dropdown');
-    if (!profileDropdown) return;
-    const profileText = profileDropdown.querySelector('.profile-text');
-    const dropdownContent = profileDropdown.querySelector('.dropdown-content');
-    let open = false;
 
-    function openDropdown() {
-      dropdownContent.classList.add('show');
-      open = true;
-    }
-    function closeDropdown() {
-      dropdownContent.classList.remove('show');
-      open = false;
-    }
-    profileText.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (open) closeDropdown();
-      else openDropdown();
-    });
-    document.addEventListener('click', function(e) {
-      if (!profileDropdown.contains(e.target)) closeDropdown();
-    });
-  })();
-
-  //dropdown inbox
-  (function() {
-  const inboxDropdown = document.querySelector('.inbox-dropdown');
-  if (!inboxDropdown) return;
-  const inboxText = inboxDropdown.querySelector('.inbox-text');
-  const dropdownContent = inboxDropdown.querySelector('.dropdown-content');
-  let open = false;
-
-  function openDropdown() {
-    dropdownContent.classList.add('show');
-    open = true;
-  }
-  function closeDropdown() {
-    dropdownContent.classList.remove('show');
-    open = false;
-  }
-  inboxText.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (open) closeDropdown();
-    else openDropdown();
-  });
-  document.addEventListener('click', function(e) {
-    if (!inboxDropdown.contains(e.target)) closeDropdown();
-  });
-})();
-</script>
 
 </body>
 </html>
