@@ -57,3 +57,39 @@ body {
 .mypets-bar .btn-add:hover {
   background-color: var(--accent-color);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mypets-bar {
+    padding: 10px 15px;
+  }
+
+  .mypets-bar h2 {
+    font-size: 1.3rem;
+  }
+
+  .mypets-bar .btn-add {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mypets-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .mypets-bar h2 {
+    font-size: 1.2rem;
+    width: 100%;
+  }
+
+  .mypets-bar .btn-add {
+    width: 100%;
+    max-width: 200px;
+  }
+}

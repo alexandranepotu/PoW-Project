@@ -624,12 +624,16 @@
     background-color: var(--bg-secondary);
 }
 
+[data-theme="dark"] .admin-form label {
+    color: #000000;
+}
+
 [data-theme="dark"] .admin-form input,
 [data-theme="dark"] .admin-form textarea,
 [data-theme="dark"] .admin-form select {
-    background-color: var(--bg-tertiary);
+    background-color: #000000;
     border: 1px solid var(--border-color);
-    color: var(--text-color);
+    color: #ffffff;
 }
 
 [data-theme="dark"] .admin-form input:focus,
@@ -660,7 +664,7 @@
 }
 
 [data-theme="dark"] .news-item {
-    background-color: var(--bg-secondary);
+    background-color: #000000;
     border: 1px solid var(--border-color);
 }
 
@@ -681,12 +685,13 @@
 }
 
 [data-theme="dark"] .file-input {
-    background-color: var(--bg-secondary);
+    background-color: #000000;
     border: 1px solid var(--border-color);
 }
 
 [data-theme="dark"] .file-input input[type="file"] {
     color: var(--text-color);
+    background-color: #000000;
 }
 
 [data-theme="dark"] .dropdown-content {
@@ -705,4 +710,26 @@
 
 [data-theme="dark"] .profile-text:hover {
     background-color: var(--hover-color);
+}
+
+[data-theme="dark"] #usersTable td,
+[data-theme="dark"] #usersTable th {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .admin-section h2:not(.news-item h2),
+[data-theme="dark"] .admin-section > p:not(.news-item p):not(.admin-form p),
+[data-theme="dark"] .modal-content h2,
+[data-theme="dark"] .modal-content p {
+    color: #000000;
+}
+
+[data-theme="dark"] .admin-form p {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .news-item h2,
+[data-theme="dark"] .news-item p,
+[data-theme="dark"] .news-item h4 {
+    color: var(--text-color);
 }

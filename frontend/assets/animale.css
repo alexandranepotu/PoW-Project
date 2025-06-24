@@ -26,6 +26,14 @@ main {
   font-weight: 500;
 }
 
+#filterForm label {
+  color: #000;
+}
+
+[data-theme="dark"] #filterForm label {
+  color: #fff;
+}
+
 #filterForm input,
 #filterForm select {
   margin-top: 0.4rem;
@@ -109,6 +117,14 @@ footer {
   margin: 0.5rem 0 0.7rem 0;
   font-size: 1.2rem;
   text-align: center;
+}
+
+.adoption-card h3 {
+  color: #000;
+}
+
+[data-theme="dark"] .adoption-card h3 {
+  color: #fff;
 }
 
 .adoption-card .animal-details {

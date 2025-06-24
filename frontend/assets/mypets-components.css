@@ -388,3 +388,119 @@
 .no-pets-message .btn-add-first:hover {
   background: var(--accent-color);
 }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .pets-container {
+    padding: 0 15px;
+    margin: 1.5rem auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .pets-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+  }
+
+  .pet-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pets-container {
+    margin: 1rem auto;
+    gap: 20px;
+  }
+
+  .pet-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .basic-info {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .media-gallery {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+
+  .feeding-section {
+    grid-area: 3 / 1 / 4 / 2;
+  }
+
+  .medical-section {
+    grid-area: 4 / 1 / 5 / 2;
+  }
+
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: none;
+  }
+
+  .pet-actions {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pets-container {
+    padding: 0 10px;
+    gap: 15px;
+  }
+
+  .pet-card {
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .basic-info h3,
+  .media-gallery h3,
+  .feeding-section h3,
+  .medical-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .basic-info-grid {
+    gap: 6px 10px;
+  }
+
+  .basic-info-label {
+    font-size: 0.85rem;
+  }
+
+  .basic-info-value {
+    font-size: 0.9rem;
+  }
+
+  .media-grid {
+    gap: 6px;
+  }
+
+  .feeding-item,
+  .medical-item {
+    padding: 6px 10px;
+  }
+
+  .pet-actions {
+    gap: 6px;
+  }
+
+  .btn-action {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+}

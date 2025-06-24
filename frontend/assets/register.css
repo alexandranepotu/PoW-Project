@@ -89,40 +89,35 @@ body {
     text-decoration: underline;
 }
 
-/* Title styles - dreapta sus */
 .site-title {
-    position: absolute;
-    top: 48px;
-    right: 48px;
     color: #fff;
     font-size: 3.5rem;
     font-family: 'Ancizar Serif', serif;
     font-weight: 700;
+    user-select: none;
     text-shadow: 0 2px 16px rgba(0,0,0,0.25);
     letter-spacing: 2px;
     z-index: 2;
-    user-select: none;
-    text-align: right;
+    text-align: right;    position: absolute;
+    top: 35vh;
+    right: 48px;
 }
 
-/* Description styles - dreapta jos */
 .site-description {
     position: absolute;
-    top: 65vh;
+    top: 45vh;
     right: 48px;
     max-width: 420px;
     color: #fff;
     font-size: 1.35rem;
     font-family: 'Ancizar Serif', serif;
     text-shadow: 0 2px 12px rgba(0,0,0,0.22);
-    background: rgba(30, 0, 40, 0.18);
-    border-radius: 10px;
-    padding: 18px 22px 18px 18px;
-    z-index: 2;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 18px 22px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     user-select: none;
-    box-sizing: border-box;
-    text-align: right;
-    transition: top 0.3s;
 }
 
 /* Responsive */

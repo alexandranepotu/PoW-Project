@@ -117,22 +117,43 @@
     background: rgba(255, 255, 255, 0.6);
 }
 
-[data-theme="dark"] #adoption-form,
-[data-theme="dark"] #adoption-form label,
-[data-theme="dark"] #adoption-form textarea,
-[data-theme="dark"] #adoption-form input[type="text"],
-[data-theme="dark"] #adoption-form h2,
-[data-theme="dark"] #animal-details {
-    color: var(--primary-color) !important;
-    background: #222 !important;
+[data-theme="dark"] #adoption-form {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] #adoption-form label {
+    color: #fff !important;
+}
+
+[data-theme="dark"] #adoption-form h2 {
+    color: #fff !important;
 }
 
 [data-theme="dark"] #adoption-form textarea,
 [data-theme="dark"] #adoption-form input[type="text"] {
-    border: 1px solid var(--primary-color);
+    background: #222 !important;
+    color: #fff !important;
+    border: 1px solid #444;
 }
 
 [data-theme="dark"] #adoption-form button {
-    background: var(--accent-color) !important;
-    color: #222 !important;
+    background: #5C9E9A !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] #adoption-form button:hover {
+    background: #4a7c79 !important;
+}
+
+[data-theme="dark"] #animal-details {
+    background: #333 !important;
+    color: #fff !important;
+    border-color: #444;
+}
+
+[data-theme="dark"] #animal-details h2,
+[data-theme="dark"] #animal-details h3,
+[data-theme="dark"] #animal-details p {
+    color: #fff !important;
 }
