@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRS - Pet Adoption on Web (PoW)</title>
+    <style>
+        :root {
+            --primary-color: #5E2E65;
+            --secondary-color: #5C9E9A;
+            --accent-color: #EEA525;
+            --text-color: #121212;
+            --bg-color: #F9F5F9;
+            --border-color: #D4D7CF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .toc h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .toc a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: var(--secondary-color);
+        }
+
+        .requirement {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .requirement h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .priority.high {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority.medium {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .priority.low {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tech-item h4 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin: 2px;
+        }
+
+        .status-complete {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-progress {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .status-planned {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .tech-stack {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Software Requirements Specification</h1>
+            <p>Pet Adoption on Web (PoW) Platform</p>
+            <small>Versiunea 1.0 | Data: 24 Iunie 2025</small>
+        </div>
+
+        <div class="content">
+            <div class="toc">
+                <h2>Cuprins</h2>
+                <ul>
+                    <li><a href="#introducere">1. Introducere</a></li>
+                    <li><a href="#descriere-generala">2. Descriere Generală</a></li>
+                    <li><a href="#cerinte-functionale">3. Cerințe Funcționale</a></li>
+                    <li><a href="#cerinte-nefunctionale">4. Cerințe Non-Funcționale</a></li>
+                    <li><a href="#arhitectura">5. Arhitectura Sistemului</a></li>
+                    <li><a href="#interfata-utilizator">6. Interfața cu Utilizatorul</a></li>
+                    <li><a href="#securitate">7. Securitate</a></li>
+                    <li><a href="#testare">8. Testare și Validare</a></li>
+                    <li><a href="#roadmap">9. Roadmap și Dezvoltare Viitoare</a></li>
+                </ul>
+            </div>
+
+            <section id="introducere" class="section">
+                <h2>1. Introducere</h2>
+                
+                <h3>1.1 Scopul Documentului</h3>
+                <p>Acest document descrie cerințele pentru platforma web <strong>PoW (Pet Adoption on Web)</strong>, un sistem complet pentru gestionarea adopțiilor de animale de companie, cu funcționalități moderne de management, comunicare și administrare.</p>
+
+                <h3>1.2 Domeniul de Aplicare</h3>
+                <p>PoW este destinat atât proprietarilor individuali de animale, cât și organizațiilor de protecție a animalelor, oferind:</p>
+                <ul>
+                    <li>Gestionarea completă a animalelor de companie</li>
+                    <li>Sistem de aplicații pentru adopție</li>
+                    <li>Comunicare între utilizatori</li>
+                    <li>Administrare avansată</li>
+                    <li>Urmărirea sănătății și îngrijirii animalelor</li>
+                </ul>
+
+                <h3>1.3 Definiții și Acronime</h3>
+                <table>
+                    <tr><th>Termen</th><th>Definiție</th></tr>
+                    <tr><td>PoW</td><td>Pet Adoption on Web - numele platformei</td></tr>
+                    <tr><td>CRUD</td><td>Create, Read, Update, Delete - operații de bază asupra datelor</td></tr>
+                    <tr><td>JWT</td><td>JSON Web Token - standard pentru autentificare</td></tr>
+                    <tr><td>API</td><td>Application Programming Interface</td></tr>
+                    <tr><td>SRS</td><td>Software Requirements Specification</td></tr>
+                </table>
+            </section>
+
+            <section id="descriere-generala" class="section">
+                <h2>2. Descriere Generală</h2>
+
+                <h3>2.1 Perspectiva Produsului</h3>
+                <p>PoW este o aplicație web independentă care facilitează procesul de adopție a animalelor de companie prin:</p>
+                <ul>
+                    <li>Interfață web modernă și intuitivă</li>
+                    <li>Backend robust cu API RESTful</li>
+                    <li>Bază de date PostgreSQL pentru persistența datelor</li>
+                    <li>Sistem de autentificare și autorizare securizat</li>
+                </ul>
+
+                <h3>2.2 Funcțiile Produsului</h3>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <h4>Gestionare Animale</h4>
+                        <p>CRUD complet pentru profile animale cu detalii extinse și istoric medical</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Sistem Adopție</h4>
+                        <p>Workflow complet de aplicații cu aprobare/respingere</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Comunicare</h4>
+                        <p>Mesagerie internă pentru coordonarea adopțiilor</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Administrare</h4>
+                        <p>Panou dedicat pentru managementul sistemului</p>
+                    </div>
+                </div>
+
+                <h3>2.3 Caracteristicile Utilizatorilor</h3>
+                <table>
+                    <tr><th>Tip Utilizator</th><th>Descriere</th><th>Nivel Tehnic</th></tr>
+                    <tr><td>Proprietar Individual</td><td>Persoană care dorește să își dea animalul în adopție</td><td>Începător-Intermediar</td></tr>
+                    <tr><td>Adoptator</td><td>Persoană care dorește să adopte un animal</td><td>Începător</td></tr>
+                    <tr><td>Organizație</td><td>Adăpost sau organizație de protecție animale</td><td>Intermediar</td></tr>
+                    <tr><td>Administrator</td><td>Persoană responsabilă cu managementul platformei</td><td>Avansat</td></tr>
+                </table>
+            </section>
+
+            <section id="cerinte-functionale" class="section">
+                <h2>3. Cerințe Funcționale</h2>
+
+                <h3>3.1 Autentificare și Autorizare</h3>
+                <div class="requirement">
+                    <h4>RF-001: Înregistrare Utilizator <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită înregistrarea de noi utilizatori cu email și parolă.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-002: Autentificare Utilizator <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită autentificarea utilizatorilor cu JWT.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-003: Gestionarea Sesiunilor <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să mențină sesiuni securizate cu HttpOnly cookies.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <h3>3.2 Gestionarea Animalelor</h3>
+                <div class="requirement">
+                    <h4>RF-004: Adăugare Animal <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Utilizatorii trebuie să poată adăuga animale cu informații complete (nume, specie, rasă, vârstă, descriere).</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-005: Upload Media <span class="priority medium">Prioritate Medie</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită upload-ul de imagini și videoclipuri pentru animale.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-006: Istoric Medical <span class="priority medium">Prioritate Medie</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită înregistrarea și vizualizarea istoricului medical.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-007: Calendar Hrănire <span class="priority medium">Prioritate Medie</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită înregistrarea programului de hrănire.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <h3>3.3 Sistem de Adopție</h3>
+                <div class="requirement">
+                    <h4>RF-008: Aplicație Adopție <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Utilizatorii trebuie să poată aplica pentru adopția unui animal completând un formular.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-009: Aprobare/Respingere <span class="priority high">Prioritate Înaltă</span></h4>
+                    <p><strong>Descriere:</strong> Proprietarii trebuie să poată aproba sau respinge aplicațiile de adopție.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <h3>3.4 Comunicare</h3>
+                <div class="requirement">
+                    <h4>RF-010: Mesagerie Internă <span class="priority medium">Prioritate Medie</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită schimbul de mesaje între utilizatori.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <h3>3.5 Administrare</h3>
+                <div class="requirement">
+                    <h4>RF-011: Panou Administrativ <span class="priority medium">Prioritate Medie</span></h4>
+                    <p><strong>Descriere:</strong> Administratorii trebuie să aibă acces la un panou pentru gestionarea utilizatorilor și sistemului.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <h3>3.6 Import/Export</h3>
+                <div class="requirement">
+                    <h4>RF-012: Export Date <span class="priority low">Prioritate Scăzută</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să permită exportul datelor în format CSV și XML.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+
+                <div class="requirement">
+                    <h4>RF-013: RSS Feed <span class="priority low">Prioritate Scăzută</span></h4>
+                    <p><strong>Descriere:</strong> Sistemul trebuie să genereze feed-uri RSS pentru știri.</p>
+                    <p><strong>Status:</strong> <span class="status-complete">✓ Implementat</span></p>
+                </div>
+            </section>
+
+            <section id="cerinte-nefunctionale" class="section">
+                <h2>4. Cerințe Non-Funcționale</h2>
+
+                <h3>4.1 Performanță</h3>
+                <ul>
+                    <li>Timp de răspuns API sub 2 secunde pentru operații normale</li>
+                    <li>Suport pentru minimum 100 utilizatori concurenți</li>
+                    <li>Upload-ul de fișiere media până la 10MB</li>
+                </ul>
+
+                <h3>4.2 Securitate</h3>
+                <ul>
+                    <li>Protecție împotriva atacurilor XSS</li>
+                    <li>Prevenirea SQL Injection prin prepared statements</li>
+                    <li>Criptarea parolelor cu algoritmi siguri</li>
+                    <li>Validarea și sanitizarea tuturor input-urilor</li>
+                </ul>
+
+                <h3>4.3 Usabilitate</h3>
+                <ul>
+                    <li>Interfață intuitivă și user-friendly</li>
+                    <li>Suport pentru temă închisă/deschisă</li>
+                    <li>Design responsive pentru toate dispozitivele</li>
+                    <li>Navigare simplă și logică</li>
+                </ul>
+
+                <h3>4.4 Compatibilitate</h3>
+                <ul>
+                    <li>Suport pentru browsere moderne (Chrome, Firefox, Safari, Edge)</li>
+                    <li>Compatibilitate cu PHP 8.0+</li>
+                    <li>Suport PostgreSQL 14+</li>
+                </ul>
+            </section>
+
+            <section id="arhitectura" class="section">
+                <h2>5. Arhitectura Sistemului</h2>
+
+                <h3>5.1 Stack Tehnologic</h3>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <h4>Frontend</h4>
+                        <span class="badge">HTML5</span>
+                        <span class="badge">CSS3</span>
+                        <span class="badge">JavaScript ES6+</span>
+                        <span class="badge">Fetch API</span>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Backend</h4>
+                        <span class="badge">PHP 8+</span>
+                        <span class="badge">PDO</span>
+                        <span class="badge">JWT</span>
+                        <span class="badge">RESTful API</span>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Bază de Date</h4>
+                        <span class="badge">PostgreSQL 14+</span>
+                        <span class="badge">PDO</span>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Securitate</h4>
+                        <span class="badge">XSS Protection</span>
+                        <span class="badge">SQL Injection Prevention</span>
+                        <span class="badge">HttpOnly Cookies</span>
+                    </div>
+                </div>
+
+                <h3>5.2 Structura Proiectului</h3>
+                <table>
+                    <tr><th>Director</th><th>Descriere</th></tr>
+                    <tr><td>/frontend</td><td>Interfața utilizator (HTML, CSS, JS)</td></tr>
+                    <tr><td>/backend</td><td>Logica server (PHP, controllere, modele)</td></tr>
+                    <tr><td>/uploads</td><td>Fișiere încărcate (imagini, videoclipuri)</td></tr>
+                    <tr><td>/exports</td><td>Fișiere exportate (CSV, XML)</td></tr>
+                    <tr><td>/documentatie</td><td>Documentația proiectului</td></tr>
+                </table>
+
+                <h3>5.3 Arhitectura MVC</h3>
+                <ul>
+                    <li><strong>Model:</strong> Gestionarea datelor și logica de business</li>
+                    <li><strong>View:</strong> Interfața utilizator și prezentarea datelor</li>
+                    <li><strong>Controller:</strong> Logica de control și rutarea cererilor</li>
+                </ul>
+            </section>
+
+            <section id="interfata-utilizator" class="section">
+                <h2>6. Interfața cu Utilizatorul</h2>
+
+                <h3>6.1 Paleta de Culori</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: #F9F5F9; padding: 15px; border-radius: 5px; text-align: center;">
+                        <div style="background: #F9F5F9; height: 40px; border-radius: 3px; margin-bottom: 10px;"></div>
+                        <strong>#F9F5F9</strong><br>Background Principal
+                    </div>
+                    <div style="background: #5E2E65; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                        <div style="background: #5E2E65; height: 40px; border-radius: 3px; margin-bottom: 10px;"></div>
+                        <strong>#5E2E65</strong><br>Culoare Brand
+                    </div>
+                    <div style="background: #5C9E9A; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                        <div style="background: #5C9E9A; height: 40px; border-radius: 3px; margin-bottom: 10px;"></div>
+                        <strong>#5C9E9A</strong><br>Accent Teal
+                    </div>
+                    <div style="background: #EEA525; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                        <div style="background: #EEA525; height: 40px; border-radius: 3px; margin-bottom: 10px;"></div>
+                        <strong>#EEA525</strong><br>Accent Orange
+                    </div>
+                </div>
+
+                <h3>6.2 Pagini Principale</h3>
+                <table>
+                    <tr><th>Pagină</th><th>Funcționalitate</th><th>Utilizatori</th></tr>
+                    <tr><td>Dashboard</td><td>Pagina principală cu statistics și știri</td><td>Toți</td></tr>
+                    <tr><td>My Pets</td><td>Gestionarea animalelor proprii</td><td>Proprietari</td></tr>
+                    <tr><td>Adopt</td><td>Vizualizarea animalelor disponibile</td><td>Adoptatori</td></tr>
+                    <tr><td>Profile</td><td>Managementul profilului utilizator</td><td>Toți</td></tr>
+                    <tr><td>Admin</td><td>Panoul de administrare</td><td>Administratori</td></tr>
+                    <tr><td>Inbox</td><td>Sistemul de mesagerie</td><td>Toți</td></tr>
+                </table>
+
+                <h3>6.3 Caracteristici UI/UX</h3>
+                <ul>
+                    <li>Design modern și minimalist</li>
+                    <li>Navigare intuitivă cu meniu dropdown</li>
+                    <li>Suport pentru temă închisă/deschisă</li>
+                    <li>Formulare cu validare în timp real</li>
+                    <li>Feedback vizual pentru acțiuni utilizator</li>
+                    <li>Loading states și error handling</li>
+                </ul>
+            </section>
+
+            <section id="securitate" class="section">
+                <h2>7. Securitate</h2>
+
+                <h3>7.1 Autentificare și Autorizare</h3>
+                <ul>
+                    <li>JWT (JSON Web Tokens) pentru autentificare</li>
+                    <li>HttpOnly cookies pentru stocarea securizată a token-urilor</li>
+                    <li>Middleware pentru verificarea autorizării</li>
+                    <li>Role-based access control (admin, user)</li>
+                </ul>
+
+                <h3>7.2 Protecția Datelor</h3>
+                <ul>
+                    <li>Criptarea parolelor cu password_hash() PHP</li>
+                    <li>Prepared statements pentru prevenirea SQL Injection</li>
+                    <li>Sanitizarea și validarea input-urilor</li>
+                    <li>Escaparea output-ului pentru prevenirea XSS</li>
+                </ul>
+
+                <h3>7.3 Securitatea Fișierelor</h3>
+                <ul>
+                    <li>Validarea tipurilor de fișiere la upload</li>
+                    <li>Limitarea mărimii fișierelor (10MB max)</li>
+                    <li>Stocarea securizată în directoare protejate</li>
+                    <li>Generarea de nume unice pentru fișiere</li>
+                </ul>
+            </section>
+
+            <section id="testare" class="section">
+                <h2>8. Testare și Validare</h2>
+
+                <h3>8.1 Strategia de Testare</h3>
+                <table>
+                    <tr><th>Tip Testare</th><th>Descriere</th><th>Status</th></tr>
+                    <tr><td>Testare Manuală</td><td>Testarea funcționalităților prin interfața web</td><td class="status-complete">✓ Implementat</td></tr>
+                    <tr><td>Testare Securitate</td><td>Verificarea vulnerabilităților XSS și SQL Injection</td><td class="status-complete">✓ Implementat</td></tr>
+                    <tr><td>Testare API</td><td>Testarea endpoint-urilor cu Postman/cURL</td><td class="status-complete">✓ Implementat</td></tr>
+                    <tr><td>Testare Autentificare</td><td>Verificarea sistemului de autorizare</td><td class="status-complete">✓ Implementat</td></tr>
+                </table>
+
+                <h3>8.2 Scenarii de Test</h3>
+                <ul>
+                    <li>Înregistrarea și autentificarea utilizatorilor</li>
+                    <li>Adăugarea și editarea animalelor</li>
+                    <li>Upload-ul fișierelor media</li>
+                    <li>Aplicațiile pentru adopție</li>
+                    <li>Sistemul de mesagerie</li>
+                    <li>Funcționalitățile administrative</li>
+                </ul>
+            </section>
+
+            <section id="roadmap" class="section">
+                <h2>9. Roadmap și Dezvoltare Viitoare</h2>
+
+                <h3>9.1 Funcționalități Implementate</h3>
+                <ul>
+                    <li class="status-complete">✅ Sistem de autentificare și autorizare</li>
+                    <li class="status-complete">✅ Management complet animale (CRUD)</li>
+                    <li class="status-complete">✅ Aplicații pentru adopție cu workflow</li>
+                    <li class="status-complete">✅ Mesagerie și comunicare</li>
+                    <li class="status-complete">✅ Panou administrativ</li>
+                    <li class="status-complete">✅ Securitate avansată (XSS, SQL Injection)</li>
+                    <li class="status-complete">✅ Export/Import date și RSS</li>
+                </ul>
+
+                <h3>9.2 Funcționalități Planificate</h3>
+                <ul>
+                    <li class="status-planned">📋 Notificări pe email</li>
+                    <li class="status-planned">📋 Sistem de rating și review-uri</li>
+                    <li class="status-planned">📋 Integrare calendar pentru programări</li>
+                    <li class="status-planned">📋 Aplicație mobilă</li>
+                </ul>
+
+                <h3>9.3 Îmbunătățiri Viitoare</h3>
+                <ul>
+                    <li>Optimizarea performanței și scalabilității</li>
+                    <li>Integrarea cu servicii externe (Google Maps, PayPal)</li>
+                    <li>Sistem de rapoarte și analiză</li>
+                    <li>API public pentru integrări terțe</li>
+                    <li>Suport multilingv</li>
+                </ul>
+            </section>
+
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 5px; text-align: center;">
+                <h3>Informații Proiect</h3>
+                <p><strong>Echipa de Dezvoltare:</strong></p>
+                <ul style="list-style: none; padding: 0;">
+                    <li>Nepotu Alexandra-Maria - Dezvoltare și implementare</li>
+                    <li>Plamada Bianca-Elena - Dezvoltare și testare</li>
+                </ul>
+                <p><strong>Licență:</strong> MIT License</p>
+                <p><strong>Repository:</strong> <a href="https://github.com/username/PoW-Project" target="_blank">GitHub - PoW Project</a></p>
+                <p><em>Document SRS generat automat pentru PoW Platform - 24 Iunie 2025</em></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
